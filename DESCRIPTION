@@ -15,4 +15,7 @@ Imports:
     hextri,
     shiny,
     vegawidget,
-    methods
+    methods,
+    magrittr
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.1.1
