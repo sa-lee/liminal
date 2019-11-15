@@ -16,6 +16,7 @@ Imports:
     shiny,
     vegawidget,
     methods,
-    magrittr
+    magrittr,
+    jsonlite
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1

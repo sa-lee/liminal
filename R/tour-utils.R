@@ -6,7 +6,7 @@
 #' onto the `ncol(.data)` dimensional unit cube.
 #' @export
 clamp <- function(.data) {
-  rng <- DelayedArray::colRanges(.data)
+  rng <- matrixStats::colRanges(.data)
   vals <- sweep(.data, 2, rng[,1])
   sweep(vals, 2, rng[,2] - rng[, 1], FUN = "/")
 }

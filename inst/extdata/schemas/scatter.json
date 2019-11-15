@@ -1,0 +1,18 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "data": {"name": null},
+  "selection": {
+    "brush": {
+      "type": "interval"
+    }
+  },
+  "mark": "point",
+  "encoding": {
+    "x": {"field": null, "type": "quantitative"},
+    "y": {"field": null, "type": "quantitative"},
+    "color": {
+      "condition": {"selection": "brush", "field": null, "type": null},
+      "value": "grey"
+    }
+  }
+}
