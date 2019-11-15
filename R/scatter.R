@@ -39,8 +39,6 @@ limn_colxy <- function(.data, x, y, colors, ...) {
   .sub <- tidyr::gather(.sub, key = "variable", value = "value", colors)
   .sub
 
-
-
 }
 
 
