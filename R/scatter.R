@@ -1,12 +1,20 @@
-#' Simple brushed scatter
+#' Brushed Scatter Plot
 #'
 #' @param .data input data.frame
 #' @param  x,y bare symbols or expressions using columns from `.data` to map
 #' to the x and y aesthetics of a scatter plot
 #' @param color an optional sybmol or expression using a column from `.data` to
-#' map to `.data``, default  is NULL
-#' @param ... other parameters to pass to
+#' map to the color aesthetic of a scatter plot.
+#' @param ... other parameters to passed to [vegawidget::vegawidget()]
+#'
 #' @export
+#'
+#'
+#' @importFrom rlang enquo
+#' @importFrom dplyr transmute bind_cols
+#' @examples
+#' limn_xy(mtcars, mpg, hp, factor(cyl))
+#'
 limn_xy <- function(.data, x, y, color = NULL, ...) {
   x <- rlang::enquo(x)
   y <- rlang::enquo(y)
@@ -50,14 +58,20 @@ limn_xy <- function(.data, x, y, color = NULL, ...) {
   )
 }
 
-color_type <- function(color) {
-  if (is.ordered(color)) return("ordinal")
-  if (is.character(color) || is.factor(color)) return("nominal")
-  if (is.null(color)) return(NULL)
-  "quantitative"
-}
 
-limn_colxy <- function(.data, x, y, colors, ...) {
+#' Dynamic colored scatter plot
+#' @param .data input data.frame
+#' @param  x,y bare symbols or expressions using columns from `.data` to map
+#' to the x and y aesthetics of a scatter plot
+#' @param colors a single unqouted expression of columns in `.data` that will be
+#' dynamically bound to the colour aesthetic.
+#' @param ... other options passed to [vegawidget::vegawidget()]
+#'
+#' @details Note that this assumes that colors are of the same type...
+#'
+#' @importFrom tidyr pivot_longer
+#' @export
+limn_xycol <- function(.data, x, y, colors, ...) {
   x <- rlang::enquo(x)
   y <- rlang::enquo(y)
   colors <- rlang::enquo(colors)
@@ -107,4 +121,12 @@ limn_colxy <- function(.data, x, y, colors, ...) {
   )
 
 }
+
+color_type <- function(color) {
+  if (is.ordered(color)) return("ordinal")
+  if (is.character(color) || is.factor(color)) return("nominal")
+  if (is.null(color)) return(NULL)
+  "quantitative"
+}
+
 
