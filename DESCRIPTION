@@ -17,6 +17,10 @@ Imports:
     vegawidget,
     methods,
     magrittr,
-    jsonlite
+    jsonlite,
+    rlang,
+    dplyr,
+    tidyr,
+    matrixStats
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
