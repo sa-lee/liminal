@@ -63,9 +63,10 @@ limn_xy <- function(.data, x, y, color = NULL, brush_name = "brush", brush_trans
     brush_transform <- match.arg(brush_transform, c("median", "mean"))
     transform <- list(list(filter = list(selection = brush_name)))
     aggregate <- list(aggregate = brush_transform)
-    encoding <- list(x = c(schema[["encoding"]][["x"]], aggregate),
-                     y = c(schema[["encoding"]][["y"]], aggregate)
-    )
+    encoding <- list(x = c(schema[["encoding"]][["x"]], aggregate,
+                           list(axis = list(title = x_nm))),
+                     y = c(schema[["encoding"]][["y"]], aggregate,
+                           list(axis = list(title = y_nm))))
     brush_layer <- list(transform = transform,
                         mark = brush_transform_mark,
                         encoding = encoding)
