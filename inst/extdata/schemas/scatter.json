@@ -6,7 +6,7 @@
       "type": "interval"
     }
   },
-  "mark": "point",
+  "mark": "circle",
   "encoding": {
     "x": {"field": null, "type": "quantitative"},
     "y": {"field": null, "type": "quantitative"},
