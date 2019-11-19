@@ -1,3 +1,4 @@
+#' @import vegawidget
 #' @keywords internal
 "_PACKAGE"
 
