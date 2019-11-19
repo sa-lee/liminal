@@ -5,6 +5,12 @@
 #' to the x and y aesthetics of a scatter plot
 #' @param color an optional sybmol or expression using a column from `.data` to
 #' map to the color aesthetic of a scatter plot.
+#' @param brush_name the name of the brush element, default is 'brush'
+#' @param brush_transform aggregate data inside the brush (currently supports
+#' median / mean), default is NULL.
+#' @param brush_transform_mark how to display result of brush transform
+#' (default is "square")
+#'
 #' @param ... other parameters to passed to [vegawidget::vegawidget()]
 #'
 #' @export
@@ -15,17 +21,17 @@
 #' @examples
 #' limn_xy(mtcars, mpg, hp, factor(cyl))
 #'
-limn_xy <- function(.data, x, y, color = NULL, ...) {
+limn_xy <- function(.data, x, y, color = NULL, brush_name = "brush", brush_transform = NULL, brush_transform_mark = "square", ...) {
   x <- rlang::enquo(x)
   y <- rlang::enquo(y)
   color <- rlang::enquo(color)
 
   schema <- schema_scatter()
-
   source_id <- substitute(.data)
   source_id <- as.character(source_id)
-
   schema[["data"]][["name"]] <- source_id
+
+  names(schema[["selection"]]) <- brush_name
 
   # encodings x,y
   source_values <- dplyr::transmute(.data, !!x, !!y)
@@ -40,14 +46,40 @@ limn_xy <- function(.data, x, y, color = NULL, ...) {
                                       dplyr::transmute(.data, !!color)
     )
     col_nm <- colnames(source_values)[3]
-    schema[["encoding"]][["color"]][["condition"]][["field"]] <- col_nm
-    schema[["encoding"]][["color"]][["condition"]][["type"]] <- color_type(.data[[col_nm]])
+
+    schema[["encoding"]][["color"]][["condition"]] <- list(
+      field = col_nm,
+      type = color_type(.data[[col_nm]]),
+      selection = brush_name )
+
   } else {
     col_nm <- "black"
-    schema[["encoding"]][["color"]][["condition"]] <- list(selection = "brush",
+    schema[["encoding"]][["color"]][["condition"]] <- list(
+      selection = brush_name,
                                                            value = col_nm)
   }
 
+  if (!is.null(brush_transform)) {
+    brush_transform <- match.arg(brush_transform, c("median", "mean"))
+    transform <- list(list(filter = list(selection = brush_name)))
+    aggregate <- list(aggregate = brush_transform)
+    encoding <- list(x = c(schema[["encoding"]][["x"]], aggregate),
+                     y = c(schema[["encoding"]][["y"]], aggregate)
+    )
+    brush_layer <- list(transform = transform,
+                        mark = brush_transform_mark,
+                        encoding = encoding)
+
+    layer <- list(list(layer = list(
+      schema[!(names(schema) %in% c("data", "$schema"))],
+      brush_layer
+    )))
+
+    schema <- list(`$schema` = schema[["$schema"]],
+                   data = schema[["data"]],
+                   layer = layer)
+
+  }
 
   schema[["data"]][["values"]] <- source_values
 
