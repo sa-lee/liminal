@@ -1,25 +1,48 @@
 #' Simple brushed scatter
 #'
 #' @param .data input data.frame
-#' @param  x,y,color aesthetics representing colors from `.data`
+#' @param  x,y bare symbols or expressions using columns from `.data` to map
+#' to the x and y aesthetics of a scatter plot
+#' @param color an optional sybmol or expression using a column from `.data` to
+#' map to `.data``, default  is NULL
 #' @param ... other parameters to pass to
 #' @export
-limn_xy <- function(.data, x, y, color, ...) {
-  stopifnot(is.character(x) && length(x) == 1,
-            is.character(y) && length(y) == 1,
-            is.character(color) && length(color) == 1,
-            c(x,y,color) %in% colnames(.data))
-
+limn_xy <- function(.data, x, y, color = NULL, ...) {
+  x <- rlang::enquo(x)
+  y <- rlang::enquo(y)
+  color <- rlang::enquo(color)
 
   schema <- schema_scatter()
-  source <- substitute(.data)
-  source <- as.character(source)
-  schema[["data"]][["name"]] <- source
-  schema[["data"]][["values"]] <- .data[, c(x,y,color)]
-  schema[["encoding"]][["x"]][["field"]] <- x
-  schema[["encoding"]][["y"]][["field"]] <- y
-  schema[["encoding"]][["color"]][["condition"]][["field"]] <- color
-  schema[["encoding"]][["color"]][["condition"]][["type"]] <- color_type(.data[[color]])
+
+  source_id <- substitute(.data)
+  source_id <- as.character(source_id)
+
+  schema[["data"]][["name"]] <- source_id
+
+  # encodings x,y
+  source_values <- dplyr::transmute(.data, !!x, !!y)
+  x_nm <- colnames(source_values)[1]
+  y_nm <- colnames(source_values)[2]
+  schema[["encoding"]][["x"]][["field"]] <- x_nm
+  schema[["encoding"]][["y"]][["field"]] <- y_nm
+
+  # set colour encoding
+  if (!rlang::quo_is_null(color)) {
+    source_values <- dplyr::bind_cols(source_values,
+                                      dplyr::transmute(.data, !!color)
+    )
+    col_nm <- colnames(source_values)[3]
+    schema[["encoding"]][["color"]][["condition"]][["field"]] <- col_nm
+    schema[["encoding"]][["color"]][["condition"]][["type"]] <- color_type(.data[[col_nm]])
+  } else {
+    col_nm <- "black"
+    schema[["encoding"]][["color"]][["condition"]] <- list(selection = "brush",
+                                                           value = col_nm)
+  }
+
+
+  schema[["data"]][["values"]] <- source_values
+
   spec <- vegawidget::as_vegaspec(schema)
   vegawidget::vegawidget(spec,
                          embed = vegawidget::vega_embed(actions = FALSE),
@@ -35,10 +58,53 @@ color_type <- function(color) {
 }
 
 limn_colxy <- function(.data, x, y, colors, ...) {
-  .sub <- .data[, c(x,y, colors)]
-  .sub <- tidyr::gather(.sub, key = "variable", value = "value", colors)
-  .sub
+  x <- rlang::enquo(x)
+  y <- rlang::enquo(y)
+  colors <- rlang::enquo(colors)
+  stopifnot(!rlang::quo_is_null(colors))
+
+  schema <- schema_scatter()
+
+
+  source_id <- substitute(.data)
+  source_id <- as.character(source_id)
+  schema[["data"]][["name"]] <- source_id
+
+  # encodings x, y
+  source_values <- dplyr::transmute(.data, !!x, !!y)
+  source_values <- dplyr::bind_cols(source_values,
+                                    dplyr::select(.data, !!colors))
+  x_nm <- colnames(source_values)[1]
+  y_nm <- colnames(source_values)[2]
+  schema[["encoding"]][["x"]][["field"]] <- x_nm
+  schema[["encoding"]][["y"]][["field"]] <- y_nm
+
+  # pivoting allows to bind a selection client side
+  source_values <- tidyr::pivot_longer(.data, !!colors)
+
+  # now we select 'value' as the colour field
+  schema[["encoding"]][["color"]][["condition"]][["field"]] <- "value"
+  schema[["encoding"]][["color"]][["condition"]][["type"]] <- color_type(source_values[["value"]])
+
+  # update the as a filter to the plot
+  selection <- list(type = "single",
+                    fields = list("name"),
+                    bind = list(input = "select",
+                                options = unique(source_values[["name"]])
+                                )
+                    )
+
+  schema[["selection"]] <- c(schema[["selection"]], list(color_var = selection))
+
+  schema[["transform"]] <- list(list(filter = list(selection = "color_var")))
+
+  schema[["data"]][["values"]] <- source_values
+
+  spec <- vegawidget::as_vegaspec(schema)
+  vegawidget::vegawidget(spec,
+                         embed = vegawidget::vega_embed(actions = FALSE),
+                         ...
+  )
 
 }
-
 
