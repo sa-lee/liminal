@@ -1,28 +1,48 @@
 limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour(), clamp = TRUE, ...) {
   cols <- rlang::enquo(cols)
   color <- rlang::enquo(color)
-
   # set up tour parameters
-  tour_data <- as.matrix(dplyr::select(.data, !!cols))
-  color_data <- dplyr::select(.data, !!color)
-  if (clamp) {
-    tour_data <- clamp(tour_data)
-  }
+  tour_data <- init_tour_matrix(.data, cols, clamp)
   path <- tourr::new_tour(tour_data, tour_path)
+  # setup colors
+  color_data <- dplyr::select(.data, !!color)
 
+  # generate app
   server <- limn_tour_server(tour_data, path, color_data)
-  ui <- limn_tour_ui()
+  ui <- limn_tour_ui("simple")
   shiny::shinyApp(ui, server)
 
 }
 
-limn_tour_ui <- function() {
+limn_tour_ui <- function(view = "simple") {
+  view <- match.arg(view, c("simple", "linked"))
+
+  # views always present
+  tview <- vegawidget::vegawidgetOutput("tourView",
+                                        width = "100%",
+                                        height = "100%")
+  aview <- vegawidget::vegawidgetOutput("axisView",
+                                        width = "100%",
+                                        height = "33%")
+
+  tview_ui <-   shiny::fluidRow(tview)
+
+  if (view == "linked") {
+    scatter_view <- vegawidget::vegawidgetOutput(
+      "scatterView",
+      width = "100%",
+      height = "80%"
+    )
+    tview_ui <- shiny::fluidRow(
+      shiny::column(4, tview, style='padding:0px;'),
+      shiny::column(4, scatter_view)
+    )
+  }
+
   shiny::fluidPage(
+    tview_ui,
     shiny::fluidRow(
-      vegawidget::vegawidgetOutput("tourView", width = "100%")
-    ),
-    shiny::fluidRow(
-      vegawidget::vegawidgetOutput("axisView", width = "100%", height = "33%")
+      shiny::column(4, aview, style='padding:0px; margin: 0 auto;')
     )
   )
 }
@@ -76,43 +96,30 @@ render_init_axes <- function(source_values, half_range, cols) {
 
 limn_tour_server <- function(tour_data, path, color_tbl) {
 
-  # half range
-  half_range <- compute_half_range(tour_data)
-
-  # intialise views
-  start <- path(0)$proj
-  source_values <- tour_data %*% start
-  colnames(source_values) <- c("x", "y")
-  source_values <- as.data.frame(source_values)
-
-  if (ncol(color_tbl) == 1) {
-    source_values <- dplyr::bind_cols(source_values, color_tbl)
-  }
-
-  init_tour <- render_init(source_values, half_range)
-  cols <- colnames(tour_data)
-  init_axes <- render_init_axes(start, half_range, cols)
+  init <- init_tour(tour_data, path, color_tbl)
 
   function(input, output, session) {
     output[["tourView"]] <- vegawidget::renderVegawidget(
       vegawidget::vegawidget(
-        vegawidget::as_vegaspec(init_tour),
+        vegawidget::as_vegaspec(init[["tourView"]]),
         embed = vegawidget::vega_embed(actions = FALSE)
       )
     )
     output[["axisView"]] <- vegawidget::renderVegawidget(
       vegawidget::vegawidget(
-        vegawidget::as_vegaspec(init_axes),
+        vegawidget::as_vegaspec(init[["axisView"]]),
         embed = vegawidget::vega_embed(actions = FALSE)
       )
     )
     rct_tour <- rct_tour(path, session = session)
-    rct_axes <- stream_axes(rct_tour, cols)
-    rct_proj <- stream_proj(rct_tour,  tour_data, source_values, half_range)
+    rct_axes <- stream_axes(rct_tour, init[["cols"]])
+    rct_proj <- stream_proj(rct_tour,
+                            tour_data,
+                            init[["source_values"]],
+                            init[["half_range"]])
 
     vegawidget::vw_shiny_set_data("axisView", "rotations", rct_axes())
     vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())
-
 
   }
 }
@@ -130,6 +137,37 @@ generate_axes <- function(source_values, cols) {
   source_values <- as.data.frame(source_values)
   source_values[["axis_name"]] <- c(cols, rep("", nrow(tbl_zeros)))
   source_values
+}
+
+init_tour_matrix <- function(.data, cols, clamp = TRUE) {
+  tour_data <- as.matrix(dplyr::select(.data, !!cols))
+  if (clamp) return(clamp(tour_data))
+  tour_data
+}
+
+init_tour <- function(tour_data, path, color_tbl) {
+  # half range
+  half_range <- compute_half_range(tour_data)
+  cols <- colnames(tour_data)
+
+  # intialise views
+  start <- path(0)$proj
+  source_values <- tour_data %*% start
+  colnames(source_values) <- c("x", "y")
+  source_values <- as.data.frame(source_values)
+
+  if (ncol(color_tbl) == 1) {
+    source_values <- dplyr::bind_cols(source_values, color_tbl)
+  }
+
+  init_tour <- render_init(source_values, half_range)
+  init_axes <- render_init_axes(start, half_range, cols)
+
+  list(tourView = init_tour,
+       axisView = init_axes,
+       half_range = half_range,
+       source_values = source_values,
+       cols = cols)
 }
 
 

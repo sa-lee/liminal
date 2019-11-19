@@ -111,6 +111,7 @@ limn_xycol <- function(.data, x, y, colors, ...) {
   stopifnot(!rlang::quo_is_null(colors))
 
   schema <- schema_scatter()
+  schema[["autosize"]] <- list(type = "fit")
 
 
   source_id <- substitute(.data)
