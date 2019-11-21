@@ -18,11 +18,8 @@ limn_tour_ui <- function(view = "simple") {
   view <- match.arg(view, c("simple", "linked"))
 
   # views always present
-  tview <- vegawidget::vegawidgetOutput("tourView",
-                                        width = "100%",
-                                        height = "100%")
+  tview <- vegawidget::vegawidgetOutput("tourView")
   aview <- vegawidget::vegawidgetOutput("axisView",
-                                        width = "100%",
                                         height = "33%")
 
   tview_ui <-   shiny::fluidRow(tview)
@@ -75,7 +72,7 @@ render_init <- function(source_values, half_range) {
     base_schema[["encoding"]][["color"]][["condition"]][["type"]] <- type
     if (type %in% c("nominal", "ordinal")) {
       col_domain <- unique(source_values[[col_nm]])
-      base_schema[["encoding"]][["color"]][["condition"]][["scale"]] <- list(domain = col_domain)
+      base_schema[["encoding"]][["color"]][["condition"]][["scale"]] <- list(domain = sort(col_domain))
     }
 
   } else {
@@ -102,13 +99,17 @@ limn_tour_server <- function(tour_data, path, color_tbl) {
     output[["tourView"]] <- vegawidget::renderVegawidget(
       vegawidget::vegawidget(
         vegawidget::as_vegaspec(init[["tourView"]]),
-        embed = vegawidget::vega_embed(actions = FALSE)
+        embed = vegawidget::vega_embed(actions = FALSE),
+        height = 300,
+        width = 450
       )
     )
     output[["axisView"]] <- vegawidget::renderVegawidget(
       vegawidget::vegawidget(
         vegawidget::as_vegaspec(init[["axisView"]]),
-        embed = vegawidget::vega_embed(actions = FALSE)
+        embed = vegawidget::vega_embed(actions = FALSE),
+        width = 350,
+        height = 300
       )
     )
     rct_tour <- rct_tour(path, session = session)
