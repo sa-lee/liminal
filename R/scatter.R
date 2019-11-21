@@ -111,8 +111,6 @@ limn_xycol <- function(.data, x, y, colors, ...) {
   stopifnot(!rlang::quo_is_null(colors))
 
   schema <- schema_scatter()
-  schema[["autosize"]] <- list(type = "fit")
-
 
   source_id <- substitute(.data)
   source_id <- as.character(source_id)
@@ -122,29 +120,30 @@ limn_xycol <- function(.data, x, y, colors, ...) {
   source_values <- dplyr::transmute(.data, !!x, !!y)
   source_values <- dplyr::bind_cols(source_values,
                                     dplyr::select(.data, !!colors))
+
+  fold_vars <- colnames(source_values)[-c(1,2)]
+
   x_nm <- colnames(source_values)[1]
   y_nm <- colnames(source_values)[2]
   schema[["encoding"]][["x"]][["field"]] <- x_nm
   schema[["encoding"]][["y"]][["field"]] <- y_nm
 
-  # pivoting allows to bind a selection client side
-  source_values <- tidyr::pivot_longer(.data, !!colors)
-
-  # now we select 'value' as the colour field
+  # now we select 'key' as the colour field
   schema[["encoding"]][["color"]][["condition"]][["field"]] <- "value"
-  schema[["encoding"]][["color"]][["condition"]][["type"]] <- color_type(source_values[["value"]])
+  schema[["encoding"]][["color"]][["condition"]][["type"]] <- color_type(source_values[,3])
 
   # update the as a filter to the plot
   selection <- list(type = "single",
-                    fields = list("name"),
+                    fields = list("key"),
                     bind = list(input = "select",
-                                options = unique(source_values[["name"]])
+                                options = fold_vars
                                 )
                     )
 
   schema[["selection"]] <- c(schema[["selection"]], list(color_var = selection))
 
-  schema[["transform"]] <- list(list(filter = list(selection = "color_var")))
+  schema[["transform"]] <- list(list(fold = fold_vars),
+                                list(filter = list(selection = "color_var")))
 
   schema[["data"]][["values"]] <- source_values
 
