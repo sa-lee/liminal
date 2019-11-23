@@ -1,0 +1,122 @@
+---
+title: "pbmc3k"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{pbmc3k}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Here we explore the use of `sneezy` on the 10x genomics PBMC3k single-cell
+dataset. We follow the preprocessing and quality control steps from
+[Chapter 25 of Orchestrating Single Cell Analysis with R](https://osca.bioconductor.org/pbmc-3k-10x-dataset-filtered.html), and
+use that to explore the linear and non-linear embedding spaces via tours
+and diagnostics.
+
+## Setup
+
+First, we load up the raw data from the `TENxPBMCData` package,
+and the analysis packages `scater` and `scran`:
+
+```{r setup}
+library(TENxPBMCData)
+library(scater)
+library(scran)
+
+pbmc3k <- TENxPBMCData("pbmc3k")
+pbmc3k
+```
+
+Next we follow the simple QC steps from the aforementioned vignette:
+
+### Quality control
+
+```{r qc}
+is.mito <- grep("MT", rowData(pbmc3k)$Symbol_TENx)
+stats <- perCellQCMetrics(pbmc3k, subsets=list(Mito=is.mito))
+high.mito <- isOutlier(stats$subsets_Mito_percent, nmads=3, type="higher")
+pbmc3k <- pbmc3k[,!high.mito]
+```
+
+### Normalization
+
+```{r}
+pbmc3k <- logNormCounts(pbmc3k)
+```
+
+### Variance modelling
+
+```{r}
+dec3k <- modelGeneVar(pbmc3k)
+chosen.hvgs <- which(dec3k$bio > 0)
+```
+
+
+## The TourExperiment object and a first embedding
+
+We provide a simple interface to constructing a `TourExperiment` from
+a SingleCellExperiment object. Once we have this object, we can construct
+linear embedding using PCA. Since, the underlying object is backed by an HDF5 
+file we use randomized PCA for speed purposes.
+
+```{r}
+library(sneezy)
+set.seed(2099)
+pbmc3k_te <- TourExperiment(pbmc3k)
+pbmc3k_te <- embed_linear(pbmc3k_te, 
+                          num_comp = 10, 
+                          .on = "logcounts", 
+                          .subset = chosen.hvgs, 
+                          .engine = pca_random())
+```
+
+The arguments above add an embedding to the pbmc3k_te object,
+using randomized PCA, only on the highly variable genes we've constructed 
+above. Since, the procedure is random, we also set a seed. 
+
+
+```{r}
+
+```
+
+
+The usual approach here is to inspect the results of a cluster
+analysis on top of an embedding, here we have used the standard 
+
+
+```{r}
+g <- buildSNNGraph(pbmc3k_te, k=15, use.dimred = 'pca_random')
+clust <- igraph::cluster_louvain(g)
+pbmc3k_te$cluster <- factor(igraph::membership(clust))
+```
+
+We can also estimate a basis set via a grand tour: 
+
+```{r}
+pbmc3k_te <- generate_bases(
+  pbmc3k_te,
+  .on = "pca_random",
+  max_bases = 10,
+  clamp  = FALSE,
+  .engine = tourr::grand_tour(),
+)
+pbmc3k_te
+```
+
+This creates an array with dimensions `r dim(basisSet(pbmc3k_te))`
+named `pca_random`. To access the underlying array use 
+`basisSet(pbmc3k_te)`.
+
+We can then view the principal components using the `view_tour_xy()`, this is a shiny application. You can view an example of it here:
+
+```{r, eval = FALSE}
+sneezy_tour(pbmc3k_te)
+```
+
