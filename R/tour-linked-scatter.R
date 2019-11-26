@@ -7,7 +7,7 @@
 #' @param tour_path
 #' @param clamp
 #' @param ...
-limn_tour_xylink <- function(.data, cols, x, y, colors, tour_path = tourr::grand_tour(), clamp = TRUE, ...) {
+limn_tour_xylink <- function(.data, cols, x, y, colors, tour_path = tourr::grand_tour(), clamp = TRUE, transformer = function(x) scale(x, scale = FALSE), ...) {
 
   # generate tour
   cols <- rlang::enquo(cols)

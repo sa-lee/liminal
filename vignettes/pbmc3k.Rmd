@@ -59,64 +59,80 @@ chosen.hvgs <- which(dec3k$bio > 0)
 ```
 
 
-## The TourExperiment object and a first embedding
+## Estimating embeddings
 
-We provide a simple interface to constructing a `TourExperiment` from
-a SingleCellExperiment object. Once we have this object, we can construct
-linear embedding using PCA. Since, the underlying object is backed by an HDF5 
-file we use randomized PCA for speed purposes.
+`liminal` is agnostic about how you construct your embedding and leaves
+that problem for other R packages. In this example,
+we use the `scater` package to directly estimate principal componenets
+and t-SNE embeddings.
 
 ```{r}
-library(sneezy)
 set.seed(2099)
-pbmc3k_te <- TourExperiment(pbmc3k)
-pbmc3k_te <- embed_linear(pbmc3k_te, 
-                          num_comp = 10, 
-                          .on = "logcounts", 
-                          .subset = chosen.hvgs, 
-                          .engine = pca_random())
+pbmc3k <- runPCA(pbmc3k, 
+                 ncomponents = 15,
+                 subset_row = chosen.hvgs,
+                 BSPARAM = BiocSingular::RandomParam(),
+                 name = "pca")
+
+set.seed(1999)
+pbmc3k <- runTSNE(pbmc3k,
+                  subset_row = chosen.hvgs,
+                  perplexity = 30,
+                  name = "tsne")
 ```
 
-The arguments above add an embedding to the pbmc3k_te object,
+The arguments above add an embedding to the pbmc3k object,
 using randomized PCA, only on the highly variable genes we've constructed 
 above. Since, the procedure is random, we also set a seed. 
 
-
-```{r}
-
-```
-
-
 The usual approach here is to inspect the results of a cluster
-analysis on top of an embedding, here we have used the standard 
-
+analysis on top of an embedding, here we have used the standard arguments
+as used by `scran`:
 
 ```{r}
-g <- buildSNNGraph(pbmc3k_te, k=15, use.dimred = 'pca_random')
+g <- buildSNNGraph(pbmc3k, k=15, use.dimred = 'pca')
 clust <- igraph::cluster_louvain(g)
-pbmc3k_te$cluster <- factor(igraph::membership(clust))
+pbmc3k$cluster <- factor(igraph::membership(clust))
 ```
 
-We can also estimate a basis set via a grand tour: 
+
+## Visualsing results
+
+All liminal visualisations take a data.frame/tibble as input.
+For example, we can flatten the single cell experiment object into a
+data.frame with the following code:
+
+```{r flatten}
+express <- t(logcounts(pbmc3k)[chosen.hvgs,])
+colnames(express) <- rowData(pbmc3k)[chosen.hvgs, "Symbol_TENx"]
+express <- as.data.frame(express)
+pcs <- tibble::as_tibble(reducedDim(pbmc3k, "pca"))
+limn_tbl <- dplyr::bind_cols(
+  tibble::tibble(
+    tsne_x = reducedDim(pbmc3k, "tsne")[,1],
+    tsne_y = reducedDim(pbmc3k, "tsne")[,2],
+    cluster = pbmc3k$cluster
+  ),
+  pcs,
+  express
+)
+```
+
+And we can generate a simple xy view 
+```{r}
+limn_xy(limn_tbl, x= tsne_x, y = tsne_y, color = cluster)
+```
+
+Or alternatively, we can view a set of marker genes:
 
 ```{r}
-pbmc3k_te <- generate_bases(
-  pbmc3k_te,
-  .on = "pca_random",
-  max_bases = 10,
-  clamp  = FALSE,
-  .engine = tourr::grand_tour(),
-)
-pbmc3k_te
+limn_xycol(limn_tbl, 
+           x = tsne_x, y = tsne_y, 
+           colors = c(CD79A, MS4A1, CD8A, CD8B, LYZ))
 ```
 
-This creates an array with dimensions `r dim(basisSet(pbmc3k_te))`
-named `pca_random`. To access the underlying array use 
-`basisSet(pbmc3k_te)`.
+We can generate a tour (this will load a shiny application)
 
-We can then view the principal components using the `view_tour_xy()`, this is a shiny application. You can view an example of it here:
-
-```{r, eval = FALSE}
-sneezy_tour(pbmc3k_te)
+```{r}
+limn_tour(limn_tbl, PC1:PC10, color = cluster)
 ```
-

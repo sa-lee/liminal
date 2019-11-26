@@ -1,4 +1,4 @@
-limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour(), clamp = TRUE, ...) {
+limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour(), clamp = TRUE, transformer = function(x) scale(x, scale = FALSE), ...) {
   cols <- rlang::enquo(cols)
   color <- rlang::enquo(color)
   # set up tour parameters
@@ -8,7 +8,7 @@ limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour()
   color_data <- dplyr::select(.data, !!color)
 
   # generate app
-  server <- limn_tour_server(tour_data, path, color_data)
+  server <- limn_tour_server(tour_data, path, color_data, transformer)
   ui <- limn_tour_ui("simple")
   shiny::shinyApp(ui, server)
 
@@ -91,7 +91,7 @@ render_init_axes <- function(source_values, half_range, cols) {
   axis_tour
 }
 
-limn_tour_server <- function(tour_data, path, color_tbl) {
+limn_tour_server <- function(tour_data, path, color_tbl, transformer) {
 
   init <- init_tour(tour_data, path, color_tbl)
 
@@ -117,7 +117,8 @@ limn_tour_server <- function(tour_data, path, color_tbl) {
     rct_proj <- stream_proj(rct_tour,
                             tour_data,
                             init[["source_values"]],
-                            init[["half_range"]])
+                            init[["half_range"]],
+                            transformer)
 
     vegawidget::vw_shiny_set_data("axisView", "rotations", rct_axes())
     vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())
