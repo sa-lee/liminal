@@ -136,3 +136,11 @@ We can generate a tour (this will load a shiny application)
 ```{r}
 limn_tour(limn_tbl, PC1:PC10, color = cluster)
 ```
+
+We can generate a linked tour 
+
+```{r}
+limn_tour_xylink(limn_tbl, PC1:PC10, 
+                 x=tsne_x, y=tsne_y, 
+           colors = c(CD79A, MS4A1, CD8A, CD8B, LYZ), transformer)
+```
