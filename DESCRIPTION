@@ -24,3 +24,8 @@ Imports:
     matrixStats
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
+Suggests: 
+    scran,
+    scater,
+    TENxPBMCData,
+    igraph
