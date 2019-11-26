@@ -16,8 +16,8 @@ stream_axes <- function(rct_tour, cols) {
 stream_proj <- function(rct_tour, tour_data, source_values, half_range, transformer) {
   shiny::reactive({
     x <- tour_data %*% rct_tour()$proj
-    x <- transformer(x)
-    source_values[, c("x","y")] <- as.data.frame(x / half_range)
+    x <- transformer(x) / half_range
+    source_values[, c("x","y")] <- as.data.frame(x)
     source_values
   })
 }

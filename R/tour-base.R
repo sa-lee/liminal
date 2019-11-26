@@ -155,6 +155,7 @@ init_tour <- function(tour_data, path, color_tbl) {
   # intialise views
   start <- path(0)$proj
   source_values <- tour_data %*% start
+  source_values <- scale(source_values, scale = FALSE) / half_range
   colnames(source_values) <- c("x", "y")
   source_values <- as.data.frame(source_values)
 
