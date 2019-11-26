@@ -21,13 +21,13 @@ limn_tour_xylink <- function(.data, cols, x, y, colors, tour_path = tourr::grand
   scatter_spec <- limn_xycol(.data, !!x, !!y, !!colors)
 
   # generate app
-  server <- limn_tour_linked_server(tour_data, path, scatter_spec)
+  server <- limn_tour_linked_server(tour_data, path, scatter_spec, transformer)
   ui <- limn_tour_ui("linked")
   shiny::shinyApp(ui, server)
 
 }
 
-limn_tour_linked_server <- function(tour_data, path, scatter_spec) {
+limn_tour_linked_server <- function(tour_data, path, scatter_spec, transformer) {
   init <- init_tour(tour_data, path, data.frame())
 
   function(input, output, session) {
@@ -51,7 +51,8 @@ limn_tour_linked_server <- function(tour_data, path, scatter_spec) {
     rct_proj <- stream_proj(rct_tour,
                             tour_data,
                             init[["source_values"]],
-                            init[["half_range"]])
+                            init[["half_range"]],
+                            transformer)
 
     vegawidget::vw_shiny_set_data("axisView", "rotations", rct_axes())
     vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())
