@@ -16,8 +16,7 @@ knitr::opts_chunk$set(
 
 
 This example is modified from the paper by Laa et al., here we show how we can
-use a tour to explore principal components space and any non-linear structure
-and clusters via non-linear embeddings.
+use a tour to explore principal components space and any non-linear structure and clusters via non-linear embeddings.
 
 ## Setting up the data 
 
@@ -31,7 +30,7 @@ all predictions of the corresponding measurement from an experiment.
  
 The remaining columns are:
  
- * InFit: A flag indicating whether an observation entered the fit of 
+ * InFit: A flag indicating whether an observation entered the fit of
    CT14HERA2 parton distribution function
  * Type: First number of ID
  * ID: contains the identifier of experiment, 1XX/2XX/5XX correpsonds
@@ -41,129 +40,102 @@ The remaining columns are:
  * x,mu: the kinematics of a parton. x is the parton momentum fraction, and
  mu is the factorisation scale.
 
-First, we take the data from a data.frame to a TourExperiment data
-structure:
+First, we take the load the data as a data.frame:
 
 ```{r pdfsense-prepare}
-library(SingleCellExperiment)
-library(sneezy)
-pdfsense <- TourExperiment(pdfsense, X1:X56)
-pdfsense
+library(liminal)
+data(pdfsense)
 ```
 
 ## Linear embeddings and the tour
 
-First we can estimate all `nrow(pdfsense)` principal components:
+First we can estimate all `nrow(pdfsense)` principal components
+using on the parton distribution fits:
 ```{r pdfsense}
-pdfsense <- embed_linear(pdfsense, 
-                         num_comp = nrow(pdfsense),
-                         center = TRUE)
-pdfsense 
+pcs  <- prcomp(pdfsense[, 7:ncol(pdfsense)])
 ```
 
-If we look at the data structure returned, we get a data structure
-called a LinearEmbeddingMatrix - which holds all the loadings and components.
-```{r}
-pcs <- reducedDim(pdfsense, "pca_exact")
-pcs
-```
 Using this data structure, we can produce a screeplot:
 ```{r, echo = TRUE}
-factorData(pcs) <- cbind(
-  factorData(pcs),
-  variance_explained = factorData(pcs)$sdev / sum(factorData(pcs)$sdev),
-  component = 1: nrow(factorData(pcs)),
-  cumulative_var = cumsum(factorData(pcs)$sdev / sum(factorData(pcs)$sdev))
-)
-
 library(ggplot2)
-ggplot(as.data.frame(factorData(pcs)),
-       aes(x = component, y = variance_explained)) + 
+ggplot(
+  data.frame(
+    component = 1:56, 
+    variance_explained = cumsum(pcs$sdev / sum(pcs$sdev))
+  ),
+  aes(x = component, y = variance_explained)
+) + 
   geom_point() +
-  labs(x = "Principal Component", y = "Proportion Variance Explained")
+  labs(
+    x = "Principal Component", 
+    y = "Cumulative Proportion Variance Explained"
+  )
 
 ```
 
-Approximately %70 of the variance in the pdf fits are explained by the first
-15 principal components.
+Approximately %70 of the variance in the pdf fits are explained by the first 15 principal components.
 
-Next we can generate a set of bases to tour on the principal components.
-Note that we restrict our view to the first 6 principal components and 
-generate 100 new bases via the grand tour (we choose 6 to follow the original paper):
+Next we augment our original data with the principal components:
 
 ```{r}
-pdfsense <- generate_bases(pdfsense,
-                           .on = "pca_exact",
-                           subset = 1:6)
-
-dim(basisSet(pdfsense))
+pdfsense <- dplyr::bind_cols(
+  pdfsense, 
+  as.data.frame(pcs$x)
+)
+pdfsense$Type <- factor(pdfsense$Type)
 ```
 
-We can view a simple tour via `sneezy_tour()`
+We can view a simple tour via`limn_tour()` and color points
+by their experimental group
 
-```{r}
-sneezy_tour(pdfsense)
+```{r, eval = FALSE}
+limn_tour(pdfsense, PC1:PC6, Type)
 ```
-
-Alternatively, we can highlight an a grouping of interest, in
-this case the JET experiments:
-
-```{r}
-highlight <- 
-  sneezy_tour(pdfsense, 
-              col = c("grey50", "darkred")[(colData(pdfsense)$Type == 5) + 1])
-highlight
-```
-
 
 
 ## Non-Linear embeddings
 
 Now we can set up a non-linear embedding via t-SNE, here
-we use an approximate fit using a default perpelxity of 30.
+we embed all 56 principal components.
 ```{r}
 set.seed(1999)
-pdfsense <- embed_nonlinear(pdfsense, 2, .on = "pca_exact")
-tsne <- reducedDim(pdfsense, "tsne_approx")
+tsne <- Rtsne::Rtsne(dplyr::select(pdfsense, PC1:PC56),
+                     pca = FALSE, 
+                     normalize = TRUE,
+                     perplexity = 10,
+                     exaggeration_factor = nrow(pdfsense) / 10)
 ```
 
-And we can use ggplot2 to construct a view of the embedding:
+Again we can augment the embedding onto the pdfsense data:
 
 ```{r tsne}
-pl <- ggplot(
-  data.frame(
-    sampleFactors(tsne),
-    colData(pdfsense)
-  )) +
-  geom_point(aes(x = Dim1, y = Dim2, col = factor(Type))) +
-  scale_color_manual(values = c("blue", "orange", "darkred")) +
-  labs(color = "Type") +
-  theme_minimal() +
-  theme(axis.text.x = element_blank(), axis.text.y = element_blank()) 
+tsne_embedding <- as.data.frame(tsne$Y)
+tsne_embedding <- dplyr::rename(tsne_embedding,
+                                tsneX = V1, tsneY = V2)
+
+pdfsense <- dplyr::bind_cols(pdfsense,
+                             tsne_embedding) 
+
 ```
+
+We can view the clusters:
+
+```{r}
+limn_xy(pdfsense, tsneX, tsneY, Type,
+        brush_transform = "median")
+```
+
 
 We can link a tour view next to the embedding to give us
 a clear picture of the clustering:
 
 ```{r}
-view <- link_left(highlight, pl)
-view 
+pdfsense$ID <- factor(pdfsense$ID)
+limn_tour_xylink(pdfsense, 
+                 PC1:PC6,
+                 tsneX, tsneY,
+                 c(Type, ID))
 ```
 
-Next we can look at some diagnostics for the embedding, we can view
-the cluster centroids via a tour:
-
-```{r}
-pdfsense <- estimate_neighbors(pdfsense, 30, .on = "tsne_approx")
-pl +
-  overlay_snn_centroids(sampleFactors(tsne)[,1],
-                        sampleFactors(tsne)[,2],
-                        neighborSet(pdfsense),
-                        size = 5)
-```
-
-```{r sneezy-centroids}
-sneezy_centroids(pdfsense)
-```
 
 
