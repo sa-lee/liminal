@@ -149,7 +149,7 @@ init_tour_matrix <- function(.data, cols, clamp = TRUE) {
 
 init_tour <- function(tour_data, path, color_tbl) {
   # half range
-  half_range <- 0.75*compute_half_range(tour_data)
+  half_range <- compute_half_range(tour_data)
   cols <- colnames(tour_data)
 
   # intialise views
