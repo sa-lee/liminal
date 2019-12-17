@@ -19,9 +19,10 @@ limn_tour_ui <- function(view = "simple") {
 
   # views always present
   tview <- vegawidget::vegawidgetOutput("tourView")
-  aview <- vegawidget::vegawidgetOutput("axisView", height = "33%")
+  aview <- vegawidget::vegawidgetOutput("axisView")
+  play <- actionButton("play", "Play", icon = shiny::icon("play"))
 
-  tview_ui <-   shiny::fluidRow(tview)
+  tview_ui <-   shiny::fluidRow(shiny::column(2, play), aview, tview)
 
   if (view == "linked") {
     scatter_view <- vegawidget::vegawidgetOutput(
@@ -38,7 +39,6 @@ limn_tour_ui <- function(view = "simple") {
   shiny::fluidPage(
     tview_ui,
     shiny::fluidRow(
-      shiny::column(4, aview, style='padding:0px; margin: 0 auto;'),
       shiny::column(4, shiny::verbatimTextOutput(outputId = "half_range"))
     )
   )
@@ -114,16 +114,16 @@ limn_tour_server <- function(tour_data, path, color_tbl, transformer) {
       vegawidget::vegawidget(
         vegawidget::as_vegaspec(init[["tourView"]]),
         embed = vegawidget::vega_embed(actions = FALSE, tooltip = FALSE),
-        height = 450,
-        width = 450
+        height = 200,
+        width = 250
       )
     )
     output[["axisView"]] <- vegawidget::renderVegawidget(
       vegawidget::vegawidget(
         vegawidget::as_vegaspec(init[["axisView"]]),
         embed = vegawidget::vega_embed(actions = FALSE, tooltip = FALSE),
-        width = 450,
-        height = 300
+        width = 200,
+        height = 200
       )
     )
 
@@ -138,7 +138,12 @@ limn_tour_server <- function(tour_data, path, color_tbl, transformer) {
     rct_half_range <- rct_half_range(rct_active_zoom, init[["half_range"]])
     rct_pause <- rct_pause(rct_active_brush)
 
-    rct_tour <- rct_tour(path, rct_event = rct_pause, session = session)
+    rct_play <- shiny::eventReactive(input$play, input$play > 0)
+
+    rct_tour <- rct_tour(path,
+                         rct_event = rct_pause,
+                         rct_refresh = rct_play,
+                         session = session)
     rct_axes <- stream_axes(rct_tour, init[["cols"]])
     rct_proj <- stream_proj(rct_tour,
                             tour_data,
@@ -146,15 +151,18 @@ limn_tour_server <- function(tour_data, path, color_tbl, transformer) {
                             rct_half_range(),
                             transformer)
 
-    # observers
 
-    output$half_range <- shiny::renderPrint({
-      # protects against initial NULL
-      list(rct_half_range(), rct_active_brush())
-    })
+
+
+    # observers
 
     vegawidget::vw_shiny_set_data("axisView", "rotations", rct_axes())
     vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())
+
+    output$half_range <- shiny::renderPrint({
+      # protects against initial NULL
+      list(rct_half_range(), rct_active_brush(), rct_play())
+    })
 
   }
 }

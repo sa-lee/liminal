@@ -19,16 +19,26 @@ rct_half_range <- function(rct_zoom, half_range) {
   })
 }
 
-rct_tour <- function(plan, aps = 1, fps = 24, rct_event, session) {
+rct_tour <- function(plan, aps = 1, fps = 24, rct_event, rct_refresh, session) {
   current <- plan(0)
   shiny::reactive({
+    replay <- rct_refresh()
     play <- current$step >= 0
     play <- !rct_event() && play
+
+    if (replay) {
+      current <<- plan(0)
+      print(current$step)
+
+    }
+
+
     if (play) {
       current <<- plan(aps/fps)
       invalidateLater(1000/fps, session)
       Sys.sleep(1/fps)
     }
+
     current
   })
 }
