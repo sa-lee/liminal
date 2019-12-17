@@ -1,9 +1,35 @@
 # Reactives for a given tour path
-rct_tour <- function(plan, aps = 1, fps = 24, session) {
+
+rct_pause <- function(rct_shift_click) {
   shiny::reactive({
-    step <- plan(aps/fps)
-    invalidateLater(1000/fps, session)
-    step
+    res <- rct_shift_click()
+    length(res) > 0
+  })
+}
+
+# reactive half range
+rct_half_range <- function(rct_zoom, half_range) {
+  shiny::reactive({
+    res <- rct_zoom()
+    res <- unlist(res)
+    if (length(res)) {
+      return(max(abs(res)))
+    }
+    return(half_range)
+  })
+}
+
+rct_tour <- function(plan, aps = 1, fps = 24, rct_event, session) {
+  current <- plan(0)
+  shiny::reactive({
+    play <- current$step >= 0
+    play <- !rct_event() && play
+    if (play) {
+      current <<- plan(aps/fps)
+      invalidateLater(1000/fps, session)
+      Sys.sleep(1/fps)
+    }
+    current
   })
 }
 

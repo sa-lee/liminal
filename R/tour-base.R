@@ -19,8 +19,7 @@ limn_tour_ui <- function(view = "simple") {
 
   # views always present
   tview <- vegawidget::vegawidgetOutput("tourView")
-  aview <- vegawidget::vegawidgetOutput("axisView",
-                                        height = "33%")
+  aview <- vegawidget::vegawidgetOutput("axisView", height = "33%")
 
   tview_ui <-   shiny::fluidRow(tview)
 
@@ -39,7 +38,8 @@ limn_tour_ui <- function(view = "simple") {
   shiny::fluidPage(
     tview_ui,
     shiny::fluidRow(
-      shiny::column(4, aview, style='padding:0px; margin: 0 auto;')
+      shiny::column(4, aview, style='padding:0px; margin: 0 auto;'),
+      shiny::column(4, shiny::verbatimTextOutput(outputId = "half_range"))
     )
   )
 }
@@ -57,6 +57,7 @@ render_init <- function(source_values, half_range) {
   base_schema <- schema_scatter()
   domain <- c(-half_range, half_range)
 
+  base_schema[["mark"]] <- list(type = "circle", clip = TRUE)
   base_schema[["encoding"]][["x"]][["field"]] <- "x"
   base_schema[["encoding"]][["x"]][["scale"]] <- list(domain = domain)
   base_schema[["encoding"]][["x"]][["axis"]] <- blank_axis()
@@ -64,6 +65,19 @@ render_init <- function(source_values, half_range) {
   base_schema[["encoding"]][["y"]][["field"]] <- "y"
   base_schema[["encoding"]][["y"]][["scale"]] <- list(domain = domain)
   base_schema[["encoding"]][["y"]][["axis"]] <- blank_axis()
+
+
+  # selection on shift-click
+  shift_click <- "[mousedown[event.shiftKey], mouseup] > mousemove"
+  base_schema[["selection"]][["brush"]][["on"]] <- shift_click
+  base_schema[["selection"]][["brush"]][["translate"]] <- shift_click
+  base_schema[["seletion"]][["brush"]][["zoom"]] <- FALSE
+
+
+  # pan + zoom
+  base_schema[["selection"]][["grid"]] <-  list(type = "interval",
+                                                bind = "scales",
+                                                translate = FALSE)
 
   if (ncol(source_values) == 3) {
     col_nm <- colnames(source_values)[3]
@@ -99,26 +113,45 @@ limn_tour_server <- function(tour_data, path, color_tbl, transformer) {
     output[["tourView"]] <- vegawidget::renderVegawidget(
       vegawidget::vegawidget(
         vegawidget::as_vegaspec(init[["tourView"]]),
-        embed = vegawidget::vega_embed(actions = FALSE),
-        height = 300,
+        embed = vegawidget::vega_embed(actions = FALSE, tooltip = FALSE),
+        height = 450,
         width = 450
       )
     )
     output[["axisView"]] <- vegawidget::renderVegawidget(
       vegawidget::vegawidget(
         vegawidget::as_vegaspec(init[["axisView"]]),
-        embed = vegawidget::vega_embed(actions = FALSE),
-        width = 350,
+        embed = vegawidget::vega_embed(actions = FALSE, tooltip = FALSE),
+        width = 450,
         height = 300
       )
     )
-    rct_tour <- rct_tour(path, session = session)
+
+    # reactives
+    rct_active_zoom <-  vegawidget::vw_shiny_get_signal("tourView",
+                                            name = "grid",
+                                            body_value = "value")
+    rct_active_brush <- vegawidget::vw_shiny_get_signal("tourView",
+                                                     name = "brush",
+                                                     body_value = "value")
+
+    rct_half_range <- rct_half_range(rct_active_zoom, init[["half_range"]])
+    rct_pause <- rct_pause(rct_active_brush)
+
+    rct_tour <- rct_tour(path, rct_event = rct_pause, session = session)
     rct_axes <- stream_axes(rct_tour, init[["cols"]])
     rct_proj <- stream_proj(rct_tour,
                             tour_data,
                             init[["source_values"]],
-                            init[["half_range"]],
+                            rct_half_range(),
                             transformer)
+
+    # observers
+
+    output$half_range <- shiny::renderPrint({
+      # protects against initial NULL
+      list(rct_half_range(), rct_active_brush())
+    })
 
     vegawidget::vw_shiny_set_data("axisView", "rotations", rct_axes())
     vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())

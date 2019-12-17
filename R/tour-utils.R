@@ -83,3 +83,7 @@ compute_tour_path <- function(.data, tour_path, start, max_bases, step_size) {
 
 }
 
+`%||%` <- function(a, b) {
+  if (!is.null(a)) a else b
+}
+
