@@ -20,7 +20,7 @@ limn_tour_ui <- function(view = "simple") {
   # views always present
   tview <- vegawidget::vegawidgetOutput("tourView")
   aview <- vegawidget::vegawidgetOutput("axisView")
-  play <- actionButton("play", "Play", icon = shiny::icon("play"))
+  play <- shiny::actionButton("play", "Play", icon = shiny::icon("play"))
 
   tview_ui <-   shiny::fluidRow(shiny::column(2, play), aview, tview)
 
