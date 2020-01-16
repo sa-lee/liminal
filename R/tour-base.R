@@ -183,7 +183,11 @@ generate_axes <- function(source_values, cols) {
 }
 
 init_tour_matrix <- function(.data, cols, clamp = TRUE) {
-  tour_data <- as.matrix(dplyr::select(.data, !!cols))
+  if (is.null(cols)) {
+    tour_data <- as.matrix(.data)
+  } else {
+    tour_data <- as.matrix(dplyr::select(.data, !!cols))
+  }
   if (clamp) return(clamp(tour_data))
   tour_data
 }
