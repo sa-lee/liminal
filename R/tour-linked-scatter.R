@@ -28,6 +28,8 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
   y_color <- rlang::enquo(y_color)
   y_views <- y_spec(y, !!y_color)
 
+  x_views[["tourView"]][["encoding"]][["color"]][["condition"]][["selection"]] <- list(`or` = list('brush', 'y_brush'))
+
   x_views[["source_values"]] <- if (by == "rowid") {
     dplyr::bind_cols(x_views[["source_values"]], y_views[["source_values"]])
   } else {
@@ -38,7 +40,7 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
   tspec <- x_views[["tourView"]][c("$schema", "data")]
   hconcat <- list(hconcat = list(x_views[["tourView"]][!names(x_views[["tourView"]]) %in% c("$schema", "data")],
                                  y_views[["y_spec"]])
-                  )
+  )
   tspec[["data"]][["values"]] <- x_views[["source_values"]]
 
   x_views[["tourView"]] <- c(tspec, hconcat)
@@ -124,14 +126,14 @@ y_spec <- function(y, y_color) {
                             type = coltype,
                             selection = list(`or` = list("brush", "y_brush"))),
                             value = "grey"
-                            )
                           )
-                   )
+                     )
+  )
   mark <- list(mark = list(type = "circle", clip = TRUE))
   selection <- list(selection = list("y_brush" = list(type = "interval")))
 
   y_spec <- c(encoding,
-                 mark,
-                 selection)
+              mark,
+              selection)
   list(source_values = y_data, y_spec = y_spec)
 }
