@@ -127,8 +127,7 @@ We can link a tour view next to the embedding to give us
 a clear picture of the clustering:
 
 ```{r}
-pdfsense$ID <- factor(pdfsense$ID)
-limn_tour_xylink(x = dplyr::select(pdfsense, PC1:PC56, Type),
+limn_tour_xylink(x = dplyr::select(pdfsense, PC1:PC6, Type),
                  y = tsne_embedding,
                  x_color = Type,
                  y_color= Type)
