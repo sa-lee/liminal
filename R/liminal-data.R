@@ -38,3 +38,16 @@
 #'
 #' @source [http://www.physics.smu.edu/botingw/PDFsense_web_histlogy](http://www.physics.smu.edu/botingw/PDFsense_web_histlogy)
 "pdfsense"
+
+#' A high-dimensional tree data structure with 10 branching points.
+#'
+#' @details Data are obtained from diffusion limited aggregation
+#' tree simulation in the `phate` python and `phateR` packages, but
+#' reconstructed as a wide data.frame rather than a list.
+#'
+#' There are 3000 rows and 101 columns, the first 100 columns are labelled
+#' dim1 - dim100, and are numeric, while the final column is a
+#' factor representing the branch id.
+#'
+#' @source [https://github.com/KrishnaswamyLab/PHATE/blob/master/Python/phate/tree.py]
+"fake_trees"
