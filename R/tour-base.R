@@ -71,7 +71,7 @@ render_init <- function(source_values, half_range) {
   shift_click <- "[mousedown[event.shiftKey], mouseup] > mousemove"
   base_schema[["selection"]][["brush"]][["on"]] <- shift_click
   base_schema[["selection"]][["brush"]][["translate"]] <- shift_click
-  base_schema[["seletion"]][["brush"]][["zoom"]] <- FALSE
+  base_schema[["selection"]][["brush"]][["zoom"]] <- FALSE
 
 
   # pan + zoom

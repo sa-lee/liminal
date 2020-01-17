@@ -112,16 +112,13 @@ Again we can augment the embedding onto the pdfsense data:
 tsne_embedding <- as.data.frame(tsne$Y)
 tsne_embedding <- dplyr::rename(tsne_embedding,
                                 tsneX = V1, tsneY = V2)
-
-pdfsense <- dplyr::bind_cols(pdfsense,
-                             tsne_embedding) 
-
+tsne_embedding$Type <- pdfsense$Type
 ```
 
 We can view the clusters:
 
 ```{r}
-limn_xy(pdfsense, tsneX, tsneY, Type,
+limn_xy(tsne_embedding, tsneX, tsneY, Type,
         brush_transform = "median")
 ```
 
@@ -131,10 +128,10 @@ a clear picture of the clustering:
 
 ```{r}
 pdfsense$ID <- factor(pdfsense$ID)
-limn_tour_xylink(pdfsense, 
-                 PC1:PC6,
-                 tsneX, tsneY,
-                 c(Type, ID))
+limn_tour_xylink(x = dplyr::select(pdfsense, PC1:PC56, Type),
+                 y = tsne_embedding,
+                 x_color = Type,
+                 y_color= Type)
 ```
 
 

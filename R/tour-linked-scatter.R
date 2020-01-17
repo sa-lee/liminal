@@ -11,13 +11,13 @@
 #' @param ...
 #'
 #' @export
-limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL, tour_path = tourr::grand_tour(), clamp = TRUE, ...) {
+limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL, tour_path = tourr::grand_tour(), clamp = TRUE, transformer = function(x) scale(x, scale = FALSE), ...) {
 
   # generate tour data
   x_color <- rlang::enquo(x_color)
-  x_color_tbl <- dplyr::select(x, rlang::quo(!!x_color))
+  x_color_tbl <- dplyr::select(x, !!x_color)
   # tour cols are everything but color column
-  x_tcols <- dplyr::select(x, rlang::quo(-!!x_color))
+  x_tcols <- dplyr::select(x, !!rlang::quo(-!!x_color))
   # convert to a matrix
   tour_data <- init_tour_matrix(x_tcols, cols = NULL, clamp)
   # establish the path
@@ -25,21 +25,81 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
 
   x_views <- init_tour(tour_data, path, x_color_tbl)
 
+  y_color <- rlang::enquo(y_color)
+  y_views <- y_spec(y, !!y_color)
 
-  y_views <- y_spec(y, y_color)
-
-  source_values <- if (by == "rowid") {
+  x_views[["source_values"]] <- if (by == "rowid") {
     dplyr::bind_cols(x_views[["source_values"]], y_views[["source_values"]])
   } else {
     dplyr::inner_join(x_views[["source_values"]], y_views[["source_values"]],
                       by = by)
   }
 
+  tspec <- x_views[["tourView"]][c("$schema", "data")]
+  hconcat <- list(hconcat = list(x_views[["tourView"]][!names(x_views[["tourView"]]) %in% c("$schema", "data")],
+                                 y_views[["y_spec"]])
+                  )
+  tspec[["data"]][["values"]] <- x_views[["source_values"]]
 
+  x_views[["tourView"]] <- c(tspec, hconcat)
+
+
+  server <- function(input, output, session) {
+    output[["tourView"]] <- vegawidget::renderVegawidget(
+      vegawidget::vegawidget(
+        vegawidget::as_vegaspec(x_views[["tourView"]]),
+        embed = vegawidget::vega_embed(actions = FALSE, tooltip = FALSE)
+      )
+    )
+    output[["axisView"]] <- vegawidget::renderVegawidget(
+      vegawidget::vegawidget(
+        vegawidget::as_vegaspec(x_views[["axisView"]]),
+        embed = vegawidget::vega_embed(actions = FALSE, tooltip = FALSE),
+        width = 200,
+        height = 200
+      )
+    )
+
+    # reactives
+    rct_active_zoom <-  vegawidget::vw_shiny_get_signal("tourView",
+                                                        name = "grid",
+                                                        body_value = "value")
+    rct_active_brush <- vegawidget::vw_shiny_get_signal("tourView",
+                                                        name = "brush",
+                                                        body_value = "value")
+
+    rct_half_range <- rct_half_range(rct_active_zoom, x_views[["half_range"]])
+    rct_pause <- rct_pause(rct_active_brush)
+
+    rct_play <- shiny::eventReactive(input$play, input$play > 0)
+
+    rct_tour <- rct_tour(path,
+                         rct_event = rct_pause,
+                         rct_refresh = rct_play,
+                         session = session)
+    rct_axes <- stream_axes(rct_tour, x_views[["cols"]])
+    rct_proj <- stream_proj(rct_tour,
+                            tour_data,
+                            x_views[["source_values"]],
+                            rct_half_range(),
+                            transformer)
+
+
+
+
+    # observers
+
+    vegawidget::vw_shiny_set_data("axisView", "rotations", rct_axes())
+    vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())
+
+    output$half_range <- shiny::renderPrint({
+      # protects against initial NULL
+      list(rct_half_range(), rct_active_brush(), rct_play(), rct_proj())
+    })
+  }
 
   # generate app
-  server <- limn_tour_linked_server(tour_data, path, scatter_spec, transformer)
-  ui <- limn_tour_ui("linked")
+  ui <- limn_tour_ui()
   shiny::shinyApp(ui, server)
 
 }
@@ -70,42 +130,8 @@ y_spec <- function(y, y_color) {
   mark <- list(mark = list(type = "circle", clip = TRUE))
   selection <- list(selection = list("y_brush" = list(type = "interval")))
 
-  y_spec <- list(encoding,
+  y_spec <- c(encoding,
                  mark,
                  selection)
   list(source_values = y_data, y_spec = y_spec)
-}
-
-
-limn_tour_linked_server <- function(tour_data, path, scatter_spec, transformer) {
-  init <- init_tour(tour_data, path, data.frame())
-
-  function(input, output, session) {
-    output[["tourView"]] <- vegawidget::renderVegawidget(
-      vegawidget::vegawidget(
-        vegawidget::as_vegaspec(init[["tourView"]]),
-        embed = vegawidget::vega_embed(actions = FALSE)
-      )
-    )
-    output[["axisView"]] <- vegawidget::renderVegawidget(
-      vegawidget::vegawidget(
-        vegawidget::as_vegaspec(init[["axisView"]]),
-        embed = vegawidget::vega_embed(actions = FALSE)
-      )
-    )
-
-    output[["scatterView"]] <- vegawidget::renderVegawidget(scatter_spec)
-
-    rct_tour <- rct_tour(path, session = session)
-    rct_axes <- stream_axes(rct_tour, init[["cols"]])
-    rct_proj <- stream_proj(rct_tour,
-                            tour_data,
-                            init[["source_values"]],
-                            init[["half_range"]],
-                            transformer)
-
-    vegawidget::vw_shiny_set_data("axisView", "rotations", rct_axes())
-    vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())
-
-  }
 }
