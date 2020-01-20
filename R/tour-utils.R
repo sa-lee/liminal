@@ -14,7 +14,7 @@ clamp <- function(.data) {
 
 #' Rescale all columns by median and IQR
 #' @param .data A 'matrix' like object
-#' @importFrom
+#' @importFrom matrixStats colMedians colMads
 clamp_robust <- function(.data) {
   centers <- matrixStats::colMedians(.data)
   scales <- matrixStats::colMads(.data)
