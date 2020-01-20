@@ -17,30 +17,43 @@ limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour()
 limn_tour_ui <- function(view = "simple") {
   view <- match.arg(view, c("simple", "linked"))
 
-  # views always present
-  tview <- vegawidget::vegawidgetOutput("tourView")
-  aview <- vegawidget::vegawidgetOutput("axisView")
+  # control panel
+  title <- shiny::h4("liminal controls")
   play <- shiny::actionButton("play", "Play", icon = shiny::icon("play"))
 
-  tview_ui <-   shiny::fluidRow(shiny::column(2, play), aview, tview)
+  half_rng <- shiny::textOutput(outputId = "half_range")
 
   if (view == "linked") {
-    scatter_view <- vegawidget::vegawidgetOutput(
-      "scatterView",
-      width = "100%",
-      height = "80%"
+    brush_rdo <- shiny::radioButtons("brush_selector",
+                                     "Select Brush Type",
+                                     choices = c("linked", "neighbors", "centroids"))
+    bottom_row <- shiny::fluidRow(
+      shiny::column(4,
+                    title,
+                    play,
+                    brush_rdo
+      ),
+      shiny::column(4, shiny::h5("Half Range"), half_rng)
     )
-    tview_ui <- shiny::fluidRow(
-      shiny::column(4, tview, style='padding:0px;'),
-      shiny::column(4, scatter_view)
+  } else {
+    bottom_row <- shiny::fluidRow(
+      shiny::column(4, play),
+      shiny::column(4, shiny::h5("Half Range"), half_rng)
     )
   }
 
+
+  # views always present
+  tview <- vegawidget::vegawidgetOutput("tourView")
+  aview <- vegawidget::vegawidgetOutput("axisView")
+
+  tview_ui <-   shiny::fluidRow(shiny::column(12, tview),
+                                shiny::column(6, aview)
+  )
+
   shiny::fluidPage(
     tview_ui,
-    shiny::fluidRow(
-      shiny::column(4, shiny::verbatimTextOutput(outputId = "half_range"))
-    )
+    bottom_row
   )
 }
 
@@ -159,9 +172,9 @@ limn_tour_server <- function(tour_data, path, color_tbl, transformer) {
     vegawidget::vw_shiny_set_data("axisView", "rotations", rct_axes())
     vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())
 
-    output$half_range <- shiny::renderPrint({
+    output$half_range <- shiny::renderText({
       # protects against initial NULL
-      list(rct_half_range(), rct_active_brush(), rct_play())
+      rct_half_range()
     })
 
   }
