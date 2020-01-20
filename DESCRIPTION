@@ -29,4 +29,7 @@ Suggests:
     scater,
     TENxPBMCData,
     igraph,
-    Rtsne
+    Rtsne,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
