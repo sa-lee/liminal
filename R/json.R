@@ -1,5 +1,5 @@
 schema_dir <- function() {
-  system.file("inst", "extdata", "schemas", package = "liminal")
+  system.file("extdata", "schemas", package = "liminal")
 }
 
 schema_scatter <- function() {
