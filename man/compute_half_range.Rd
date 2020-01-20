@@ -4,10 +4,13 @@
 \alias{compute_half_range}
 \title{Compute range of axes for bases}
 \usage{
-compute_half_range(.data)
+compute_half_range(.data, center = TRUE)
 }
 \arguments{
 \item{.data}{A 'matrix' like object}
+
+\item{center}{Subtract \code{colMeans(.data)} from each column in \code{.data}?
+Default is TRUE.}
 }
 \description{
 Compute range of axes for bases
