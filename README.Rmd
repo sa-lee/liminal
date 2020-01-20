@@ -1,16 +1,16 @@
 ---
 output: github_document
-always_allow_html: true
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, include = FALSE}
+```{r, echo = FALSE}
+library(vegawidget)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  dev = "svg"
 )
 ```
 
@@ -45,15 +45,15 @@ we can see the following:
 Let's take a look at a high-dimensional
 tree structured data set:
 
-```{r}
+```{r init}
 library(liminal)
-dplyr::glimpse(fake_trees)
+dim(fake_trees)
 ```
 
 This data set has 3000 observations and 100 numeric variables,
 and has ten branches. We can generate principal components:
 
-```{r}
+```{r pc-view}
 pcs  <- prcomp(fake_trees[, -ncol(fake_trees)])
 # var explained
 head(cumsum(pcs$sdev / sum(pcs$sdev)))
@@ -61,7 +61,7 @@ head(cumsum(pcs$sdev / sum(pcs$sdev)))
 
 And visualise the results as interactive scatter plot by augmenting the orginal data
 
-```{r}
+```{r pca-xy}
 fake_trees <- dplyr::bind_cols(fake_trees, as.data.frame(pcs$x))
 limn_xy(fake_trees, x = PC1, y = PC2, color = branches)
 ```
@@ -79,7 +79,7 @@ The blue branch is hidden and connects all other branches.
 
 We can also compare this to t-SNE embedding:
 
-```{r}
+```{r tsne-xy}
 set.seed(2099)
 tsne <- Rtsne::Rtsne(dplyr::select(fake_trees, dplyr::starts_with("dim")))
 
