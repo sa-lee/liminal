@@ -1,5 +1,6 @@
 ---
 output: github_document
+always_allow_html: true
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -40,3 +41,60 @@ we can see the following:
 3. identify 'interesting' shapes or points in the data
 
 ## Quick start
+
+Let's take a look at a high-dimensional
+tree structured data set:
+
+```{r}
+library(liminal)
+dplyr::glimpse(fake_trees)
+```
+
+This data set has 3000 observations and 100 numeric variables,
+and has ten branches. We can generate principal components:
+
+```{r}
+pcs  <- prcomp(fake_trees[, -ncol(fake_trees)])
+# var explained
+head(cumsum(pcs$sdev / sum(pcs$sdev)))
+```
+
+And visualise the results as interactive scatter plot by augmenting the orginal data
+
+```{r}
+fake_trees <- dplyr::bind_cols(fake_trees, as.data.frame(pcs$x))
+limn_xy(fake_trees, x = PC1, y = PC2, color = branches)
+```
+
+We see some separation of the branches in first two principal components,
+however, we can't see each of the branches clearly or their relation to each
+other. We can tourr them to get an idea of underlying structure:
+
+```{r, eval = FALSE}
+# this loads a shiny app
+limn_tour(fake_trees, PC1:PC15, color = branches)
+```
+
+The blue branch is hidden and connects all other branches. 
+
+We can also compare this to t-SNE embedding:
+
+```{r}
+set.seed(2099)
+tsne <- Rtsne::Rtsne(dplyr::select(fake_trees, dplyr::starts_with("dim")))
+
+tsne_df <- data.frame(tsneX = tsne$Y[,1],
+                      tsneY = tsne$Y[,2],
+                      branches = fake_trees$branches)
+limn_xy(tsne_df, x = tsneX, y = tsneY, color = branches)
+```
+
+The topology is a little messed up. We can see where our embedding is different
+via a linked scatter plot:
+
+```{r, eval = FALSE}
+limn_tour_xylink(dplyr::select(fake_trees, PC1:PC10, branches),
+                 tsne_df,
+                 x_color = branches, 
+                 y_color = branches)
+```
