@@ -17,6 +17,11 @@ limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour()
 limn_tour_ui <- function(view = "simple") {
   view <- match.arg(view, c("simple", "linked"))
 
+
+  # views always present
+  tview <- vegawidget::vegawidgetOutput("tourView")
+  aview <- vegawidget::vegawidgetOutput("axisView")
+
   # control panel
   title <- shiny::h4("liminal controls")
   play <- shiny::actionButton("play", "Play", icon = shiny::icon("play"))
@@ -28,6 +33,7 @@ limn_tour_ui <- function(view = "simple") {
                                      "Select Brush Type",
                                      choices = c("linked", "neighbors", "centroids"))
     bottom_row <- shiny::fluidRow(
+      shiny::column(4, aview),
       shiny::column(4,
                     title,
                     play,
@@ -37,19 +43,13 @@ limn_tour_ui <- function(view = "simple") {
     )
   } else {
     bottom_row <- shiny::fluidRow(
+      shiny::column(4, aview),
       shiny::column(4, play),
       shiny::column(4, shiny::h5("Half Range"), half_rng)
     )
   }
 
-
-  # views always present
-  tview <- vegawidget::vegawidgetOutput("tourView")
-  aview <- vegawidget::vegawidgetOutput("axisView")
-
-  tview_ui <-   shiny::fluidRow(shiny::column(12, tview),
-                                shiny::column(6, aview)
-  )
+  tview_ui <-   shiny::fluidRow(shiny::column(12, tview))
 
   shiny::fluidPage(
     tview_ui,

@@ -96,12 +96,12 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
 
     output$half_range <- shiny::renderPrint({
       # protects against initial NULL
-      list(rct_half_range(), rct_active_brush(), rct_play(), rct_proj())
+      rct_half_range()
     })
   }
 
   # generate app
-  ui <- limn_tour_ui()
+  ui <- limn_tour_ui("linked")
   shiny::shinyApp(ui, server)
 
 }
