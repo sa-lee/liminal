@@ -98,11 +98,11 @@ limn_tour(pdfsense, PC1:PC6, Type)
 Now we can set up a non-linear embedding via t-SNE, here
 we embed all 56 principal components.
 ```{r}
-set.seed(1999)
+set.seed(3099)
 tsne <- Rtsne::Rtsne(dplyr::select(pdfsense, PC1:PC56),
                      pca = FALSE, 
                      normalize = TRUE,
-                     perplexity = 10,
+                     perplexity = 50,
                      exaggeration_factor = nrow(pdfsense) / 10)
 ```
 
@@ -126,7 +126,7 @@ limn_xy(tsne_embedding, tsneX, tsneY, Type,
 We can link a tour view next to the embedding to give us
 a clear picture of the clustering:
 
-```{r}
+```{r, eval = FALSE}
 limn_tour_xylink(x = dplyr::select(pdfsense, PC1:PC6, Type),
                  y = tsne_embedding,
                  x_color = Type,
