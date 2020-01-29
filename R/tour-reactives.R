@@ -1,5 +1,6 @@
 # Reactives for a given tour path
 
+#' @importFrom shiny reactive invalidateLater
 rct_pause <- function(rct_shift_click) {
   shiny::reactive({
     res <- rct_shift_click()
@@ -29,7 +30,7 @@ rct_tour <- function(plan, aps = 1, fps = 12, rct_event, rct_refresh, session) {
 
     if (play) {
       current <<- plan(aps/fps)
-      invalidateLater(1000/fps, session)
+      shiny::invalidateLater(1000/fps, session)
       Sys.sleep(1/fps)
     }
 
@@ -43,10 +44,10 @@ stream_axes <- function(rct_tour, cols) {
   })
 }
 
-stream_proj <- function(rct_tour, tour_data, source_values, half_range, transformer) {
+stream_proj <- function(rct_tour, tour_data, source_values, half_range, morph) {
   shiny::reactive({
     x <- tour_data %*% rct_tour()$proj
-    x <- transformer(x) / half_range
+    x <- morph(x) / half_range
     source_values[, c("x","y")] <- as.data.frame(x)
     source_values
   })

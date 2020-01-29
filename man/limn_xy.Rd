@@ -39,5 +39,4 @@ Brushed Scatter Plot
 }
 \examples{
 limn_xy(mtcars, mpg, hp, factor(cyl))
-
 }

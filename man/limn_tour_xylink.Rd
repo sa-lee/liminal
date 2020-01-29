@@ -11,9 +11,8 @@ limn_tour_xylink(
   x_color = NULL,
   y_color = NULL,
   tour_path = tourr::grand_tour(),
-  clamp = TRUE,
-  transformer = function(x) scale(x, scale = FALSE),
-  ...
+  clamp = clamp,
+  morph = morph_center
 )
 }
 \arguments{
@@ -28,11 +27,13 @@ for details. By default we use the row index for both tables.}
 
 \item{y_color}{an optional bare column name for the colour mapping the linked view}
 
-\item{tour_path}{the name of the tour path, defaul is \code{tourr::grand_tour()}}
+\item{tour_path}{the tour path to take, the default is \code{\link[tourr:grand_tour]{tourr::grand_tour()}}.}
 
-\item{clamp}{rescale tour variables to lie in closed interval between 0 and 1.}
+\item{clamp}{A function that rescales tour columns. Default is \code{\link[=clamp]{clamp()}}
+To not perform any scaling use \code{\link[=identity]{identity()}}.}
 
-\item{...}{}
+\item{morph}{A callback function that modifies the projection, default is to
+center the projection using \code{\link[=morph_center]{morph_center()}}.}
 }
 \description{
 Tour view linked

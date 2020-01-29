@@ -6,12 +6,14 @@
 #' for details. By default we use the row index for both tables.
 #' @param x_color an optional bare column name in `x`, for the color mapping in the tour view
 #' @param y_color an optional bare column name for the colour mapping the linked view
-#' @param tour_path the name of the tour path, defaul is `tourr::grand_tour()`
-#' @param clamp rescale tour variables to lie in closed interval between 0 and 1.
-#' @param ...
+#' @param tour_path the tour path to take, the default is [tourr::grand_tour()].
+#' @param clamp A function that rescales tour columns. Default is [clamp()]
+#' To not perform any scaling use [identity()].
+#' @param morph A callback function that modifies the projection, default is to
+#' center the projection using [morph_center()].
 #'
 #' @export
-limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL, tour_path = tourr::grand_tour(), clamp = TRUE, transformer = function(x) scale(x, scale = FALSE), ...) {
+limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL, tour_path = tourr::grand_tour(), clamp = clamp, morph = morph_center) {
 
   # generate tour data
   x_color <- rlang::enquo(x_color)
@@ -84,7 +86,7 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
                             tour_data,
                             x_views[["source_values"]],
                             rct_half_range(),
-                            transformer)
+                            morph)
 
 
 

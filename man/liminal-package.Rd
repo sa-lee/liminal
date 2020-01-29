@@ -4,9 +4,13 @@
 \name{liminal-package}
 \alias{liminal}
 \alias{liminal-package}
-\title{liminal: What the Package Does (Title Case)}
+\title{liminal: Multivariate Data Visualization With Tours and Embeddings}
 \description{
 More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
+}
+\author{
+\strong{Maintainer}: Stuart Lee \email{stuart.lee1@monash.edu}
+
 }
 \keyword{internal}

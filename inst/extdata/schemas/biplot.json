@@ -42,7 +42,7 @@
       "encoding": {
         "order": {
           "field": "group",
-          "type": "nominal"
+          "type": "quantitative"
         },
         "color": {
           "value": "black"
@@ -52,7 +52,7 @@
     {
       "mark": {
         "type": "text",
-        "align": "left",
+        "align": "center",
         "dy": -3
       },
       "encoding": {

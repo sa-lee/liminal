@@ -49,5 +49,5 @@
 #' dim1 - dim100, and are numeric, while the final column is a
 #' factor representing the branch id.
 #'
-#' @source [https://github.com/KrishnaswamyLab/PHATE/blob/master/Python/phate/tree.py]
+#' @source [PHATE](https://github.com/KrishnaswamyLab/PHATE/blob/master/Python/phate/tree.py)
 "fake_trees"

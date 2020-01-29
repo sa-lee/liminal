@@ -9,7 +9,7 @@ schema_scatter <- function() {
 
 schema_axes_tour <- function(name, half_range) {
   json <- file.path(schema_dir(), "biplot.json")
-  ans <- jsonlite::fromJSON(json)
+  ans <- jsonlite::fromJSON(json, simplifyDataFrame = FALSE)
   ans[["data"]][["name"]] <- name
   ans[["encoding"]][["x"]][["scale"]][["domain"]] <- c(-half_range, half_range)
   ans[["encoding"]][["y"]][["scale"]][["domain"]] <- c(-half_range, half_range)

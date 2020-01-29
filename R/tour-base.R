@@ -1,14 +1,29 @@
-limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour(), clamp = TRUE, transformer = function(x) scale(x, scale = FALSE), ...) {
+#' Tour a high dimensional dataset
+#'
+#' @param .data a data.frame to tour
+#' @param cols Columns to tour. This can use a tidyselect specification.
+#' @param color A variable name in `.data`, mapping to the color aesthetic. Default
+#' is to not colour any points.
+#' @param tour_path the tour path to take, the default is [tourr::grand_tour()].
+#' @param rescale A function that rescales tour columns. Default is [clamp()]
+#' To not perform any scaling use [identity()].
+#' @param morph A callback function that modifies the projection, default is to
+#' center the projection using [morph_center()].
+#'
+#'
+#'
+#' @export
+limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour(), rescale = clamp, morph = morph_center) {
   cols <- rlang::enquo(cols)
   color <- rlang::enquo(color)
   # set up tour parameters
-  tour_data <- init_tour_matrix(.data, cols, clamp)
+  tour_data <- init_tour_matrix(.data, cols, rescale)
   path <- tourr::new_tour(tour_data, tour_path)
   # setup colors
   color_data <- dplyr::select(.data, !!color)
 
   # generate app
-  server <- limn_tour_server(tour_data, path, color_data, transformer)
+  server <- limn_tour_server(tour_data, path, color_data, morph)
   ui <- limn_tour_ui("simple")
   shiny::shinyApp(ui, server)
 
@@ -118,7 +133,7 @@ render_init_axes <- function(source_values, half_range, cols) {
   axis_tour
 }
 
-limn_tour_server <- function(tour_data, path, color_tbl, transformer) {
+limn_tour_server <- function(tour_data, path, color_tbl, morph) {
 
   init <- init_tour(tour_data, path, color_tbl)
 
@@ -162,7 +177,7 @@ limn_tour_server <- function(tour_data, path, color_tbl, transformer) {
                             tour_data,
                             init[["source_values"]],
                             rct_half_range(),
-                            transformer)
+                            morph)
 
 
 
@@ -195,14 +210,14 @@ generate_axes <- function(source_values, cols) {
   source_values
 }
 
-init_tour_matrix <- function(.data, cols, clamp = TRUE) {
+init_tour_matrix <- function(.data, cols, clamp) {
+  stopifnot(is.function(clamp))
   if (is.null(cols)) {
     tour_data <- as.matrix(.data)
   } else {
     tour_data <- as.matrix(dplyr::select(.data, !!cols))
   }
-  if (clamp) return(clamp(tour_data))
-  tour_data
+  return(clamp(tour_data))
 }
 
 init_tour <- function(tour_data, path, color_tbl) {

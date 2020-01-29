@@ -1,6 +1,18 @@
 # --- Alternative implementations of tourr package internals ---
 
-#' Rescale all columns to lie in [0,1]
+
+#' Morphing Projections
+#'
+#' @param .data a projection
+#'
+#' @export
+morph_center <- function(.data) {
+  scale(.data, scale = FALSE)
+}
+
+
+#' Rescale all columns to lie in unit interval
+#'
 #' @param .data A 'matrix' like object
 #' @details This function "clamps" all columns in `.data` to fit
 #' onto the `ncol(.data)` dimensional unit cube.
@@ -15,6 +27,7 @@ clamp <- function(.data) {
 #' Rescale all columns by median and IQR
 #' @param .data A 'matrix' like object
 #' @importFrom matrixStats colMedians colMads
+#' @export
 clamp_robust <- function(.data) {
   centers <- matrixStats::colMedians(.data)
   scales <- matrixStats::colMads(.data)

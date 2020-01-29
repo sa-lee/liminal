@@ -2,7 +2,7 @@
 % Please edit documentation in R/tour-utils.R
 \name{clamp}
 \alias{clamp}
-\title{Rescale all columns to lie in \link{0,1}}
+\title{Rescale all columns to lie in unit interval}
 \usage{
 clamp(.data)
 }
@@ -10,7 +10,7 @@ clamp(.data)
 \item{.data}{A 'matrix' like object}
 }
 \description{
-Rescale all columns to lie in \link{0,1}
+Rescale all columns to lie in unit interval
 }
 \details{
 This function "clamps" all columns in \code{.data} to fit

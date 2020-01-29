@@ -20,7 +20,6 @@
 #' @importFrom dplyr transmute bind_cols
 #' @examples
 #' limn_xy(mtcars, mpg, hp, factor(cyl))
-#'
 limn_xy <- function(.data, x, y, color = NULL, brush_name = "brush", brush_transform = NULL, brush_transform_mark = "square", ...) {
   x <- rlang::enquo(x)
   y <- rlang::enquo(y)
@@ -101,8 +100,6 @@ limn_xy <- function(.data, x, y, color = NULL, brush_name = "brush", brush_trans
 #' @param ... other options passed to [vegawidget::vegawidget()]
 #'
 #' @details Note that this assumes that colors are of the same type...
-#'
-#' @importFrom tidyr pivot_longer
 #' @export
 limn_xycol <- function(.data, x, y, colors, ...) {
   x <- rlang::enquo(x)
