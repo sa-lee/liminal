@@ -31,4 +31,6 @@ can see the following:
 2.  the local and global structure of the data
 3.  identify ‘interesting’ shapes or points in the data
 
-See the [liminal vignette]() for details of package usage.
+See the [liminal
+vignette](https://https://sa-lee.github.io/liminal/articles/liminal.html)
+for details of package usage.
