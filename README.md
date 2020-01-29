@@ -23,7 +23,7 @@ and shiny packages) and with a technique from multivariate stastics
 called the tour (via the tourr package). Briefly, a tour is a sequence
 of interploated projections of multivariate data onto lower dimensional
 space. The sequence is displayed as a dynamic visualisation, and enables
-us to see the shadows of the high dimensional data makes in a lower
+us to see the shadows the high dimensional data makes in a lower
 dimensional view. By combining the tour with embedding algorithms, we
 can see the following:
 
