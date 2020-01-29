@@ -25,11 +25,6 @@ Imports:
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.0.2
 Suggests: 
-    scran,
-    scater,
-    TENxPBMCData,
-    BiocSingular,
-    igraph,
     Rtsne,
     knitr,
     rmarkdown
