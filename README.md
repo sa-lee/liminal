@@ -14,7 +14,7 @@ status](https://travis-ci.org/sa-lee/liminal.svg?branch=master)](https://travis-
 The goal of `liminal` is to provide diganostics and visual analytics for
 understanding embedding algorithms such as tSNE. It has been
 [shown](https://distill.pub/2016/misread-tsne/) that in order to produce
-an effective embedding may one have to play with hyperparamters and
+an ‘effective’ embedding one may have to play with hyperparamters and
 various settings for these algorithms.
 
 `liminal` aims to increase the effective use of these algorithms by
