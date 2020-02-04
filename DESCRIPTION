@@ -20,12 +20,12 @@ Imports:
     jsonlite,
     rlang,
     dplyr,
-    ggplot2,
     matrixStats
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.0.2
 Suggests: 
     Rtsne,
     knitr,
-    rmarkdown
+    rmarkdown,
+    uwot
 VignetteBuilder: knitr
