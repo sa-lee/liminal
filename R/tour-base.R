@@ -92,23 +92,19 @@ render_init_axes <- function(source_values, half_range, cols) {
 
 limn_tour_server <- function(tour_data, path, color_tbl, morph) {
 
-  init <- init_tour(tour_data, path, color_tbl)
+  init <- init_tour(tour_data, path, color_tbl, morph)
 
   function(input, output, session) {
     output[["tourView"]] <- vegawidget::renderVegawidget(
       vegawidget::vegawidget(
         vegawidget::as_vegaspec(init[["tourView"]]),
         embed = vegawidget::vega_embed(actions = FALSE, tooltip = FALSE),
-        height = 200,
-        width = 250
       )
     )
     output[["axisView"]] <- vegawidget::renderVegawidget(
       vegawidget::vegawidget(
         vegawidget::as_vegaspec(init[["axisView"]]),
-        embed = vegawidget::vega_embed(actions = FALSE, tooltip = FALSE),
-        width = 200,
-        height = 200
+        embed = vegawidget::vega_embed(actions = FALSE, tooltip = FALSE)
       )
     )
 
@@ -136,16 +132,11 @@ limn_tour_server <- function(tour_data, path, color_tbl, morph) {
                             rct_half_range(),
                             morph)
 
-
-
-
     # observers
-
     vegawidget::vw_shiny_set_data("axisView", "rotations", rct_axes())
     vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())
 
     output$half_range <- shiny::renderText({
-      # protects against initial NULL
       rct_half_range()
     })
 
@@ -176,7 +167,7 @@ init_tour_matrix <- function(.data, cols, rescale) {
   return(rescale(tour_data))
 }
 
-init_tour <- function(tour_data, path, color_tbl) {
+init_tour <- function(tour_data, path, color_tbl, morph) {
   # half range
   half_range <- compute_half_range(tour_data)
   cols <- colnames(tour_data)
@@ -184,7 +175,7 @@ init_tour <- function(tour_data, path, color_tbl) {
   # intialise views
   start <- path(0)$proj
   source_values <- tour_data %*% start
-  source_values <- scale(source_values, scale = FALSE) / half_range
+  source_values <- morph(source_values) / half_range
   colnames(source_values) <- c("x", "y")
   source_values <- as.data.frame(source_values)
 
