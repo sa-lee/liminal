@@ -1,5 +1,4 @@
-# Utility functions
-
+# UI functions
 limn_tour_ui <- function(view = "simple") {
   view <- match.arg(view, c("simple", "linked"))
 
