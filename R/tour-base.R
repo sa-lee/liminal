@@ -17,7 +17,7 @@ limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour()
   cols <- rlang::enquo(cols)
   color <- rlang::enquo(color)
   # set up tour parameters
-  tour_data <- init_tour_matrix(.data, cols, rescale)
+  tour_data <- init_tour_matrix(.data, cols, rescale = rescale)
   path <- tourr::new_tour(tour_data, tour_path)
   # setup colors
   color_data <- dplyr::select(.data, !!color)
@@ -27,49 +27,6 @@ limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour()
   ui <- limn_tour_ui("simple")
   shiny::shinyApp(ui, server)
 
-}
-
-limn_tour_ui <- function(view = "simple") {
-  view <- match.arg(view, c("simple", "linked"))
-
-
-  # views always present
-  tview <- vegawidget::vegawidgetOutput("tourView")
-  aview <- vegawidget::vegawidgetOutput("axisView")
-
-  # control panel
-  title <- shiny::h4("liminal controls")
-  play <- shiny::actionButton("play", "Play", icon = shiny::icon("play"))
-
-  half_rng <- shiny::textOutput(outputId = "half_range")
-
-  if (view == "linked") {
-    brush_rdo <- shiny::radioButtons("brush_selector",
-                                     "Select Brush Type",
-                                     choices = c("linked", "neighbors", "centroids"))
-    bottom_row <- shiny::fluidRow(
-      shiny::column(4, aview),
-      shiny::column(4,
-                    title,
-                    play,
-                    brush_rdo
-      ),
-      shiny::column(4, shiny::h5("Half Range"), half_rng)
-    )
-  } else {
-    bottom_row <- shiny::fluidRow(
-      shiny::column(4, aview),
-      shiny::column(4, play),
-      shiny::column(4, shiny::h5("Half Range"), half_rng)
-    )
-  }
-
-  tview_ui <-   shiny::fluidRow(shiny::column(12, tview))
-
-  shiny::fluidPage(
-    tview_ui,
-    bottom_row
-  )
 }
 
 blank_axis <- function() {
@@ -210,14 +167,13 @@ generate_axes <- function(source_values, cols) {
   source_values
 }
 
-init_tour_matrix <- function(.data, cols, clamp) {
-  stopifnot(is.function(clamp))
+init_tour_matrix <- function(.data, cols, rescale) {
   if (is.null(cols)) {
     tour_data <- as.matrix(.data)
   } else {
     tour_data <- as.matrix(dplyr::select(.data, !!cols))
   }
-  return(clamp(tour_data))
+  return(rescale(tour_data))
 }
 
 init_tour <- function(tour_data, path, color_tbl) {
