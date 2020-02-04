@@ -1,4 +1,4 @@
-#' Tour view linked
+#' View a tour with external context
 #'
 #' @param x a `data.frame` or `tibble` to tour
 #' @param y a `data.frame` to link to `x`, representing a scatter plot
@@ -7,13 +7,14 @@
 #' @param x_color an optional bare column name in `x`, for the color mapping in the tour view
 #' @param y_color an optional bare column name for the colour mapping the linked view
 #' @param tour_path the tour path to take, the default is [tourr::grand_tour()].
-#' @param clamp A function that rescales tour columns. Default is [clamp()]
+#' @param rescale A function that rescales tour columns. Default is [clamp()]
 #' To not perform any scaling use [identity()].
 #' @param morph A callback function that modifies the projection, default is to
 #' center the projection using [morph_center()].
 #'
+#' @importFrom dplyr inner_join
 #' @export
-limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL, tour_path = tourr::grand_tour(), clamp = clamp, morph = morph_center) {
+limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL, tour_path = tourr::grand_tour(), rescale = clamp, morph = morph_center) {
 
   # generate tour data
   x_color <- rlang::enquo(x_color)
@@ -21,7 +22,7 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
   # tour cols are everything but color column
   x_tcols <- dplyr::select(x, !!rlang::quo(-!!x_color))
   # convert to a matrix
-  tour_data <- init_tour_matrix(x_tcols, cols = NULL, clamp)
+  tour_data <- init_tour_matrix(x_tcols, cols = NULL, rescale = rescale)
   # establish the path
   path <- tourr::new_tour(tour_data, tour_path)
 
@@ -32,12 +33,8 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
 
   x_views[["tourView"]][["encoding"]][["color"]][["condition"]][["selection"]] <- list(`or` = list('brush', 'y_brush'))
 
-  x_views[["source_values"]] <- if (by == "rowid") {
-    dplyr::bind_cols(x_views[["source_values"]], y_views[["source_values"]])
-  } else {
-    dplyr::inner_join(x_views[["source_values"]], y_views[["source_values"]],
-                      by = by)
-  }
+  x_views[["source_values"]] <- conditional_join(x_views[["source_values"]],
+                                                 y_views[["source_values"]])
 
   tspec <- x_views[["tourView"]][c("$schema", "data")]
   hconcat <- list(hconcat = list(x_views[["tourView"]][!names(x_views[["tourView"]]) %in% c("$schema", "data")],
@@ -59,8 +56,6 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
       vegawidget::vegawidget(
         vegawidget::as_vegaspec(x_views[["axisView"]]),
         embed = vegawidget::vega_embed(actions = FALSE, tooltip = FALSE),
-        width = 200,
-        height = 200
       )
     )
 
@@ -89,22 +84,35 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
                             morph)
 
 
-
-
     # observers
-
     vegawidget::vw_shiny_set_data("axisView", "rotations", rct_axes())
     vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())
 
     output$half_range <- shiny::renderPrint({
       # protects against initial NULL
-      rct_half_range()
+      list(rct_half_range(),
+      rct_active_brush())
     })
   }
 
   # generate app
   ui <- limn_tour_ui("linked")
   shiny::shinyApp(ui, server)
+
+}
+
+conditional_join <- function(x, y, by = "rowid") {
+  rowid.x <- seq_len(nrow(x))
+  rowid.y <- seq_len(nrow(y))
+
+  x[["rowid"]] <- rowid.x
+  y[["rowid"]]<- rowid.y
+
+  if (by == "rowid") {
+    return(dplyr::bind_cols(x, y))
+  }
+
+  dplyr::inner_join(x, y, by = by)
 
 }
 
