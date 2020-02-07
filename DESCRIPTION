@@ -20,7 +20,9 @@ Imports:
     jsonlite,
     rlang,
     dplyr,
-    matrixStats
+    matrixStats,
+    FNN,
+    RcppAnnoy
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.0.2
 Suggests: 
