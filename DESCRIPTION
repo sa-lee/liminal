@@ -16,13 +16,13 @@ Imports:
     tourr,
     shiny,
     vegawidget,
-    magrittr,
     jsonlite,
     rlang,
     dplyr,
     matrixStats,
     FNN,
-    RcppAnnoy
+    RcppAnnoy,
+    tibble
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.0.2
 Suggests: 

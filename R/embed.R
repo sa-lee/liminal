@@ -1,7 +1,7 @@
 #' Generate multiple t-SNE embeddings for a single data set
 #'
-#' @param .data
-#' @param cols
+#' @param .data a data.frame to extract tSNE embeddings for
+#' @param cols columns to embed
 #' @param .params A named list with valid parameters to the embedding function,
 #' this will expand out all combinations of inputs
 #' @param ... other paramters to pass to [Rtsne::Rtsne()]
@@ -10,7 +10,7 @@ limn_embed_tsne <- function(.data, cols, .params, ...) {
 
   cols <- rlang::enquo(cols)
 
-  param_df <- dplyr::as_tibble(expand.grid(.params))
+  param_df <- tibble::as_tibble(expand.grid(.params))
   inx <- seq_len(nrow(param_df))
   X <- init_tour_matrix(.data, cols, identity)
 

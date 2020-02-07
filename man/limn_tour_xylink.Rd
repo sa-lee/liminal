@@ -2,7 +2,7 @@
 % Please edit documentation in R/tour-linked-scatter.R
 \name{limn_tour_xylink}
 \alias{limn_tour_xylink}
-\title{Tour view linked}
+\title{View a tour with external context}
 \usage{
 limn_tour_xylink(
   x,
@@ -11,7 +11,7 @@ limn_tour_xylink(
   x_color = NULL,
   y_color = NULL,
   tour_path = tourr::grand_tour(),
-  clamp = clamp,
+  rescale = clamp,
   morph = morph_center
 )
 }
@@ -29,12 +29,12 @@ for details. By default we use the row index for both tables.}
 
 \item{tour_path}{the tour path to take, the default is \code{\link[tourr:grand_tour]{tourr::grand_tour()}}.}
 
-\item{clamp}{A function that rescales tour columns. Default is \code{\link[=clamp]{clamp()}}
+\item{rescale}{A function that rescales tour columns. Default is \code{\link[=clamp]{clamp()}}
 To not perform any scaling use \code{\link[=identity]{identity()}}.}
 
 \item{morph}{A callback function that modifies the projection, default is to
 center the projection using \code{\link[=morph_center]{morph_center()}}.}
 }
 \description{
-Tour view linked
+View a tour with external context
 }
