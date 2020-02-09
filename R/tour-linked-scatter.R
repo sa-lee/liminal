@@ -26,7 +26,7 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
   # establish the path
   path <- tourr::new_tour(tour_data, tour_path)
 
-  x_views <- init_tour(tour_data, path, x_color_tbl)
+  x_views <- init_tour(tour_data, path, x_color_tbl, morph)
 
   y_color <- rlang::enquo(y_color)
   y_views <- y_spec(y, !!y_color)
