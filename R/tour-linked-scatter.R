@@ -67,7 +67,12 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
                                                         name = "brush",
                                                         body_value = "value")
 
-    rct_half_range <- rct_half_range(rct_active_zoom, x_views[["half_range"]])
+    rct_embed_brush <- vegawidget::vw_shiny_get_signal("tourView",
+                                                       name = "y_brush",
+                                                       body_value = "value")
+
+    rct_half_range <- rct_half_range(rct_active_zoom,
+                                     x_views[["half_range"]])
     rct_pause <- rct_pause(rct_active_brush)
 
     rct_play <- shiny::eventReactive(input$play, input$play > 0)
@@ -91,7 +96,7 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
     output$half_range <- shiny::renderPrint({
       # protects against initial NULL
       list(rct_half_range(),
-      rct_active_brush())
+      rct_embed_brush())
     })
   }
 
