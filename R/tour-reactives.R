@@ -31,10 +31,40 @@ rct_tour <- function(plan, aps = 1, fps = 12, rct_event, rct_refresh, session) {
     if (play) {
       current <<- plan(aps/fps)
       shiny::invalidateLater(1000/fps, session)
-      Sys.sleep(1/fps)
     }
 
     current
+  })
+}
+
+rct_neighbours <- function(.data, num_neighbors = 10) {
+  shiny::reactive({
+    find_knn(.data, num_neighbors)
+  })
+}
+
+
+
+rct_selection <- function(selection_type, embed_brush, source_values) {
+  shiny::reactive({
+    active_brush <- embed_brush()
+    # no brush, everything selected; early return
+    if (length(active_brush) == 0) return(logical(0))
+    # one to one selection
+    if (identical(selection_type, "linked")) {
+
+      cols <- names(active_brush)
+      print(cols)
+      print(active_brush)
+      selected <- dplyr::between(source_values[[cols[1]]],
+                                 active_brush[[cols[1]]][[1]],
+                                 active_brush[[cols[1]]][[2]]) &
+        dplyr::between(source_values[[cols[2]]],
+                       active_brush[[cols[2]]][[1]],
+                       active_brush[[cols[2]]][[2]])
+    }
+    print(source_values[selected,])
+    return(selected)
   })
 }
 
@@ -46,8 +76,9 @@ stream_axes <- function(rct_tour, cols) {
 
 stream_proj <- function(rct_tour, tour_data, source_values, half_range, morph) {
   shiny::reactive({
+    # update tour
     x <- tour_data %*% rct_tour()$proj
-    x <- morph(x) / half_range
+    x <- morph(x) / half_range()
     source_values[, c("x","y")] <- as.data.frame(x)
     source_values
   })

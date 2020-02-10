@@ -40,10 +40,7 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
   )
   tspec[["data"]][["values"]] <- x_views[["source_values"]]
 
-  print(x_views[["source_values"]])
-
   x_views[["tourView"]] <- c(tspec, hconcat)
-
 
   server <- function(input, output, session) {
     output[["tourView"]] <- vegawidget::renderVegawidget(
@@ -71,8 +68,7 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
                                                        name = "y_brush",
                                                        body_value = "value")
 
-    rct_half_range <- rct_half_range(rct_active_zoom,
-                                     x_views[["half_range"]])
+    rct_half_range <- rct_half_range(rct_active_zoom, x_views[["half_range"]])
     rct_pause <- rct_pause(rct_active_brush)
 
     rct_play <- shiny::eventReactive(input$play, input$play > 0)
@@ -85,9 +81,12 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
     rct_proj <- stream_proj(rct_tour,
                             tour_data,
                             x_views[["source_values"]],
-                            rct_half_range(),
+                            rct_half_range,
                             morph)
 
+    rct_selected <- rct_selection(input$brush_selector,
+                                  rct_embed_brush,
+                                  x_views[["source_values"]])
 
     # observers
     vegawidget::vw_shiny_set_data("axisView", "rotations", rct_axes())
@@ -96,7 +95,7 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
     output$half_range <- shiny::renderPrint({
       # protects against initial NULL
       list(rct_half_range(),
-      rct_embed_brush())
+           head(rct_selection()))
     })
   }
 
@@ -118,7 +117,9 @@ conditional_join <- function(x, y, by = "rowid") {
   } else {
     res <- dplyr::inner_join(x, y, by = by)
   }
-  res <- dplyr::mutate(res, .selected = TRUE)
+  res <- dplyr::mutate(res,
+                       selectedX = TRUE,
+                       selectedY = TRUE)
   res
 
 }
@@ -138,14 +139,17 @@ y_spec <- function(y, y_color) {
   encoding <- list(encoding =
                      list(x = list(field = xf, type = "quantitative"),
                           y = list(field = yf, type = "quantitative"),
-                          color = list(condition = list(
+                          color = list(
+                            condition = list(
+                              test = "datum.selectedY === false",
+                              value = "grey"
+                            ),
                             field = colf,
-                            type = coltype,
-                            selection = list(`or` = list("brush", "y_brush"))),
-                            value = "grey"
+                            type = coltype
+                            )
                           )
                      )
-  )
+
   mark <- list(mark = list(type = "circle", clip = TRUE))
   selection <- list(selection = list("y_brush" = list(type = "interval")))
 
