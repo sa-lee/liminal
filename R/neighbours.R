@@ -1,6 +1,10 @@
-#' Utilities for estimating  and searching kNN graph
+# Utilities for estimating  and searching kNN graph
+# These functions are used internally to perform spatially resolved
+# linked brushing. The default is to compute exact nearest neighbors
+# using the FNN package. Otherwise, for largeish data and/or an alternate
+# distance metric, the RcppAnnoy package is used to compute approximate nearest
+# neighbors.
 
-# Exact nearest neighbors
 find_knn <- function(.data,
                      num_neighbors = 10,
                      metric = c("euclidean", "cosine", "manhattan"),
@@ -20,7 +24,6 @@ find_knn <- function(.data,
 }
 
 
-# default build graph with FNN package
 #' @importFrom FNN get.knn
 build_fnn <- function(.data, num_neighbors, .include_self = TRUE) {
 
