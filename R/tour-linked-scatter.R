@@ -31,8 +31,6 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
   y_color <- rlang::enquo(y_color)
   y_views <- y_spec(y, !!y_color)
 
-  x_views[["tourView"]][["encoding"]][["color"]][["condition"]][["selection"]] <- list(`or` = list('brush', 'y_brush'))
-
   x_views[["source_values"]] <- conditional_join(x_views[["source_values"]],
                                                  y_views[["source_values"]])
 
@@ -41,6 +39,8 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
                                  y_views[["y_spec"]])
   )
   tspec[["data"]][["values"]] <- x_views[["source_values"]]
+
+  print(x_views[["source_values"]])
 
   x_views[["tourView"]] <- c(tspec, hconcat)
 
@@ -109,10 +109,12 @@ conditional_join <- function(x, y, by = "rowid") {
   y[["rowid"]]<- rowid.y
 
   if (by == "rowid") {
-    return(dplyr::bind_cols(x, y))
+    res <- dplyr::bind_cols(x, y)
+  } else {
+    res <- dplyr::inner_join(x, y, by = by)
   }
-
-  dplyr::inner_join(x, y, by = by)
+  res <- dplyr::mutate(res, .selected = TRUE)
+  res
 
 }
 
