@@ -1,16 +1,5 @@
 # --- Alternative implementations of tourr package internals ---
 
-
-#' Morphing Projections
-#'
-#' @param .data a projection
-#'
-#' @export
-morph_center <- function(.data) {
-  scale(.data, scale = FALSE)
-}
-
-
 #' Rescale all columns to lie in unit interval
 #'
 #' @param .data A 'matrix' like object
@@ -98,5 +87,24 @@ compute_tour_path <- function(.data, tour_path, start, max_bases, step_size) {
 
 `%||%` <- function(a, b) {
   if (!is.null(a)) a else b
+}
+
+conditional_join <- function(x, y, by = "rowid") {
+  rowid.x <- seq_len(nrow(x))
+  rowid.y <- seq_len(nrow(y))
+
+  x[["rowid"]] <- rowid.x
+  y[["rowid"]]<- rowid.y
+
+  if (by == "rowid") {
+    res <- dplyr::bind_cols(x, y)
+  } else {
+    res <- dplyr::inner_join(x, y, by = by)
+  }
+  res <- dplyr::mutate(res,
+                       selectedX = TRUE,
+                       selectedY = TRUE)
+  res
+
 }
 

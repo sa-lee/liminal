@@ -31,16 +31,19 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
   y_color <- rlang::enquo(y_color)
   y_views <- y_spec(y, !!y_color)
 
-  x_views[["source_values"]] <- conditional_join(x_views[["source_values"]],
-                                                 y_views[["source_values"]])
+  # each concatenated view can specifiy it's own data
+  # x_views[["source_values"]] <- conditional_join(x_views[["source_values"]],
+  #                                                y_views[["source_values"]])
 
-  tspec <- x_views[["tourView"]][c("$schema", "data")]
-  hconcat <- list(hconcat = list(x_views[["tourView"]][!names(x_views[["tourView"]]) %in% c("$schema", "data")],
+  tspec <- x_views[["tourView"]][["$schema"]]
+  hconcat <- list(hconcat = list(x_views[["tourView"]][!names(x_views[["tourView"]]) %in% c("$schema")],
                                  y_views[["y_spec"]])
   )
-  tspec[["data"]][["values"]] <- x_views[["source_values"]]
 
-  x_views[["tourView"]] <- c(tspec, hconcat)
+  # tspec[["data"]][["values"]] <- x_views[["source_values"]]
+
+  x_views[["tourView"]] <- c(`$schema` = tspec, hconcat)
+
 
   server <- function(input, output, session) {
     output[["tourView"]] <- vegawidget::renderVegawidget(
@@ -84,18 +87,15 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
                             rct_half_range,
                             morph)
 
-    rct_selected <- rct_selection(input$brush_selector,
-                                  rct_embed_brush,
-                                  x_views[["source_values"]])
-
     # observers
     vegawidget::vw_shiny_set_data("axisView", "rotations", rct_axes())
+
+    # only update data to the tour view
     vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())
 
     output$half_range <- shiny::renderPrint({
       # protects against initial NULL
-      list(rct_half_range(),
-           head(rct_selection()))
+      rct_half_range()
     })
   }
 
@@ -141,20 +141,23 @@ y_spec <- function(y, y_color) {
                           y = list(field = yf, type = "quantitative"),
                           color = list(
                             condition = list(
-                              test = "datum.selectedY === false",
-                              value = "grey"
+                              selection = "y_brush",
+                              field = colf,
+                              type = coltype
                             ),
-                            field = colf,
-                            type = coltype
-                            )
+                            value = "grey"
+
                           )
                      )
+  )
 
   mark <- list(mark = list(type = "circle", clip = TRUE))
   selection <- list(selection = list("y_brush" = list(type = "interval")))
+  data <- list(data = list(name = "embed", values = y_data))
 
-  y_spec <- c(encoding,
+  y_spec <- c(data,
+              encoding,
               mark,
               selection)
-  list(source_values = y_data, y_spec = y_spec)
+  list(y_spec = y_spec)
 }
