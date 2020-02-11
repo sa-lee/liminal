@@ -31,16 +31,11 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
   y_color <- rlang::enquo(y_color)
   y_views <- y_spec(y, !!y_color)
 
-  # each concatenated view can specifiy it's own data
-  # x_views[["source_values"]] <- conditional_join(x_views[["source_values"]],
-  #                                                y_views[["source_values"]])
-
   tspec <- x_views[["tourView"]][["$schema"]]
   hconcat <- list(hconcat = list(x_views[["tourView"]][!names(x_views[["tourView"]]) %in% c("$schema")],
                                  y_views[["y_spec"]])
   )
 
-  # tspec[["data"]][["values"]] <- x_views[["source_values"]]
 
   x_views[["tourView"]] <- c(`$schema` = tspec, hconcat)
 
@@ -102,25 +97,6 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
   # generate app
   ui <- limn_tour_ui("linked")
   shiny::shinyApp(ui, server)
-
-}
-
-conditional_join <- function(x, y, by = "rowid") {
-  rowid.x <- seq_len(nrow(x))
-  rowid.y <- seq_len(nrow(y))
-
-  x[["rowid"]] <- rowid.x
-  y[["rowid"]]<- rowid.y
-
-  if (by == "rowid") {
-    res <- dplyr::bind_cols(x, y)
-  } else {
-    res <- dplyr::inner_join(x, y, by = by)
-  }
-  res <- dplyr::mutate(res,
-                       selectedX = TRUE,
-                       selectedY = TRUE)
-  res
 
 }
 
