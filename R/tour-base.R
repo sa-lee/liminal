@@ -76,7 +76,7 @@ render_init <- function(source_values, half_range) {
     base_schema[["selection"]][["colclick"]] <- list(type = "multi",
                                                      fields = list(col_nm),
                                                      bind = list(legend = "dblclick"))
-    op_value <- 0.1
+    op_value <- (1 / nrow(source_values))^0.5
     base_schema[["encoding"]][["opacity"]] <- list(condition = list(selection = "colclick", value = 0.9), value = op_value)
 
 
