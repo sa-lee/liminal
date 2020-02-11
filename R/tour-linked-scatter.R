@@ -95,7 +95,7 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
   }
 
   # generate app
-  ui <- limn_tour_ui("linked")
+  ui <- limn_tour_ui("linked", nr = nrow(x) - 1L)
   shiny::shinyApp(ui, server)
 
 }
@@ -146,6 +146,4 @@ y_spec <- function(y, y_color) {
   list(y_spec = y_spec)
 }
 
-
-centroid_spec <- function() {}
 

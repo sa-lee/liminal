@@ -1,5 +1,5 @@
 # UI functions
-limn_tour_ui <- function(view = "simple") {
+limn_tour_ui <- function(view = "simple", nr) {
   view <- match.arg(view, c("simple", "linked"))
 
 
@@ -18,7 +18,7 @@ limn_tour_ui <- function(view = "simple") {
                                      "Selection Type",
                                      choices = c("linked",
                                                  "neighbors",
-                                                 "centroids"))
+                                                 "distance"))
     brush_fixed <- shiny::radioButtons("brush_logic",
                                        "Selection Sequence",
                                        choices = c("independent", "or", "and")
@@ -27,7 +27,8 @@ limn_tour_ui <- function(view = "simple") {
     brush_knn <- shiny::numericInput("brush_knn",
                                      "Neighbors:",
                                      value = 10,
-                                     min = 0)
+                                     min = 0,
+                                     max = nr)
 
     bottom_row <- shiny::fluidRow(
       shiny::column(4, aview),
