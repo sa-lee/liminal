@@ -44,6 +44,7 @@ First, we take the load the data as a data.frame:
 
 ```{r pdfsense-prepare}
 library(liminal)
+library(vegawidget)
 data(pdfsense)
 ```
 
@@ -91,11 +92,13 @@ Now we can set up a non-linear embedding via t-SNE, here
 we embed all 56 principal components.
 ```{r}
 set.seed(3099)
-tsne <- Rtsne::Rtsne(dplyr::select(pdfsense, PC1:PC56),
+tsne <- Rtsne::Rtsne(dplyr::select(pdfsense, X1:X56),
                      pca = FALSE, 
                      normalize = TRUE,
                      perplexity = 50,
-                     exaggeration_factor = nrow(pdfsense) / 10)
+                     exaggeration_factor = nrow(pdfsense) / 100,
+                     Y_init = clamp_scaled_pca(as.matrix(dplyr::select(pdfsense, PC1, PC2)))
+)
 ```
 
 Again we can augment the embedding onto the pdfsense data:
