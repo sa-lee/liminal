@@ -130,7 +130,7 @@ y_spec <- function(y, y_color) {
                           ),
                           opacity = list(
                             condition = list(selection = "colclick", value = 0.9),
-                            value = 0.1
+                            value = opacity_value(nrow(y_data))
                           )
                      )
   )

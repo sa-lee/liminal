@@ -76,7 +76,7 @@ render_init <- function(source_values, half_range) {
     base_schema[["selection"]][["colclick"]] <- list(type = "multi",
                                                      fields = list(col_nm),
                                                      bind = list(legend = "dblclick"))
-    op_value <- (1 / nrow(source_values))^0.5
+    op_value <- opacity_value(nrow(source_values))
     base_schema[["encoding"]][["opacity"]] <- list(condition = list(selection = "colclick", value = 0.9), value = op_value)
 
 
@@ -200,3 +200,4 @@ init_tour <- function(tour_data, path, color_tbl, morph) {
 }
 
 
+opacity_value <- function(nr, pow = 0.3) (1 / nr)^pow
