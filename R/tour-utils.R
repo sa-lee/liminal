@@ -24,8 +24,12 @@ clamp_robust <- function(.data) {
   sweep(vals, 2, scales, FUN = "/")
 }
 
-# rescale PCs to have standard deviation
-clamp_scaled_pca <- function(.data, sd = 1e-4) {
+#' Rescale all columns to have same standard deviation
+#' @param .data  A 'matrix' like object
+#' @param sd the value of each columns standard devation
+#' @importFrom matrixStats colSds
+#' @export
+clamp_sd <- function(.data, sd = 1e-4) {
   scales <- matrixStats::colSds(.data) / sd
   sweep(.data, 2, scales, FUN = "/")
 }

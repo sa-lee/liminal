@@ -22,3 +22,5 @@ radial <- function(x, p) {
 cumulative_radial <- function(r, R, p) {
   1 - (1 - (r/R)^2)^(p/2)
 }
+
+
