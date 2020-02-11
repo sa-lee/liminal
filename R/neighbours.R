@@ -44,11 +44,12 @@ build_fnn <- function(.data, num_neighbors, .include_self = TRUE) {
 
 }
 
+#' @importFrom methods new is
 new_ann <- function(metric, nc) {
   switch(metric,
-         "euclidean" = new(RcppAnnoy::AnnoyEuclidean, nc),
-         "cosine" = new(RcppAnnoy::AnnoyAngular, nc),
-         "manhattan" = new(RcppAnnoy::AnnoyManhattan, nc),
+         "euclidean" = methods::new(RcppAnnoy::AnnoyEuclidean, nc),
+         "cosine" = methods::new(RcppAnnoy::AnnoyAngular, nc),
+         "manhattan" = methods::new(RcppAnnoy::AnnoyManhattan, nc),
          stop("Unknown metric:", metric)
   )
 }
