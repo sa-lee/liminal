@@ -1,3 +1,12 @@
+#' Morphing Projections
+#'
+#' @param .data a projection
+#'
+#' @export
+morph_center <- function(.data) {
+  scale(.data, scale = FALSE)
+}
+
 radial <- function(x, p) {
   x <- x - colMeans(x)
   rad <- sqrt(x[,1]^2 + x[,2]^2)
