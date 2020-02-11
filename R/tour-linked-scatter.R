@@ -112,9 +112,13 @@ y_spec <- function(y, y_color) {
   colf <- names(y_data)[3]
   coltype <- color_type(y_data[,3])
 
+  domain_x <- range(y_data[[xf]], na.rm = TRUE)
+  domain_y <- range(y_data[[yf]], na.rm = TRUE)
+  domain <- range(c(domain_x, domain_y))
+
   encoding <- list(encoding =
-                     list(x = list(field = xf, type = "quantitative"),
-                          y = list(field = yf, type = "quantitative"),
+                     list(x = list(field = xf, type = "quantitative", scale = list(domain = domain)),
+                          y = list(field = yf, type = "quantitative", scale = list(domain = domain)),
                           color = list(
                             condition = list(
                               selection = "y_brush",
@@ -127,7 +131,7 @@ y_spec <- function(y, y_color) {
                      )
   )
 
-  mark <- list(mark = list(type = "circle", clip = TRUE))
+  mark <- list(mark = list(type = "circle"))
   selection <- list(selection = list("y_brush" = list(type = "interval")))
   data <- list(data = list(name = "embed", values = y_data))
 
