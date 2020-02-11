@@ -57,20 +57,12 @@ pcs  <- prcomp(pdfsense[, 7:ncol(pdfsense)])
 
 Using this data structure, we can produce a screeplot:
 ```{r, echo = TRUE}
-library(ggplot2)
-ggplot(
-  data.frame(
-    component = 1:56, 
-    variance_explained = cumsum(pcs$sdev / sum(pcs$sdev))
-  ),
-  aes(x = component, y = variance_explained)
-) + 
-  geom_point() +
-  labs(
-    x = "Principal Component", 
-    y = "Cumulative Proportion Variance Explained"
-  )
+res <- data.frame(
+  component = 1:56, 
+  variance_explained = cumsum(pcs$sdev / sum(pcs$sdev))
+)
 
+limn_xy(res, x = component, y = variance_explained)
 ```
 
 Approximately %70 of the variance in the pdf fits are explained by the first 15 principal components.
