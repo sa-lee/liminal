@@ -63,7 +63,6 @@ render_init <- function(source_values, half_range) {
   base_schema[["selection"]][["grid"]] <-  list(type = "interval",
                                                 bind = "scales",
                                                 translate = FALSE)
-
   if (ncol(source_values) == 3) {
     col_nm <- colnames(source_values)[3]
     type <- color_type(source_values[[col_nm]])
@@ -73,6 +72,13 @@ render_init <- function(source_values, half_range) {
       col_domain <- unique(source_values[[col_nm]])
       base_schema[["encoding"]][["color"]][["condition"]][["scale"]] <- list(domain = sort(col_domain))
     }
+    # if color available enable clickable legend
+    base_schema[["selection"]][["colclick"]] <- list(type = "multi",
+                                                     fields = list(col_nm),
+                                                     bind = list(legend = "dblclick"))
+    op_value <- 0.1
+    base_schema[["encoding"]][["opacity"]] <- list(condition = list(selection = "colclick", value = 0.9), value = op_value)
+
 
   } else {
     col_nm <- "black"
@@ -129,7 +135,7 @@ limn_tour_server <- function(tour_data, path, color_tbl, morph) {
     rct_proj <- stream_proj(rct_tour,
                             tour_data,
                             init[["source_values"]],
-                            rct_half_range(),
+                            rct_half_range,
                             morph)
 
     # observers

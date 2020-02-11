@@ -127,6 +127,10 @@ y_spec <- function(y, y_color) {
                             ),
                             value = "grey"
 
+                          ),
+                          opacity = list(
+                            condition = list(selection = "colclick", value = 0.9),
+                            value = 0.1
                           )
                      )
   )
@@ -141,3 +145,7 @@ y_spec <- function(y, y_color) {
               selection)
   list(y_spec = y_spec)
 }
+
+
+centroid_spec <- function() {}
+
