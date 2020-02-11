@@ -24,6 +24,12 @@ clamp_robust <- function(.data) {
   sweep(vals, 2, scales, FUN = "/")
 }
 
+# rescale PCs to have standard deviation
+clamp_scaled_pca <- function(.data, sd = 1e-4) {
+  scales <- matrixStats::colSds(.data) / sd
+  sweep(.data, 2, scales, FUN = "/")
+}
+
 #' Compute Frobenius norm of matrix-like objects x and y
 #' @param x,y 'matrix' like objects
 #' @export
