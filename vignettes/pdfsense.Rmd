@@ -92,7 +92,7 @@ Now we can set up a non-linear embedding via t-SNE, here
 we embed all 56 principal components.
 ```{r}
 set.seed(3099)
-tsne <- Rtsne::Rtsne(dplyr::select(pdfsense, X1:X56),
+tsne <- Rtsne::Rtsne(dplyr::select(pdfsense, PC1:PC56),
                      pca = FALSE, 
                      normalize = TRUE,
                      perplexity = 50,
