@@ -70,6 +70,7 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
     rct_active_zoom <-  vegawidget::vw_shiny_get_signal("tourView",
                                                         name = "grid",
                                                         body_value = "value")
+
     rct_active_brush <- vegawidget::vw_shiny_get_signal("tourView",
                                                         name = "brush",
                                                         body_value = "value")
@@ -81,7 +82,8 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
     rct_half_range <- rct_half_range(rct_active_zoom, x_views[["half_range"]])
     rct_pause <- rct_pause(rct_active_brush)
 
-    rct_play <- shiny::eventReactive(input$play, input$play > 0)
+    rct_play <- shiny::eventReactive(input$play,
+                                     input$play > 0)
 
     rct_tour <- rct_tour(path,
                          rct_event = rct_pause,
@@ -98,7 +100,7 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
     vegawidget::vw_shiny_set_data("axisView", "rotations", rct_axes())
 
     # only update data to the tour view
-    vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())
+    # vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())
 
     # observe embed brush
     selections <- shiny::reactiveValues(x = logical(nrow(x)),
@@ -113,14 +115,32 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
                                                  active_brush,
                                                  selections,
                                                  view = "y",
+                                                 name = "embed",
+                                                 logic = input$brush_logic,
                                                  session)
                         })
+
+    shiny::observeEvent(rct_tour(), {
+      current_brush <- rct_active_brush()
+      vals <- rct_proj()
+      transient_brush_update(
+        vals,
+        current_brush,
+        selections,
+        view = "x",
+        name = "path",
+        logic = input$brush_logic,
+        session
+      )
+    })
 
 
 
     output$half_range <- shiny::renderPrint({
       # protects against initial NULL
-      list(rct_half_range(), table(selections$y))
+      list(rct_half_range(),
+           table(selections$y),
+           table(selections$x))
     })
   }
 
@@ -187,21 +207,29 @@ inside_brush <- function(cols, vals, brush) {
 }
 
 
-transient_brush_update <- function(vals, brush, current, view, session) {
+transient_brush_update <- function(vals, brush, current, view, name, logic, session) {
   message <- list(outputId = "tourView",
-                  name = "embed",
+                  name = name,
                   data_insert = NULL ,
                   data_remove = TRUE,
                   run = TRUE)
 
+  selection_sequence <- switch(logic,
+                               "independent" = `%||%`,
+                               "and" = `&`,
+                               "or" = `|`
+                               )
+
   view <- match.arg(view, names(current))
+  not_in_view <- setdiff(names(current), view)
   target <-paste0("selected", toupper(view))
   if (length(brush) == 0) {
     message[["data_insert"]] <- vals
   } else {
     cols <- names(brush)
 
-    current[[view]] <- inside_brush(cols, vals, brush)
+    current[[view]] <- selection_sequence(inside_brush(cols, vals, brush),
+                                          current[[not_in_view]])
     message[["data_insert"]] <- dplyr::bind_cols(
       dplyr::select(vals, -target),
       !!rlang::sym(target) := current[[view]]

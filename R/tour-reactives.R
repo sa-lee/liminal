@@ -27,7 +27,6 @@ rct_tour <- function(plan, aps = 1, fps = 12, rct_event, rct_refresh, session) {
     play <- current$step >= 0 && play
     play <- !rct_event() && play
 
-
     if (play) {
       current <<- plan(aps/fps)
       shiny::invalidateLater(1000/fps, session)
