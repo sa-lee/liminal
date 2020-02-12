@@ -21,8 +21,7 @@ limn_tour_ui <- function(view = "simple", nr) {
                                                  "distance"))
     brush_fixed <- shiny::radioButtons("brush_logic",
                                        "Selection Sequence",
-                                       choices = c("independent", "or", "and")
-    )
+                                       choices = c("or", "and", "independent"))
 
     brush_knn <- shiny::numericInput("brush_knn",
                                      "Neighbors:",
