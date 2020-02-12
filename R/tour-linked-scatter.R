@@ -28,6 +28,18 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
 
   x_views <- init_tour(tour_data, path, x_color_tbl, morph)
 
+  x_views[["tourView"]][["encoding"]][["color"]][["condition"]] <-
+    c(test = "datum.selectedX === true",
+         x_views[["tourView"]][["encoding"]][["color"]][["condition"]][-1]
+         )
+
+  x_views[["source_values"]] <- dplyr::bind_cols(
+    x_views[["source_values"]],
+    selectedX = !logical(nrow(x))
+  )
+
+  x_views[["tourView"]][["data"]][["values"]] <- x_views[["source_values"]]
+
   y_color <- rlang::enquo(y_color)
   y_views <- y_spec(y, !!y_color)
 
@@ -89,12 +101,18 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
     vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())
 
     # observe embed brush
+    selections <- shiny::reactiveValues(x = logical(nrow(x)),
+                                        y = logical(nrow(y)))
+
     shiny::observeEvent(rct_embed_brush(),
                         if (identical(input$brush_selector, "linked")) {
 
                           active_brush <- rct_embed_brush()
+                          # update selections for embed view
                           transient_brush_update(y_views[["y_spec"]][["data"]][["values"]],
                                                  active_brush,
+                                                 selections,
+                                                 view = "y",
                                                  session)
                         })
 
@@ -102,7 +120,7 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
 
     output$half_range <- shiny::renderPrint({
       # protects against initial NULL
-      rct_half_range()
+      list(rct_half_range(), table(selections$y))
     })
   }
 
@@ -169,21 +187,24 @@ inside_brush <- function(cols, vals, brush) {
 }
 
 
-transient_brush_update <- function(vals, brush, session) {
+transient_brush_update <- function(vals, brush, current, view, session) {
   message <- list(outputId = "tourView",
                   name = "embed",
                   data_insert = NULL ,
                   data_remove = TRUE,
                   run = TRUE)
 
+  view <- match.arg(view, names(current))
+  target <-paste0("selected", toupper(view))
   if (length(brush) == 0) {
     message[["data_insert"]] <- vals
   } else {
     cols <- names(brush)
 
+    current[[view]] <- inside_brush(cols, vals, brush)
     message[["data_insert"]] <- dplyr::bind_cols(
-      dplyr::select(vals, 1:3),
-      selectedY = inside_brush(cols, vals, brush)
+      dplyr::select(vals, -target),
+      !!rlang::sym(target) := current[[view]]
     )
   }
   session$sendCustomMessage("changeData", message)
