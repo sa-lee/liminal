@@ -88,6 +88,18 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
     # only update data to the tour view
     vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())
 
+    # observe embed brush
+    shiny::observeEvent(rct_embed_brush(),
+                        if (identical(input$brush_selector, "linked")) {
+
+                          active_brush <- rct_embed_brush()
+                          transient_brush_update(y_views[["y_spec"]][["data"]][["values"]],
+                                                 active_brush,
+                                                 session)
+                        })
+
+
+
     output$half_range <- shiny::renderPrint({
       # protects against initial NULL
       rct_half_range()
@@ -106,6 +118,7 @@ y_spec <- function(y, y_color) {
   y_color <- rlang::enquo(y_color)
   y_data <- dplyr::select(y, dplyr::everything(), !!y_color)
   stopifnot(ncol(y_data) <= 3)
+  y_data[["selectedY"]] <- TRUE
 
   xf <- names(y_data)[1]
   yf <- names(y_data)[2]
@@ -121,7 +134,7 @@ y_spec <- function(y, y_color) {
                           y = list(field = yf, type = "quantitative", scale = list(domain = domain)),
                           color = list(
                             condition = list(
-                              selection = "y_brush",
+                              test = "datum.selectedY === true",
                               field = colf,
                               type = coltype
                             ),
@@ -146,4 +159,32 @@ y_spec <- function(y, y_color) {
   list(y_spec = y_spec)
 }
 
+inside_brush <- function(cols, vals, brush) {
+  dplyr::between(vals[[cols[1]]],
+                 brush[[cols[1]]][[1]],
+                 brush[[cols[1]]][[2]]) &
+    dplyr::between(vals[[cols[2]]],
+                   brush[[cols[2]]][[1]],
+                   brush[[cols[2]]][[2]])
+}
 
+
+transient_brush_update <- function(vals, brush, session) {
+  message <- list(outputId = "tourView",
+                  name = "embed",
+                  data_insert = NULL ,
+                  data_remove = TRUE,
+                  run = TRUE)
+
+  if (length(brush) == 0) {
+    message[["data_insert"]] <- vals
+  } else {
+    cols <- names(brush)
+
+    message[["data_insert"]] <- dplyr::bind_cols(
+      dplyr::select(vals, 1:3),
+      selectedY = inside_brush(cols, vals, brush)
+    )
+  }
+  session$sendCustomMessage("changeData", message)
+}

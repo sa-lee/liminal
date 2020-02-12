@@ -43,31 +43,6 @@ rct_neighbours <- function(.data, num_neighbors = 10) {
   })
 }
 
-
-
-rct_selection <- function(selection_type, embed_brush, source_values) {
-  shiny::reactive({
-    active_brush <- embed_brush()
-    # no brush, everything selected; early return
-    if (length(active_brush) == 0) return(logical(0))
-    # one to one selection
-    if (identical(selection_type, "linked")) {
-
-      cols <- names(active_brush)
-      print(cols)
-      print(active_brush)
-      selected <- dplyr::between(source_values[[cols[1]]],
-                                 active_brush[[cols[1]]][[1]],
-                                 active_brush[[cols[1]]][[2]]) &
-        dplyr::between(source_values[[cols[2]]],
-                       active_brush[[cols[2]]][[1]],
-                       active_brush[[cols[2]]][[2]])
-    }
-    print(source_values[selected,])
-    return(selected)
-  })
-}
-
 stream_axes <- function(rct_tour, cols) {
   shiny::reactive({
     generate_axes(rct_tour()$proj, cols)
