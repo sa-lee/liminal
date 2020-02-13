@@ -20,18 +20,17 @@ rct_half_range <- function(rct_zoom, half_range) {
   })
 }
 
-rct_tour <- function(plan, aps = 1, fps = 12, rct_event, rct_refresh, session) {
+rct_tour <- function(plan, aps = 1, fps = 12, rct_event, rct_refresh, selections, session) {
   current <- plan(0)
   shiny::reactive({
     play <- rct_refresh()
     play <- current$step >= 0 && play
     play <- !rct_event() && play
-
     if (play) {
       current <<- plan(aps/fps)
+      selections[["proj"]] <- current$proj
       shiny::invalidateLater(1000/fps, session)
     }
-
     current
   })
 }
@@ -48,12 +47,13 @@ stream_axes <- function(rct_tour, cols) {
   })
 }
 
-stream_proj <- function(rct_tour, tour_data, source_values, half_range, morph) {
+stream_proj <- function(tour_data, source_values, selections, half_range, morph) {
   shiny::reactive({
     # update tour
-    x <- tour_data %*% rct_tour()$proj
+    x <- tour_data %*% selections$proj
     x <- morph(x) / half_range()
     source_values[, c("x","y")] <- as.data.frame(x)
+    source_values[["selectedX"]] <- selections[["x"]]
     source_values
   })
 }
