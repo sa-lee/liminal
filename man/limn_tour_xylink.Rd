@@ -7,7 +7,6 @@
 limn_tour_xylink(
   x,
   y,
-  by = "rowid",
   x_color = NULL,
   y_color = NULL,
   tour_path = tourr::grand_tour(),

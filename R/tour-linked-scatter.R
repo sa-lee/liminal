@@ -48,7 +48,7 @@
 #' }
 #'
 #' @export
-limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL, tour_path = tourr::grand_tour(), rescale = clamp, morph = morph_center) {
+limn_tour_xylink <- function(x, y, x_color = NULL, y_color = NULL, tour_path = tourr::grand_tour(), rescale = clamp, morph = morph_center) {
 
   # generate tour data
   x_color <- rlang::enquo(x_color)
