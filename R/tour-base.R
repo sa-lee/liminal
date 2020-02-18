@@ -1,16 +1,42 @@
 #' Tour a high dimensional dataset
 #'
 #' @param .data a data.frame to tour
-#' @param cols Columns to tour. This can use a tidyselect specification.
-#' @param color A variable name in `.data`, mapping to the color aesthetic. Default
-#' is to not colour any points.
-#' @param tour_path the tour path to take, the default is [tourr::grand_tour()].
-#' @param rescale A function that rescales tour columns. Default is [clamp()]
-#' To not perform any scaling use [identity()].
-#' @param morph A callback function that modifies the projection, default is to
-#' center the projection using [morph_center()].
+#' @param cols Columns to tour. This can use a [tidyselect] specification
+#' such as [tidyselect::starts_with()].
+#' @param color A variable name in `.data`, mapping to the color aesthetic, if
+#' NULL points will be colored black.
+#' @param tour_path the tour path to take, the default is [tourr::grand_tour()]
+#' but also works with [tourr::guided_tour()].
+#' @param rescale A function that rescales `cols`, the default is to
+#' [clamp()] the data to lie in the hyperdimensional unit cube. To not perform
+#' any scaling use [identity()].
+#' @param morph A callback function that modifies each projection generated,
+#' the default is to center the projection using [morph_center()].
+#'
+#' @return A shiny app object
+#' @details
+#' The tour interface consists of two views, the tour view which is a
+#' dynamic scatterplot and an axis view which shows the direction and
+#' magnitude of the basis vectors being generated.
+#' There is a play button, that when pressed will start the tour. There
+#' is also a text view of the half range which is the maximum squared
+#' eucluidean distance between points in the tour view. The half range
+#' is a scale factor for projections and can be thought of as a way
+#' of zooming in and out on points.
+#' It can be dynamically modified by scrolling (via a mouse-wheel).
+#' The animation can be paused via brushing over points using
+#' shift the key with a mouse drag.
 #'
 #'
+#' @seealso [compute_half_range()],[limn_tour_xylinked()]
+#' @examples
+#' # tour the first ten columns of the fake tree data
+#' if (interactive()) {
+#'   # loads the default interface
+#'   limn_tour(fake_trees, dim1:dim10)
+#'   # perform the same action but now coloring points
+#'   limn_tour(fake_trees, dim1:dim10, color = branches)
+#' }
 #'
 #' @export
 limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour(), rescale = clamp, morph = morph_center) {

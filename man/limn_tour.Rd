@@ -16,19 +16,51 @@ limn_tour(
 \arguments{
 \item{.data}{a data.frame to tour}
 
-\item{cols}{Columns to tour. This can use a tidyselect specification.}
+\item{cols}{Columns to tour. This can use a \link{tidyselect} specification
+such as \code{\link[tidyselect:starts_with]{tidyselect::starts_with()}}.}
 
-\item{color}{A variable name in \code{.data}, mapping to the color aesthetic. Default
-is to not colour any points.}
+\item{color}{A variable name in \code{.data}, mapping to the color aesthetic, if
+NULL points will be colored black.}
 
-\item{tour_path}{the tour path to take, the default is \code{\link[tourr:grand_tour]{tourr::grand_tour()}}.}
+\item{tour_path}{the tour path to take, the default is \code{\link[tourr:grand_tour]{tourr::grand_tour()}}
+but also works with \code{\link[tourr:guided_tour]{tourr::guided_tour()}}.}
 
-\item{rescale}{A function that rescales tour columns. Default is \code{\link[=clamp]{clamp()}}
-To not perform any scaling use \code{\link[=identity]{identity()}}.}
+\item{rescale}{A function that rescales \code{cols}, the default is to
+\code{\link[=clamp]{clamp()}} the data to lie in the hyperdimensional unit cube. To not perform
+any scaling use \code{\link[=identity]{identity()}}.}
 
-\item{morph}{A callback function that modifies the projection, default is to
-center the projection using \code{\link[=morph_center]{morph_center()}}.}
+\item{morph}{A callback function that modifies each projection generated,
+the default is to center the projection using \code{\link[=morph_center]{morph_center()}}.}
+}
+\value{
+A shiny app object
 }
 \description{
 Tour a high dimensional dataset
+}
+\details{
+The tour interface consists of two views, the tour view which is a
+dynamic scatterplot and an axis view which shows the direction and
+magnitude of the basis vectors being generated.
+There is a play button, that when pressed will start the tour. There
+is also a text view of the half range which is the maximum squared
+eucluidean distance between points in the tour view. The half range
+is a scale factor for projections and can be thought of as a way
+of zooming in and out on points.
+It can be dynamically modified by scrolling (via a mouse-wheel).
+The animation can be paused via brushing over points using
+shift the key with a mouse drag.
+}
+\examples{
+# tour the first ten columns of the fake tree data
+if (interactive()) {
+  # loads the default interface
+  limn_tour(fake_trees, dim1:dim10)
+  # perform the same action but now coloring points
+  limn_tour(fake_trees, dim1:dim10, color = branches)
+}
+
+}
+\seealso{
+\code{\link[=compute_half_range]{compute_half_range()}},\code{\link[=limn_tour_xylinked]{limn_tour_xylinked()}}
 }
