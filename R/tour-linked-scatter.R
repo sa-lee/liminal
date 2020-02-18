@@ -2,8 +2,6 @@
 #'
 #' @param x a `data.frame` or `tibble` to tour
 #' @param y a `data.frame` to link to `x`, representing a scatter plot
-#' @param by a column (or columns) for defining how to join. See `dplyr::inner_join()`
-#' for details. By default we use the row index for both tables.
 #' @param x_color an optional bare column name in `x`, for the color mapping in the tour view
 #' @param y_color an optional bare column name for the colour mapping the linked view
 #' @param tour_path the tour path to take, the default is [tourr::grand_tour()].
@@ -12,7 +10,43 @@
 #' @param morph A callback function that modifies the projection, default is to
 #' center the projection using [morph_center()].
 #'
-#' @importFrom dplyr inner_join
+#' @details
+#' The linked tour interface consists of three views:
+#'  1. the tour view which is a dynamic scatterplot. Brushing on the tour view
+#'  is activated with the shift key plus a mouse drag. By default it will
+#'  highlight corresponding points in the xy view and pause the animation.
+#'  2. the xy view which an interactive scatterplot. Brushing on the xy view
+#'  will highlight points in the tour view and is activated via a mouse drag,
+#'  the type of highlighting depends on the brush mode selected.
+#'  3. the axis view which shows the direction and magnitude of the
+#'  basis vectors being generated.
+#' There are several other user controls available:
+#'  * There is a play button, that when pressed will start the tour.
+#'  * There is also a text view of the half range which is the maximum squared
+#'    Euclidean distance between points in the tour view. The half range
+#'    is a scale factor for projections and can be thought of as a way
+#'    of zooming in and out on points. It can be dynamically modified by scrolling
+#'    (via a mouse-wheel). To reset double click the tour view.
+#'  * The legend can be toggled to highlight groups of points with
+#'    shift+mouse-click. Multiple groups can be selected in this way. To
+#'    reset double click the legend title.
+#'  * There are different brushing modes that can be modified via
+#'    radio buttons. Both neighbors and distance based brushing operate
+#'    on the k-NN graph obtained from the control panel.
+#
+#' @examples
+#' # tour the first ten columns of the fake tree data and link to the
+#' # another layout based on t-SNE
+#' if (interactive()) {
+#'   # loads the default interface
+#'   tsne <- Rtsne::Rtsne(dplyr::select(fake_trees, dplyr::starts_with("dim")))
+#'   tsne_df <- data.frame(tsneX = tsne$Y[,1], tsneY = tsne$Y[,2], branches = fake_trees$branches)
+#'   limn_tour_xylinked(dplyr::select(fake_trees, dim1:dim10, branches),
+#'                      tsne_df,
+#'                      x_color = branches,
+#'                      y_color = branches)
+#' }
+#'
 #' @export
 limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL, tour_path = tourr::grand_tour(), rescale = clamp, morph = morph_center) {
 

@@ -1,7 +1,7 @@
 #' Tour a high dimensional dataset
 #'
 #' @param .data a data.frame to tour
-#' @param cols Columns to tour. This can use a [tidyselect] specification
+#' @param cols Columns to tour. This can use a tidyselect specification
 #' such as [tidyselect::starts_with()].
 #' @param color A variable name in `.data`, mapping to the color aesthetic, if
 #' NULL points will be colored black.
@@ -15,20 +15,23 @@
 #'
 #' @return A shiny app object
 #' @details
-#' The tour interface consists of two views, the tour view which is a
-#' dynamic scatterplot and an axis view which shows the direction and
-#' magnitude of the basis vectors being generated.
-#' There is a play button, that when pressed will start the tour. There
-#' is also a text view of the half range which is the maximum squared
-#' eucluidean distance between points in the tour view. The half range
-#' is a scale factor for projections and can be thought of as a way
-#' of zooming in and out on points.
-#' It can be dynamically modified by scrolling (via a mouse-wheel).
-#' The animation can be paused via brushing over points using
-#' shift the key with a mouse drag.
+#' The tour interface consists of two views
+#'   1. the tour view which is a dynamic scatterplot
+#'   2. the axis view which shows the direction and magnitude of the
+#'   basis vectors being generated.
+#' There are several other user controls available:
+#'  * There is a play button, that when pressed will start the tour.
+#'  * There is also a text view of the half range which is the maximum squared
+#'    Euclidean distance between points in the tour view. The half range
+#'    is a scale factor for projections and can be thought of as a way
+#'    of zooming in and out on points. It can be dynamically modified by scrolling
+#'    (via a mouse-wheel). To reset double click the tour view.
+#'  * The legend can be toggled to highlight groups of points with
+#'    shift+mouse-click. Multiple groups can be selected in this way. To
+#'    reset double click the legend title.
 #'
 #'
-#' @seealso [compute_half_range()],[limn_tour_xylinked()]
+#' @seealso [compute_half_range()],[limn_tour_xylink()]
 #' @examples
 #' # tour the first ten columns of the fake tree data
 #' if (interactive()) {

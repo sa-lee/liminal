@@ -20,9 +20,6 @@ limn_tour_xylink(
 
 \item{y}{a \code{data.frame} to link to \code{x}, representing a scatter plot}
 
-\item{by}{a column (or columns) for defining how to join. See \code{dplyr::inner_join()}
-for details. By default we use the row index for both tables.}
-
 \item{x_color}{an optional bare column name in \code{x}, for the color mapping in the tour view}
 
 \item{y_color}{an optional bare column name for the colour mapping the linked view}
@@ -37,4 +34,46 @@ center the projection using \code{\link[=morph_center]{morph_center()}}.}
 }
 \description{
 View a tour with external context
+}
+\details{
+The linked tour interface consists of three views:
+\enumerate{
+\item the tour view which is a dynamic scatterplot. Brushing on the tour view
+is activated with the shift key plus a mouse drag. By default it will
+highlight corresponding points in the xy view and pause the animation.
+\item the xy view which an interactive scatterplot. Brushing on the xy view
+will highlight points in the tour view and is activated via a mouse drag,
+the type of highlighting depends on the brush mode selected.
+\item the axis view which shows the direction and magnitude of the
+basis vectors being generated.
+There are several other user controls available:
+}
+\itemize{
+\item There is a play button, that when pressed will start the tour.
+\item There is also a text view of the half range which is the maximum squared
+Euclidean distance between points in the tour view. The half range
+is a scale factor for projections and can be thought of as a way
+of zooming in and out on points. It can be dynamically modified by scrolling
+(via a mouse-wheel). To reset double click the tour view.
+\item The legend can be toggled to highlight groups of points with
+shift+mouse-click. Multiple groups can be selected in this way. To
+reset double click the legend title.
+\item There are different brushing modes that can be modified via
+radio buttons. Both neighbors and distance based brushing operate
+on the k-NN graph obtained from the control panel.
+}
+}
+\examples{
+# tour the first ten columns of the fake tree data and link to the
+# another layout based on t-SNE
+if (interactive()) {
+  # loads the default interface
+  tsne <- Rtsne::Rtsne(dplyr::select(fake_trees, dplyr::starts_with("dim")))
+  tsne_df <- data.frame(tsneX = tsne$Y[,1], tsneY = tsne$Y[,2], branches = fake_trees$branches)
+  limn_tour_xylinked(dplyr::select(fake_trees, dim1:dim10, branches),
+                     tsne_df,
+                     x_color = branches,
+                     y_color = branches)
+}
+
 }

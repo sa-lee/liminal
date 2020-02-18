@@ -16,7 +16,7 @@ limn_tour(
 \arguments{
 \item{.data}{a data.frame to tour}
 
-\item{cols}{Columns to tour. This can use a \link{tidyselect} specification
+\item{cols}{Columns to tour. This can use a tidyselect specification
 such as \code{\link[tidyselect:starts_with]{tidyselect::starts_with()}}.}
 
 \item{color}{A variable name in \code{.data}, mapping to the color aesthetic, if
@@ -39,17 +39,24 @@ A shiny app object
 Tour a high dimensional dataset
 }
 \details{
-The tour interface consists of two views, the tour view which is a
-dynamic scatterplot and an axis view which shows the direction and
-magnitude of the basis vectors being generated.
-There is a play button, that when pressed will start the tour. There
-is also a text view of the half range which is the maximum squared
-eucluidean distance between points in the tour view. The half range
+The tour interface consists of two views
+\enumerate{
+\item the tour view which is a dynamic scatterplot
+\item the axis view which shows the direction and magnitude of the
+basis vectors being generated.
+There are several other user controls available:
+}
+\itemize{
+\item There is a play button, that when pressed will start the tour.
+\item There is also a text view of the half range which is the maximum squared
+Euclidean distance between points in the tour view. The half range
 is a scale factor for projections and can be thought of as a way
-of zooming in and out on points.
-It can be dynamically modified by scrolling (via a mouse-wheel).
-The animation can be paused via brushing over points using
-shift the key with a mouse drag.
+of zooming in and out on points. It can be dynamically modified by scrolling
+(via a mouse-wheel). To reset double click the tour view.
+\item The legend can be toggled to highlight groups of points with
+shift+mouse-click. Multiple groups can be selected in this way. To
+reset double click the legend title.
+}
 }
 \examples{
 # tour the first ten columns of the fake tree data
@@ -62,5 +69,5 @@ if (interactive()) {
 
 }
 \seealso{
-\code{\link[=compute_half_range]{compute_half_range()}},\code{\link[=limn_tour_xylinked]{limn_tour_xylinked()}}
+\code{\link[=compute_half_range]{compute_half_range()}},\code{\link[=limn_tour_xylink]{limn_tour_xylink()}}
 }
