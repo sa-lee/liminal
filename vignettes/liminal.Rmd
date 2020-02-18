@@ -41,16 +41,39 @@ limn_xy(fake_trees, x = PC1, y = PC2, color = branches)
 
 We see some separation of the branches in first two principal components,
 however, we can't see each of the branches clearly or their relation to each
-other. We can tourr them to get an idea of underlying structure:
+other. 
+
+We can tour the components that represent most of the variation in the 
+data to get an idea of underlying structure. The code below generates a dynamic scatter plot by touring the first fifteen principal components. 
+
+The following code generates a shiny application, the provides an interface to the tour:
 
 ```{r, eval = FALSE}
 # this loads a shiny app
 limn_tour(fake_trees, PC1:PC15, color = branches)
 ```
+The interace consists of the tour view which is a dynamic scatterplot
+and an axis view which corresponds to magnitude and direction of 
+the generated basis vectors. 
 
-The blue branch is hidden and connects all other branches. 
+Brushing on the tour view is activated with the shift key plus a mouse drag. It will highlight points that fall inside the brush and
+pause the current view. 
 
-We can also compare this to t-SNE embedding:
+There are several additional interactions available on this view:
+  * There is a play button, that when pressed will start the tour.
+  * There is also a text view of the half range which is the maximum squared
+    Euclidean distance between points in the tour view. The half range
+    is a scale factor for projections and can be thought of as a way
+    of zooming in and out on points. It can be dynamically modified by scrolling
+    (via a mouse-wheel). To reset double click the tour view.
+  * The legend can be toggled to highlight groups of points with
+    shift+mouse-click. Multiple groups can be selected in this way. To
+    reset double click the legend title.
+
+From tour view, we can see that the blue branch is hidden and forms the
+backbone of the tree. 
+
+We can also compare this to t-SNE embedding run with default settings:
 
 ```{r tsne-xy}
 set.seed(2099)
@@ -62,8 +85,8 @@ tsne_df <- data.frame(tsneX = tsne$Y[,1],
 limn_xy(tsne_df, x = tsneX, y = tsneY, color = branches)
 ```
 
-The topology is a little messed up. We can see where our embedding is different
-via a linked scatter plot:
+The topology is a little messed up as the blue branch is now broken into two distinct pieces. 
+We can see where our embedding is different via a linked tour:
 
 ```{r, eval = FALSE}
 limn_tour_xylink(dplyr::select(fake_trees, PC1:PC10, branches),
@@ -71,3 +94,7 @@ limn_tour_xylink(dplyr::select(fake_trees, PC1:PC10, branches),
                  x_color = branches, 
                  y_color = branches)
 ```
+ This function requires two tables that will be linked together in seperate views. The tour interface is the same as above, except now
+ brushing on the tour view will highlight points on the right hand side
+ scatter plot. The right side scatterplot view is an interactive scatterplot. Brushing on the right view is activated via click and drag movements. It will highlight points in the tour view but the type of highlighting depends on the brush mode selected, the default is simple
+ linked brushing. There are two other brushing modes that can be modified via radio buttons. Both neighbors and distance based brushing operate on the k-NN graph obtained from the control panel.

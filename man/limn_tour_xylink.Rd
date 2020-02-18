@@ -37,10 +37,10 @@ View a tour with external context
 \details{
 The linked tour interface consists of three views:
 \enumerate{
-\item the tour view which is a dynamic scatterplot. Brushing on the tour view
+\item The tour view on the left is a dynamic and interactive scatterplot. Brushing on the tour view
 is activated with the shift key plus a mouse drag. By default it will
 highlight corresponding points in the xy view and pause the animation.
-\item the xy view which an interactive scatterplot. Brushing on the xy view
+\item The xy view on the right is an interactive scatterplot. Brushing on the xy view
 will highlight points in the tour view and is activated via a mouse drag,
 the type of highlighting depends on the brush mode selected.
 \item the axis view which shows the direction and magnitude of the

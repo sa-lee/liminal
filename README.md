@@ -32,5 +32,5 @@ can see the following:
 3.  identify ‘interesting’ shapes or points in the data
 
 See the [liminal
-vignette](https://https://sa-lee.github.io/liminal/articles/liminal.html)
-for details of package usage.
+vignette](https://sa-lee.github.io/liminal/articles/liminal.html) for
+details of package usage.
