@@ -110,7 +110,7 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
     vegawidget::vw_shiny_set_data("axisView", "rotations", rct_axes())
 
     # only update data to the tour view
-    # vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())
+    vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())
 
     shiny::observeEvent(rct_y_brush_active(), {
       # if y_brush is activated, will always highlight
@@ -143,13 +143,6 @@ limn_tour_xylink <- function(x, y, by = "rowid", x_color = NULL, y_color = NULL,
     #   selections[["y"]] <- sel_seq(selections[["y"]], selections[["x"]])
     #
     # })
-
-    shiny::observeEvent(rct_x_brush_active(), {
-      vals <- rct_proj()
-      message_view("path", vals, session)
-    })
-
-
 
     output$half_range <- shiny::renderPrint({
       # protects against initial NULL
