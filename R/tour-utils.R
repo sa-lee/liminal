@@ -103,18 +103,15 @@ conditional_join <- function(x, y, by = "rowid") {
   rowid.x <- seq_len(nrow(x))
   rowid.y <- seq_len(nrow(y))
 
+  names.x <- colnames(x)
+  # only extract names if they are different
+  names.y <- setdiff(colnames(y), names.x)
+
+  y <- y[, names.y]
   x[["rowid"]] <- rowid.x
   y[["rowid"]]<- rowid.y
 
-  if (by == "rowid") {
-    res <- dplyr::bind_cols(x, y)
-  } else {
-    res <- dplyr::inner_join(x, y, by = by)
-  }
-  res <- dplyr::mutate(res,
-                       selectedX = TRUE,
-                       selectedY = TRUE)
-  res
+  dplyr::inner_join(x, y, by = by)
 
 }
 
