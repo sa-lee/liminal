@@ -62,28 +62,31 @@ limn_tour_xylink <- function(x, y, x_color = NULL, y_color = NULL, tour_path = t
 
   x_views <- init_tour(tour_data, path, x_color_tbl, morph)
 
-  x_views[["tourView"]][["encoding"]][["color"]][["condition"]] <-
-    c(test = "datum.selectedX === true",
-         x_views[["tourView"]][["encoding"]][["color"]][["condition"]][-1]
-         )
+  x_views[["tourView"]][["encoding"]][["color"]][["condition"]][["selection"]] <-
+    list(`or` = list("brush", "y_brush"))
+  # x_views[["tourView"]][["encoding"]][["color"]][["condition"]] <-
+  #   c(test = "datum.selectedX === true",
+  #        x_views[["tourView"]][["encoding"]][["color"]][["condition"]][-1]
+  #        )
 
-  x_views[["source_values"]] <- dplyr::bind_cols(
-    x_views[["source_values"]],
-    selectedX = !logical(nrow(x))
-  )
-
-  x_views[["tourView"]][["data"]][["values"]] <- x_views[["source_values"]]
 
   y_color <- rlang::enquo(y_color)
   y_views <- y_spec(y, !!y_color)
 
-  tspec <- x_views[["tourView"]][["$schema"]]
-  hconcat <- list(hconcat = list(x_views[["tourView"]][!names(x_views[["tourView"]]) %in% c("$schema")],
+  x_views[["source_values"]] <- conditional_join(
+    x_views[["source_values"]],
+    y_views[["y_data"]]
+  )
+  x_views[["tourView"]][["data"]][["values"]] <- x_views[["source_values"]]
+
+
+  tspec <- x_views[["tourView"]][c("$schema", "data")]
+  hconcat <- list(hconcat = list(x_views[["tourView"]][!names(x_views[["tourView"]]) %in% c("$schema", "data")],
                                  y_views[["y_spec"]])
   )
 
+  x_views[["tourView"]] <- c(tspec, hconcat)
 
-  x_views[["tourView"]] <- c(`$schema` = tspec, hconcat)
 
   server <- function(input, output, session) {
     output[["tourView"]] <- vegawidget::renderVegawidget(
@@ -146,44 +149,10 @@ limn_tour_xylink <- function(x, y, x_color = NULL, y_color = NULL, tour_path = t
     # only update data to the tour view
     vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())
 
-    shiny::observeEvent(rct_y_brush_active(), {
-      # if y_brush is activated, will always highlight
-      # the y_view
-      active_brush <- rct_embed_brush()
-      # setup selection
-
-      # update selections for embed view
-      transient_brush_update(y_views[["y_spec"]][["data"]][["values"]],
-                             active_brush,
-                             selections,
-                             view = "y",
-                             name = "embed",
-                             session)
-
-      selections[["x"]] <- selections[["y"]]
-      vals_x <- rct_proj()
-      message_view("path", vals_x, session)
-    })
-
-    # shiny::observeEvent(rct_x_brush_active(), {
-    #   # if x_brush is activated, will always highlight
-    #   # the x_view
-    #   active_brush <- rct_active_brush()
-    #   # update selections for embed view
-
-    #
-    #   # setup selection
-    #   sel_seq <- selection_sequence(input$brush_logic)
-    #   selections[["y"]] <- sel_seq(selections[["y"]], selections[["x"]])
-    #
-    # })
 
     output$half_range <- shiny::renderPrint({
       # protects against initial NULL
-      list(rct_half_range(),
-           table(selections$y),
-           table(selections$x),
-           selections$proj)
+      list(rct_half_range(), selections$proj)
     })
   }
 
@@ -199,7 +168,6 @@ y_spec <- function(y, y_color) {
   y_color <- rlang::enquo(y_color)
   y_data <- dplyr::select(y, dplyr::everything(), !!y_color)
   stopifnot(ncol(y_data) <= 3)
-  y_data[["selectedY"]] <- TRUE
 
   xf <- names(y_data)[1]
   yf <- names(y_data)[2]
@@ -215,7 +183,7 @@ y_spec <- function(y, y_color) {
                           y = list(field = yf, type = "quantitative", scale = list(domain = domain)),
                           color = list(
                             condition = list(
-                              test = "datum.selectedY === true",
+                              selection = list(`or` = list("y_brush", "brush")),
                               field = colf,
                               type = coltype
                             ),
@@ -231,13 +199,12 @@ y_spec <- function(y, y_color) {
 
   mark <- list(mark = list(type = "circle"))
   selection <- list(selection = list("y_brush" = list(type = "interval")))
-  data <- list(data = list(name = "embed", values = y_data))
+  #data <- list(data = list(name = "embed", values = y_data))
 
-  y_spec <- c(data,
-              encoding,
+  y_spec <- c(encoding,
               mark,
               selection)
-  list(y_spec = y_spec)
+  list(y_data = y_data, y_spec = y_spec)
 }
 
 inside_brush <- function(cols, vals, brush) {
