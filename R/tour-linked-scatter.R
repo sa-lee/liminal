@@ -1,4 +1,4 @@
-#' View a tour with external context
+#' View a tour, linked to a scatter plot.
 #'
 #' @param x a `data.frame` or `tibble` to tour
 #' @param y a `data.frame` to link to `x`, representing a scatter plot
@@ -9,6 +9,9 @@
 #' To not perform any scaling use [identity()].
 #' @param morph A callback function that modifies the projection, default is to
 #' center the projection using [morph_center()].
+#' @param reference an optional data.frame or matrix to compute
+#' nearest neighbors from, must have same number of rows as `x`, the default
+#' is to compute from all numeric columns in `x`.
 #'
 #' @details
 #' The linked tour interface consists of three views:
@@ -48,7 +51,14 @@
 #' }
 #'
 #' @export
-limn_tour_xylink <- function(x, y, x_color = NULL, y_color = NULL, tour_path = tourr::grand_tour(), rescale = clamp, morph = morph_center) {
+limn_tour_xylink <- function(x,
+                             y,
+                             x_color = NULL,
+                             y_color = NULL,
+                             tour_path = tourr::grand_tour(),
+                             rescale = clamp,
+                             morph = morph_center,
+                             reference = x) {
 
   # generate tour data
   x_color <- rlang::enquo(x_color)
@@ -64,15 +74,15 @@ limn_tour_xylink <- function(x, y, x_color = NULL, y_color = NULL, tour_path = t
 
   x_views[["tourView"]][["encoding"]][["color"]][["condition"]][["selection"]] <-
     list(`or` = list("brush", "y_brush"))
-  # x_views[["tourView"]][["encoding"]][["color"]][["condition"]] <-
-  #   c(test = "datum.selectedX === true",
-  #        x_views[["tourView"]][["encoding"]][["color"]][["condition"]][-1]
-  #        )
 
-
+  # generate y_views
   y_color <- rlang::enquo(y_color)
   y_views <- y_spec(y, !!y_color)
 
+  # generate reference matrix for kNN
+  reference <- as.matrix(dplyr::select_if(reference, is.numeric))
+
+  # collapse views
   x_views[["source_values"]] <- conditional_join(
     x_views[["source_values"]],
     y_views[["y_data"]]
@@ -85,8 +95,8 @@ limn_tour_xylink <- function(x, y, x_color = NULL, y_color = NULL, tour_path = t
                                  y_views[["y_spec"]])
   )
 
-  x_views[["tourView"]] <- c(tspec, hconcat)
 
+  x_views[["tourView"]] <- c(tspec, hconcat)
 
   server <- function(input, output, session) {
     output[["tourView"]] <- vegawidget::renderVegawidget(
@@ -103,10 +113,7 @@ limn_tour_xylink <- function(x, y, x_color = NULL, y_color = NULL, tour_path = t
     )
 
     # reactives
-    selections <- shiny::reactiveValues(x = !logical(nrow(x)),
-                                        y = !logical(nrow(y)),
-                                        proj = path(0)$proj
-                                        )
+    selections <- shiny::reactiveValues(proj = path(0)$proj)
 
     rct_active_zoom <-  vegawidget::vw_shiny_get_signal("tourView",
                                                         name = "grid",
@@ -124,9 +131,14 @@ limn_tour_xylink <- function(x, y, x_color = NULL, y_color = NULL, tour_path = t
     rct_x_brush_active <- rct_pause(rct_active_brush)
     rct_y_brush_active <- rct_pause(rct_embed_brush)
 
-
-
     rct_play <- shiny::eventReactive(input$play, input$play > 0)
+
+    rct_neighbours <- shiny::reactive({
+      if (!identical(input$brush_selector, "linked")) {
+        message("Computing k-NN with paramaters k = ", input$brush_knn)
+        find_knn(reference, input$brush_knn)
+      }
+    })
 
     # these set up streaming for tour view
     rct_tour <- rct_tour(path,
@@ -152,7 +164,9 @@ limn_tour_xylink <- function(x, y, x_color = NULL, y_color = NULL, tour_path = t
 
     output$half_range <- shiny::renderPrint({
       # protects against initial NULL
-      list(rct_half_range(), selections$proj)
+      list(rct_half_range(),
+           selections$proj,
+           rct_neighbours())
     })
   }
 
