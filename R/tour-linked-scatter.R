@@ -154,13 +154,11 @@ limn_tour_xylink <- function(x,
                             rct_half_range,
                             morph)
 
-
     # observers
     vegawidget::vw_shiny_set_data("axisView", "rotations", rct_axes())
 
     # only update data to the tour view
     vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())
-
 
     output$half_range <- shiny::renderPrint({
       # protects against initial NULL
