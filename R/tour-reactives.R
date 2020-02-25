@@ -25,7 +25,8 @@ rct_tour <- function(plan, aps = 1, fps = 12, rct_event, rct_refresh, selections
   shiny::reactive({
     play <- rct_refresh()
     play <- current$step >= 0 && play
-    play <- !rct_event() && play
+    db <- shiny::debounce(rct_event, aps/fps)
+    play <- !db() && play
     if (play) {
       current <<- plan(aps/fps)
       selections[["proj"]] <- current$proj
