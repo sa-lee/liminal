@@ -85,7 +85,9 @@ tsne_df <- data.frame(tsneX = tsne$Y[,1],
 limn_xy(tsne_df, x = tsneX, y = tsneY, color = branches)
 ```
 
-The topology is a little messed up as the blue branch is now broken into two distinct pieces. 
+The topology is a little messed up as the blue branch is now broken into two 
+distinct pieces. 
+
 We can see where our embedding is different via a linked tour:
 
 ```{r, eval = FALSE}
