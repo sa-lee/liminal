@@ -83,20 +83,14 @@ limn_tour_xylink <- function(x,
   reference <- as.matrix(dplyr::select_if(reference, is.numeric))
 
   # collapse views
-  x_views[["source_values"]] <- conditional_join(
-    x_views[["source_values"]],
-    y_views[["y_data"]]
-  )
-  x_views[["tourView"]][["data"]][["values"]] <- x_views[["source_values"]]
 
 
-  tspec <- x_views[["tourView"]][c("$schema", "data")]
-  hconcat <- list(hconcat = list(x_views[["tourView"]][!names(x_views[["tourView"]]) %in% c("$schema", "data")],
+  hconcat <- list(hconcat = list(x_views[["tourView"]][!names(x_views[["tourView"]]) %in% c("$schema")],
                                  y_views[["y_spec"]])
   )
 
-
-  x_views[["tourView"]] <- c(tspec, hconcat)
+  x_views[["tourView"]] <- c(list(`$schema` = x_views[["tourView"]][["$schema"]]),
+                             hconcat)
 
   server <- function(input, output, session) {
     output[["tourView"]] <- vegawidget::renderVegawidget(
@@ -211,12 +205,13 @@ y_spec <- function(y, y_color) {
 
   mark <- list(mark = list(type = "circle"))
   selection <- list(selection = list("y_brush" = list(type = "interval")))
-  #data <- list(data = list(name = "embed", values = y_data))
+  data <- list(data = list(name = "embed", values = y_data))
 
-  y_spec <- c(encoding,
+  y_spec <- c(data,
+              encoding,
               mark,
               selection)
-  list(y_data = y_data, y_spec = y_spec)
+  list(y_spec = y_spec)
 }
 
 inside_brush <- function(cols, vals, brush) {
@@ -266,3 +261,9 @@ selection_sequence <- function(logic) {
          stop("Unknown option:", logic)
   )
 }
+
+# idea for getting NN to work,
+# create a new layer that contains the indexes
+# filter that data based on a selection
+# the layer encoding is the one that colours points etc,
+# while the layer above is the driver for the selections
