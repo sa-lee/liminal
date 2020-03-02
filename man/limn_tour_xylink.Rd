@@ -2,7 +2,7 @@
 % Please edit documentation in R/tour-linked-scatter.R
 \name{limn_tour_xylink}
 \alias{limn_tour_xylink}
-\title{View a tour with external context}
+\title{View a tour, linked to a scatter plot.}
 \usage{
 limn_tour_xylink(
   x,
@@ -11,7 +11,8 @@ limn_tour_xylink(
   y_color = NULL,
   tour_path = tourr::grand_tour(),
   rescale = clamp,
-  morph = morph_center
+  morph = morph_center,
+  reference = x
 )
 }
 \arguments{
@@ -30,9 +31,13 @@ To not perform any scaling use \code{\link[=identity]{identity()}}.}
 
 \item{morph}{A callback function that modifies the projection, default is to
 center the projection using \code{\link[=morph_center]{morph_center()}}.}
+
+\item{reference}{an optional data.frame or matrix to compute
+nearest neighbors from, must have same number of rows as \code{x}, the default
+is to compute from all numeric columns in \code{x}.}
 }
 \description{
-View a tour with external context
+View a tour, linked to a scatter plot.
 }
 \details{
 The linked tour interface consists of three views:

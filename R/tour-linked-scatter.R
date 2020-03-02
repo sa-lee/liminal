@@ -224,6 +224,7 @@ inside_brush <- function(cols, vals, brush) {
 }
 
 
+#' @importFrom rlang ":="
 transient_brush_update <- function(vals, brush, current, view, name, session) {
   view <- match.arg(view, c("x", "y"))
   not_in_view <- setdiff(c("x", "y"), view)
