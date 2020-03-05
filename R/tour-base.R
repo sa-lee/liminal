@@ -39,7 +39,7 @@
 #'   limn_tour(fake_trees, dim1:dim10)
 #'   # perform the same action but now coloring points
 #'   limn_tour(fake_trees, dim1:dim10, color = branches)
-#' }
+#'}
 #'
 #' @export
 limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour(), rescale = clamp, morph = morph_center) {
@@ -144,6 +144,9 @@ limn_tour_server <- function(tour_data, path, color_tbl, morph) {
     )
 
     # reactives
+    selections <- shiny::reactiveValues(proj = path(0)$proj)
+
+
     rct_active_zoom <-  vegawidget::vw_shiny_get_signal("tourView",
                                             name = "grid",
                                             body_value = "value")
@@ -152,18 +155,20 @@ limn_tour_server <- function(tour_data, path, color_tbl, morph) {
                                                      body_value = "value")
 
     rct_half_range <- rct_half_range(rct_active_zoom, init[["half_range"]])
-    rct_pause <- rct_pause(rct_active_brush)
+    rct_x_brush_active <- rct_pause(rct_active_brush)
 
     rct_play <- shiny::eventReactive(input$play, input$play > 0)
 
     rct_tour <- rct_tour(path,
-                         rct_event = rct_pause,
+                         rct_event = rct_x_brush_active,
                          rct_refresh = rct_play,
+                         selections = selections,
                          session = session)
+
     rct_axes <- stream_axes(rct_tour, init[["cols"]])
-    rct_proj <- stream_proj(rct_tour,
-                            tour_data,
+    rct_proj <- stream_proj(tour_data,
                             init[["source_values"]],
+                            selections,
                             rct_half_range,
                             morph)
 
