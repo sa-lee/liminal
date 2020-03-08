@@ -44,10 +44,7 @@
 #'   # loads the default interface
 #'   tsne <- Rtsne::Rtsne(dplyr::select(fake_trees, dplyr::starts_with("dim")))
 #'   tsne_df <- data.frame(tsneX = tsne$Y[,1], tsneY = tsne$Y[,2], branches = fake_trees$branches)
-#'   limn_tour_xylinked(dplyr::select(fake_trees, dim1:dim10, branches),
-#'                      tsne_df,
-#'                      x_color = branches,
-#'                      y_color = branches)
+#'   limn_tour_xylink(dplyr::select(fake_trees, dim1:dim10, branches), tsne_df, x_color = branches, y_color = branches)
 #' }
 #'
 #' @export
@@ -85,12 +82,24 @@ limn_tour_xylink <- function(x,
   # collapse views
 
 
-  hconcat <- list(hconcat = list(x_views[["tourView"]][!names(x_views[["tourView"]]) %in% c("$schema")],
+  hconcat <- list(hconcat = list(x_views[["tourView"]][!names(x_views[["tourView"]]) %in% c("$schema", "data")],
                                  y_views[["y_spec"]])
   )
 
-  x_views[["tourView"]] <- c(list(`$schema` = x_views[["tourView"]][["$schema"]]),
-                             hconcat)
+  x_views[["tourView"]] <- c(list(`$schema` = x_views[["tourView"]][["$schema"]],
+                                  datasets =
+                                    list("path" = x_views[["tourView"]][["data"]][["values"]],
+                                         "embed" = y_views[["data"]]),
+                                  data = list(name = "path"),
+                                  transform = list(
+                                    list("window" =  list(list("op" = "row_number", "as" = "row_number"))),
+                                    list("lookup" = "row_number",
+                                         "from" = list("data" = list("name" = "embed"),
+                                                       "key" = "row_number",
+                                                       "fields" = names(y_views[["data"]])[seq_len(ncol(y))])
+                                    )
+  )),
+  hconcat)
 
   server <- function(input, output, session) {
     output[["tourView"]] <- vegawidget::renderVegawidget(
@@ -156,9 +165,7 @@ limn_tour_xylink <- function(x,
 
     output$half_range <- shiny::renderPrint({
       # protects against initial NULL
-      list(rct_half_range(),
-           selections$proj,
-           rct_neighbours())
+      rct_half_range()
     })
   }
 
@@ -205,13 +212,12 @@ y_spec <- function(y, y_color) {
 
   mark <- list(mark = list(type = "circle"))
   selection <- list(selection = list("y_brush" = list(type = "interval")))
-  data <- list(data = list(name = "embed", values = y_data))
 
-  y_spec <- c(data,
-              encoding,
+  y_spec <- c(encoding,
               mark,
               selection)
-  list(y_spec = y_spec)
+  list(data = dplyr::mutate(y_data, row_number = seq_len(nrow(y_data))),
+       y_spec = y_spec)
 }
 
 inside_brush <- function(cols, vals, brush) {
