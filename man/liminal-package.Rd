@@ -4,10 +4,30 @@
 \name{liminal-package}
 \alias{liminal}
 \alias{liminal-package}
-\title{liminal: Multivariate Data Visualization With Tours and Embeddings}
+\title{liminal: interactive high-dimensional data visualisation}
 \description{
-More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+liminal is an R package for constructing interactive visualisations designed
+for exploratory high-dimensional data analysis. It's main purpose is to
+combine tours with (non-linear) dimension reduction algorithms to provide a
+more holistic view of the geometry and topology of dataset. These
+are designed for data analysts first, so they render either inside the
+RStudio Viewer pane or from a web-browser.
+}
+\details{
+There are three main functions for generating visualisations:
+\itemize{
+\item Simple interactive scatter plots with \code{limn_xy()} and \code{limn_xycol()}
+\item Generating tours via \code{limn_tour()}
+\item Linking tours to another view \code{limn_tour_link()}
+}
+
+User interactions can be customised via brush compostions
+\itemize{
+\item ...
+}
+
+For more details on the features of liminal, read the vignettes:
+\code{browseVignettes(package = "liminal")}
 }
 \author{
 \strong{Maintainer}: Stuart Lee \email{stuart.lee1@monash.edu}

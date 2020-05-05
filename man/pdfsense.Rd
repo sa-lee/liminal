@@ -4,7 +4,9 @@
 \name{pdfsense}
 \alias{pdfsense}
 \title{Parton distribution function sensitivity experiments}
-\format{An object of class \code{data.frame} with 2808 rows and 62 columns.}
+\format{
+An object of class \code{data.frame} with 2808 rows and 62 columns.
+}
 \source{
 \url{http://www.physics.smu.edu/botingw/PDFsense_web_histlogy}
 }

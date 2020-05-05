@@ -1,13 +1,15 @@
 Package: liminal
 Type: Package
 Title: Multivariate Data Visualization With Tours and Embeddings
-Version: 0.0.3.9999
+Version: 0.0.4.9999
 Authors@R: person(given = "Stuart", 
                   family = "Lee",
                   role = c("aut", "cre"),
                   email = "stuart.lee1@monash.edu")
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: Compose interactive visualisations designed for exploratory 
+        high-dimensional data analysis. With liminal you can combine tours with 
+        (non-linear) dimension reduction algorithms to provide a more holistic 
+        view of the geometry and topology of dataset.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -22,10 +24,9 @@ Imports:
     matrixStats,
     FNN,
     RcppAnnoy,
-    tibble,
     methods
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 Suggests: 
     Rtsne,
     knitr,

@@ -4,7 +4,9 @@
 \name{fake_trees}
 \alias{fake_trees}
 \title{A high-dimensional tree data structure with 10 branching points.}
-\format{An object of class \code{data.frame} with 3000 rows and 101 columns.}
+\format{
+An object of class \code{data.frame} with 3000 rows and 101 columns.
+}
 \source{
 \href{https://github.com/KrishnaswamyLab/PHATE/blob/master/Python/phate/tree.py}{PHATE}
 }
