@@ -1,43 +1,45 @@
 # UI functions
 
-#' @import miniUI
 gadget_tour_titlebar <- function(title) {
   # creates a gadget interface, once user clicks done,
   # return current basiis in view
   gadgetTitleBar(title,
-                 left = miniTitleBarCancel(), # use escape key or click to end
+                 left = miniTitleBarCancelButton(), # use escape key or click to end
                  right = miniTitleBarButton("done", "Done", primary = TRUE)
   )
 }
 
 gadget_tour_main_panel <- function(axis = TRUE) {
-  tour_view <- vegawidgetOutput("tourView", height = "100%")
+  tour_view <- vegawidgetOutput("tourView", height = "100%", width = "100%")
   padding <- 0
 
   # print half_rng under the view
-  flex_col <- c(1, NA)
+  flex_col <- c(2, 1)
   half_range_view <- textOutput(outputId = "half_range")
 
   if (axis) {
-    flex_row <- c(1,2)
-    axis_view <- vegawidgetOutput("axisView", height = "100%")
-    miniContentPanel(
+    flex_row <- c(1,1)
+    axis_view <- vegawidgetOutput("axisView", height = "100%", width = "100%")
+    main_panel <- miniContentPanel(
       padding = padding,
       fillCol(
-        flex = flex_col,
-        fillRow(flex_row = flex_row, axis_view, tour_view),
+        fillRow(axis_view, tour_view, flex = flex_row),
         half_range_view,
-      )
+        flex = flex_col
+      ), scrollable = FALSE
     )
+  } else {
+    main_panel <-   miniContentPanel(padding = padding,
+                                     fillCol(
+                                       flex = flex_col,
+                                       tview,
+                                       half_range_view
+                                     )
+    )
+
   }
 
-  miniContenPanel(padding = padding,
-                  fillCol(
-                    flex = flex_col,
-                    tview,
-                    half_range_view
-                  )
-  )
+  main_panel
 
 }
 

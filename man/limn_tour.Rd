@@ -29,7 +29,7 @@ but also works with \code{\link[tourr:guided_tour]{tourr::guided_tour()}}.}
 \code{\link[=clamp]{clamp()}} the data to lie in the hyperdimensional unit cube. To not perform
 any scaling use \code{\link[=identity]{identity()}}.}
 
-\item{morph}{A callback function that modifies each projection generated,
+\item{morph}{A function that modifies each projection generated,
 the default is to center the projection using \code{\link[=morph_center]{morph_center()}}.}
 }
 \value{

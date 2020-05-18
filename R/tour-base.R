@@ -53,9 +53,9 @@ limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour()
 
   # generate app
   server <- limn_tour_server(tour_data, path, color_data, morph)
-  ui <- limn_tour_ui("simple")
-  shiny::shinyApp(ui, server)
-
+  ui <- gadget_tour_ui(title = "liminal tour")
+  app <- shinyApp(ui, server)
+  runGadget(app)
 }
 
 blank_axis <- function() {

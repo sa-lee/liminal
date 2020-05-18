@@ -19,6 +19,8 @@
 #' For more details on the features of liminal, read the vignettes:
 #' `browseVignettes(package = "liminal")`
 #' @import vegawidget
+#' @import shiny
+#' @import miniUI
 #' @keywords internal
 "_PACKAGE"
 
