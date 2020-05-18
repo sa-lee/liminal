@@ -1,4 +1,68 @@
 # UI functions
+
+#' @import miniUI
+gadget_tour_titlebar <- function(title) {
+  # creates a gadget interface, once user clicks done,
+  # return current basiis in view
+  gadgetTitleBar(title,
+                 left = miniTitleBarCancel(), # use escape key or click to end
+                 right = miniTitleBarButton("done", "Done", primary = TRUE)
+  )
+}
+
+gadget_tour_main_panel <- function(axis = TRUE) {
+  tour_view <- vegawidgetOutput("tourView", height = "100%")
+  padding <- 0
+
+  # print half_rng under the view
+  flex_col <- c(1, NA)
+  half_range_view <- textOutput(outputId = "half_range")
+
+  if (axis) {
+    flex_row <- c(1,2)
+    axis_view <- vegawidgetOutput("axisView", height = "100%")
+    miniContentPanel(
+      padding = padding,
+      fillCol(
+        flex = flex_col,
+        fillRow(flex_row = flex_row, axis_view, tour_view),
+        half_range_view,
+      )
+    )
+  }
+
+  miniContenPanel(padding = padding,
+                  fillCol(
+                    flex = flex_col,
+                    tview,
+                    half_range_view
+                  )
+  )
+
+}
+
+
+gadget_tour_controls <- function() {
+  play <- actionButton("play", "Play", icon = icon("play"))
+  reset <- actionButton("restart", "Restart", icon = icon("refresh"))
+  pause <- actionButton("pause", "Pause", icon = icon("pause"))
+
+  miniButtonBlock(
+    play,
+    pause,
+    reset
+  )
+}
+
+gadget_tour_ui <- function(title = "liminal tour", axis = TRUE) {
+  miniPage(
+    gadget_tour_titlebar(title),
+    gadget_tour_main_panel(axis),
+    gadget_tour_controls()
+  )
+}
+
+
 limn_tour_ui <- function(view = "simple", nr) {
   view <- match.arg(view, c("simple", "linked"))
 
