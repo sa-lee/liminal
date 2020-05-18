@@ -66,6 +66,9 @@ blank_axis <- function() {
        domainColor = "lightgray")
 }
 
+# look into sizing policies for vegawidget https://vega.github.io/vega-lite/docs/size.html
+#
+
 render_init <- function(source_values, half_range) {
   # setup initial view
   base_schema <- schema_scatter()
