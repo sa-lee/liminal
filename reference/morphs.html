@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Compute Frobenius norm of matrix-like objects x and y — compute_proj_dist • liminal</title>
+<title>Morphing Projections — morph_center • liminal</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Compute Frobenius norm of matrix-like objects x and y — compute_proj_dist" />
-<meta property="og:description" content="Compute Frobenius norm of matrix-like objects x and y" />
+<meta property="og:title" content="Morphing Projections — morph_center" />
+<meta property="og:description" content="Morphing Projections" />
 
 
 
@@ -118,23 +118,35 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Compute Frobenius norm of matrix-like objects x and y</h1>
+    <h1>Morphing Projections</h1>
     
-    <div class="hidden name"><code>compute_proj_dist.Rd</code></div>
+    <div class="hidden name"><code>morphs.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Compute Frobenius norm of matrix-like objects x and y</p>
+    <p>Morphing Projections</p>
     </div>
 
-    <pre class="usage"><span class='fu'>compute_proj_dist</span>(<span class='kw'>x</span>, <span class='kw'>y</span>)</pre>
+    <pre class="usage"><span class='fu'>morph_center</span>(<span class='kw'>proj</span>, <span class='kw'>half_range</span>)
+
+<span class='fu'>morph_identity</span>(<span class='kw'>proj</span>, <span class='kw'>half_range</span>)
+
+<span class='fu'>morph_radial</span>(<span class='kw'>proj</span>, <span class='kw'>half_range</span>, <span class='kw'>p_eff</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x, y</th>
-      <td><p>'matrix' like objects that have <code>tcrossprod</code> methods</p></td>
+      <th>proj</th>
+      <td><p>a projection</p></td>
+    </tr>
+    <tr>
+      <th>half_range</th>
+      <td><p>scale factor for projection</p></td>
+    </tr>
+    <tr>
+      <th>p_eff</th>
+      <td><p>dimensionality of basis</p></td>
     </tr>
     </table>
 

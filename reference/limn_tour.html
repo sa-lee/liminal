@@ -133,7 +133,7 @@
   color = <span class='kw'>NULL</span>,
   tour_path = <span class='kw'>tourr</span>::<span class='fu'><a href='https://rdrr.io/pkg/tourr/man/grand_tour.html'>grand_tour</a></span>(),
   rescale = <span class='kw'>clamp</span>,
-  morph = <span class='kw'>morph_center</span>
+  morph = <span class='st'>"center"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -166,8 +166,10 @@ any scaling use <code><a href='https://rdrr.io/r/base/identity.html'>identity()<
     </tr>
     <tr>
       <th>morph</th>
-      <td><p>A function that modifies each projection generated,
-the default is to center the projection using <code>morph_center()</code>.</p></td>
+      <td><p>One of <code><a href='https://rdrr.io/r/base/c.html'>c("center", "centre", "identity", "radial")</a></code>
+that rescales each projection along the tour path. The default
+is to center the projections and divide by half range. See <code>morph_center()</code>
+for details.</p></td>
     </tr>
     </table>
 
