@@ -50,7 +50,6 @@ limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour()
   color <- rlang::enquo(color)
   # set up tour parameters
   tour_data <- init_tour_matrix(.data, cols, rescale = rescale)
-  path <- tourr::new_tour(tour_data, tour_path)
   # setup colors
   color_data <- dplyr::select(.data, !!color)
 
@@ -58,7 +57,7 @@ limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour()
   morph_projection <- generate_morph(morph, p_eff = ncol(tour_data))
 
   # generate app
-  server <- limn_tour_server(tour_data, path, color_data, morph_projection)
+  server <- limn_tour_server(tour_data, tour_path, color_data, morph_projection)
   ui <- gadget_tour_ui(title = "liminal tour")
   app <- shinyApp(ui, server)
   runGadget(app)
@@ -134,8 +133,9 @@ render_init_axes <- function(source_values, half_range, cols) {
   axis_tour
 }
 
-limn_tour_server <- function(tour_data, path, color_tbl, morph) {
+limn_tour_server <- function(tour_data, tour_path, color_tbl, morph) {
 
+  path <- tourr::new_tour(tour_data, tour_path)
   init <- init_tour(tour_data, path, color_tbl, morph)
 
   function(input, output, session) {
@@ -152,10 +152,13 @@ limn_tour_server <- function(tour_data, path, color_tbl, morph) {
       )
     )
 
-    # reactives
-    selections <- shiny::reactiveValues(proj = path(0)$proj)
+    # reactiveValues, store current place in tour path
+    selections <- shiny::reactiveValues(proj = path(0)$proj,
+                                        do_tour = FALSE)
 
 
+    # vega-lite event listeners
+    # listen for zoom and brush events
     rct_active_zoom <-  vegawidget::vw_shiny_get_signal("tourView",
                                             name = "grid",
                                             body_value = "value")
@@ -164,15 +167,8 @@ limn_tour_server <- function(tour_data, path, color_tbl, morph) {
                                                      body_value = "value")
 
     rct_half_range <- rct_half_range(rct_active_zoom, init[["half_range"]])
-    rct_x_brush_active <- rct_pause(rct_active_brush)
 
-    rct_play <- shiny::eventReactive(input$play, input$play > 0)
-
-    rct_tour <- rct_tour(path,
-                         rct_event = rct_x_brush_active,
-                         rct_refresh = rct_play,
-                         selections = selections,
-                         session = session)
+    rct_tour <- rct_tour(path, selections = selections)
 
     rct_axes <- reactive({
       rct_tour()
@@ -190,6 +186,39 @@ limn_tour_server <- function(tour_data, path, color_tbl, morph) {
     # observers
     vegawidget::vw_shiny_set_data("axisView", "rotations", rct_axes())
     vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())
+
+
+    # if play button is pressed start tour
+    shiny::observeEvent(input$play, {
+      selections$do_tour <-  input$play
+    })
+
+    # if pause button is pressed stop tour
+    shiny::observeEvent(input$pause, {
+      selections$do_tour <- FALSE
+    })
+
+    # if brush is active stop tour
+    shiny::observeEvent(rct_active_brush(), {
+      selections$do_tour <- length(rct_active_brush()) == 0
+    })
+
+
+    # if restart, pause tour, and generate new tour path
+    shiny::observeEvent(input$restart, {
+      selections$do_tour <- FALSE
+      path <<- tourr::new_tour(tour_data, tour_path)
+    })
+
+    # When the Done button is clicked, return a value
+    observeEvent(input$done, {
+      tour_artefacts <- list(
+        selected_basis = selections$proj,
+        selected_points = rct_active_brush()
+      )
+      stopApp(tour_artefacts)
+    })
+
 
     output$half_range <- shiny::renderText({
       paste("Tour with half-range:", round(rct_half_range(), 3))
