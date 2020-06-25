@@ -168,12 +168,19 @@ limn_tour_server <- function(tour_data, path, color_tbl, morph) {
                          selections = selections,
                          session = session)
 
-    rct_axes <- stream_axes(rct_tour, init[["cols"]])
-    rct_proj <- stream_proj(tour_data,
-                            init[["source_values"]],
-                            selections,
-                            rct_half_range,
-                            morph)
+    rct_axes <- reactive({
+      rct_tour()
+      generate_axes(selections$proj, init[["cols"]])
+    })
+
+    rct_proj <- reactive({
+      proj <- morph_projection(
+        project_onto_basis(tour_data, selections$proj),
+        rct_half_range(),
+        morph
+      )
+      tbl_projection(init[["source_values"]], proj)
+    })
 
     # observers
     vegawidget::vw_shiny_set_data("axisView", "rotations", rct_axes())

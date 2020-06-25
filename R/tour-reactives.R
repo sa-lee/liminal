@@ -35,26 +35,3 @@ rct_tour <- function(plan, aps = 1, fps = 12, rct_event, rct_refresh, selections
     current
   })
 }
-
-rct_neighbours <- function(.data, num_neighbors = 10) {
-  shiny::reactive({
-    find_knn(.data, num_neighbors)
-  })
-}
-
-stream_axes <- function(rct_tour, cols) {
-  shiny::reactive({
-    generate_axes(rct_tour()$proj, cols)
-  })
-}
-
-stream_proj <- function(tour_data, source_values, selections, half_range, morph) {
-  shiny::reactive({
-    # update tour
-    x <- tour_data %*% selections$proj
-    x <- morph(x) / half_range()
-    source_values[, c("x","y")] <- as.data.frame(x)
-    source_values[["selectedX"]] <- selections[["x"]]
-    source_values
-  })
-}

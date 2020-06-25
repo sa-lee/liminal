@@ -35,7 +35,7 @@ clamp_sd <- function(.data, sd = 1e-4) {
 }
 
 #' Compute Frobenius norm of matrix-like objects x and y
-#' @param x,y 'matrix' like objects
+#' @param x,y 'matrix' like objects that have `tcrossprod` methods
 #' @export
 compute_proj_dist <- function(x, y) {
   sqrt(sum((tcrossprod(x) - tcrossprod(y))^2))
@@ -59,59 +59,24 @@ compute_half_range <- function(.data, center = TRUE) {
 
 
 
-compute_tour_path <- function(.data, tour_path, start, max_bases, step_size) {
-  # checks
-  stopifnot(is.numeric(step_size),
-            is.numeric(max_bases),
-            is.null(start) || is.matrix(start)
-  )
-
-  # set up generator
-  tour <- tourr::new_tour(.data, tour_path, start)
-  # starting projection
-  start <- tour(0)$proj
-  # dimensions
-  nc <- ncol(.data)
-  dims <- c(nc, ncol(start),  max_bases + 1)
-  projs <- array(NA_real_, dims)
-
-  i <- 0L
-  while (i < max_bases) {
-
-    i <- i + 1
-    step <- tour(step_size)
-    projs[,,i] <- step$target
-    if (step$step < 0)
-      break
-
-  }
-
-  empty <- apply(projs, 3, function(x) all(is.na(x)))
-  projs <- projs[, , !empty, drop = FALSE]
-  # flatten to array
-  projs <-  Map(function(x) x[[1]], apply(projs, 3, list))
-
-  tourr::planned_tour(projs)
-
+# Helpers for setting up data to the stream
+project_onto_basis <- function(ref, basis) {
+  ref %*% basis
 }
+
+
+morph_projection <- function(proj, half_range, morph) {
+  morph(proj) / half_range
+}
+
+tbl_projection <- function(tbl, proj) {
+  stopifnot(c("x", "y") %in% names(tbl))
+  tbl[, c("x", "y")] <- as.data.frame(proj)
+  tbl
+}
+
 
 `%||%` <- function(a, b) {
   if (!is.null(a)) a else b
-}
-
-conditional_join <- function(x, y, by = "rowid") {
-  rowid.x <- seq_len(nrow(x))
-  rowid.y <- seq_len(nrow(y))
-
-  names.x <- colnames(x)
-  # only extract names if they are different
-  names.y <- setdiff(colnames(y), names.x)
-
-  y <- y[, names.y]
-  x[["rowid"]] <- rowid.x
-  y[["rowid"]]<- rowid.y
-
-  dplyr::inner_join(x, y, by = by)
-
 }
 
