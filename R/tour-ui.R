@@ -3,7 +3,7 @@
 gadget_tour_titlebar <- function(title) {
   # creates a gadget interface, once user clicks done,
   # return current basiis in view
-  gadgetTitleBar(title,
+  gadgetTitleBar(textOutput(outputId = "half_range", inline = TRUE),
                  left = miniTitleBarCancelButton(), # use escape key or click to end
                  right = miniTitleBarButton("done", "Done", primary = TRUE)
   )
@@ -11,29 +11,23 @@ gadget_tour_titlebar <- function(title) {
 
 gadget_tour_main_panel <- function(axis = TRUE, height = "100%", width = height) {
   tour_view <- vegawidgetOutput("tourView", height = height, width = width)
-  padding <- 0
-
-  # print half_rng under the view
-  flex_col <- c(2, 1)
-  half_range_view <- textOutput(outputId = "half_range")
 
   if (axis) {
-    flex_row <- c(1,1)
+    flex_row <- c(1,2)
     axis_view <- vegawidgetOutput("axisView", height = height, width = width)
     main_panel <- miniContentPanel(
-      padding = padding,
+      padding = 0,
       fillCol(
         fillRow(axis_view, tour_view, flex = flex_row),
-        half_range_view,
-        flex = flex_col
+        #half_range_view,
+        flex = 1
       ), scrollable = FALSE
     )
   } else {
-    main_panel <-   miniContentPanel(padding = padding,
+    main_panel <-   miniContentPanel(padding = 0,
                                      fillCol(
-                                       flex = flex_col,
-                                       tour_view,
-                                       half_range_view
+                                       flex = 1,
+                                       tour_view
                                      )
     )
 

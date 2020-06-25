@@ -180,7 +180,7 @@ limn_tour_server <- function(tour_data, path, color_tbl, morph) {
     vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())
 
     output$half_range <- shiny::renderText({
-      rct_half_range()
+      paste("Tour with half-range:", round(rct_half_range(), 3))
     })
 
   }
