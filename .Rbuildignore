@@ -11,3 +11,4 @@
 ^LICENSE\.md$
 Makefile
 ^data-raw$
+^codecov\.yml$

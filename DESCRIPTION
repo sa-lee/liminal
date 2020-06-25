@@ -32,5 +32,6 @@ Suggests:
     Rtsne,
     knitr,
     rmarkdown,
-    uwot
+    uwot,
+    covr
 VignetteBuilder: knitr

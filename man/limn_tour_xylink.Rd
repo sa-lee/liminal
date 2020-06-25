@@ -68,13 +68,13 @@ on the k-NN graph obtained from the control panel.
 }
 }
 \examples{
+\dontrun{
 # tour the first ten columns of the fake tree data and link to the
 # another layout based on t-SNE
-if (interactive()) {
-  # loads the default interface
-  tsne <- Rtsne::Rtsne(dplyr::select(fake_trees, dplyr::starts_with("dim")))
-  tsne_df <- data.frame(tsneX = tsne$Y[,1], tsneY = tsne$Y[,2], branches = fake_trees$branches)
-  limn_tour_xylink(dplyr::select(fake_trees, dim1:dim10, branches), tsne_df, x_color = branches, y_color = branches)
+# loads the default interface
+tsne <- Rtsne::Rtsne(dplyr::select(fake_trees, dplyr::starts_with("dim")))
+tsne_df <- data.frame(tsneX = tsne$Y[,1], tsneY = tsne$Y[,2], branches = fake_trees$branches)
+limn_tour_xylink(dplyr::select(fake_trees, dim1:dim10, branches), tsne_df, x_color = branches, y_color = branches)
 }
 
 }

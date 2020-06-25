@@ -5,10 +5,11 @@
 
 <!-- badges: start -->
 
-[![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
-[![Travis build
-status](https://travis-ci.org/sa-lee/liminal.svg?branch=master)](https://travis-ci.org/sa-lee/liminal)
+[![Lifecycle:experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![R build
+status](https://github.com/sa-lee/liminal/workflows/R-CMD-check/badge.svg)](https://github.com/sa-lee/liminal/actions)
+[![Codecov test
+coverage](https://codecov.io/gh/sa-lee/liminal/branch/master/graph/badge.svg)](https://codecov.io/gh/sa-lee/liminal?branch=master)
 <!-- badges: end -->
 
 The goal of `liminal` is to provide diganostics and visual analytics for

@@ -33,12 +33,12 @@
 #'
 #' @seealso [compute_half_range()],[limn_tour_xylink()]
 #' @examples
+#' \dontrun{
 #' # tour the first ten columns of the fake tree data
-#' if (interactive()) {
-#'   # loads the default interface
-#'   limn_tour(fake_trees, dim1:dim10)
-#'   # perform the same action but now coloring points
-#'   limn_tour(fake_trees, dim1:dim10, color = branches)
+#' # loads the default interface
+#' limn_tour(fake_trees, dim1:dim10)
+#' # perform the same action but now coloring points
+#' limn_tour(fake_trees, dim1:dim10, color = branches)
 #'}
 #'
 #' @export
