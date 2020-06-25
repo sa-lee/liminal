@@ -9,8 +9,8 @@ gadget_tour_titlebar <- function(title) {
   )
 }
 
-gadget_tour_main_panel <- function(axis = TRUE) {
-  tour_view <- vegawidgetOutput("tourView", height = "100%", width = "100%")
+gadget_tour_main_panel <- function(axis = TRUE, height = "100%", width = height) {
+  tour_view <- vegawidgetOutput("tourView", height = height, width = width)
   padding <- 0
 
   # print half_rng under the view
@@ -19,7 +19,7 @@ gadget_tour_main_panel <- function(axis = TRUE) {
 
   if (axis) {
     flex_row <- c(1,1)
-    axis_view <- vegawidgetOutput("axisView", height = "100%", width = "100%")
+    axis_view <- vegawidgetOutput("axisView", height = height, width = width)
     main_panel <- miniContentPanel(
       padding = padding,
       fillCol(
@@ -32,7 +32,7 @@ gadget_tour_main_panel <- function(axis = TRUE) {
     main_panel <-   miniContentPanel(padding = padding,
                                      fillCol(
                                        flex = flex_col,
-                                       tview,
+                                       tour_view,
                                        half_range_view
                                      )
     )
