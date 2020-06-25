@@ -12,8 +12,8 @@
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/journal/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
@@ -128,14 +128,14 @@
     </div>
 
     <pre class="usage"><span class='fu'>limn_xy</span>(
-  <span class='no'>.data</span>,
-  <span class='no'>x</span>,
-  <span class='no'>y</span>,
-  <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>brush_name</span> <span class='kw'>=</span> <span class='st'>"brush"</span>,
-  <span class='kw'>brush_transform</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>brush_transform_mark</span> <span class='kw'>=</span> <span class='st'>"square"</span>,
-  <span class='no'>...</span>
+  <span class='kw'>.data</span>,
+  <span class='kw'>x</span>,
+  <span class='kw'>y</span>,
+  color = <span class='kw'>NULL</span>,
+  brush_name = <span class='st'>"brush"</span>,
+  brush_transform = <span class='kw'>NULL</span>,
+  brush_transform_mark = <span class='st'>"square"</span>,
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -177,7 +177,7 @@ median / mean), default is NULL.</p></td>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>limn_xy</span>(<span class='no'>mtcars</span>, <span class='no'>mpg</span>, <span class='no'>hp</span>, <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='no'>cyl</span>))</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>limn_xy</span>(<span class='kw'>mtcars</span>, <span class='kw'>mpg</span>, <span class='kw'>hp</span>, <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='kw'>cyl</span>))</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -193,7 +193,7 @@ median / mean), default is NULL.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
 </div>
 
       </footer>

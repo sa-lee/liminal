@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>pdfsense: or understanding high dimensional parameter space • liminal</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/journal/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -72,7 +72,7 @@
 
       
 
-      </header><script src="pdfsense_files/htmlwidgets-1.5.1/htmlwidgets.js"></script><script src="pdfsense_files/vega-5.9.0/vega.min.js"></script><script src="pdfsense_files/vega-lite-4.0.2/vega-lite.min.js"></script><link href="pdfsense_files/vega-embed-6.2.0/vega-embed.css" rel="stylesheet">
+      </header><script src="pdfsense_files/accessible-code-block-0.0.1/empty-anchor.js"></script><script src="pdfsense_files/htmlwidgets-1.5.1/htmlwidgets.js"></script><script src="pdfsense_files/vega-5.9.0/vega.min.js"></script><script src="pdfsense_files/vega-lite-4.0.2/vega-lite.min.js"></script><link href="pdfsense_files/vega-embed-6.2.0/vega-embed.css" rel="stylesheet">
 <script src="pdfsense_files/vega-embed-6.2.0/vega-embed.js"></script><script src="pdfsense_files/vegawidget-binding-0.3.1/vegawidget.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
@@ -101,24 +101,30 @@
 <li>x,mu: the kinematics of a parton. x is the parton momentum fraction, and mu is the factorisation scale.</li>
 </ul>
 <p>First, we take the load the data as a data.frame:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">liminal</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">vegawidget</span>)
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">pdfsense</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">liminal</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/vegawidget/vegawidget">vegawidget</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="kw">pdfsense</span>)
+</pre></div>
 </div>
 <div id="linear-embeddings-and-the-tour" class="section level2">
 <h2 class="hasAnchor">
 <a href="#linear-embeddings-and-the-tour" class="anchor"></a>Linear embeddings and the tour</h2>
 <p>First we can estimate all <code><a href="https://rdrr.io/r/base/nrow.html">nrow(pdfsense)</a></code> principal components using on the parton distribution fits:</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">pcs</span>  <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html">prcomp</a></span>(<span class="no">pdfsense</span>[, <span class="fl">7</span>:<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span>(<span class="no">pdfsense</span>)])</pre></body></html></div>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="kw">pcs</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html">prcomp</a></span>(<span class="kw">pdfsense</span>[, <span class="fl">7</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span>(<span class="kw">pdfsense</span>)])
+</pre></div>
 <p>Using this data structure, we can produce a screeplot:</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(
-  <span class="kw">component</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fl">56</span>,
-  <span class="kw">variance_explained</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span>(<span class="no">pcs</span>$<span class="no">sdev</span> / <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">pcs</span>$<span class="no">sdev</span>))
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="kw">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(
+  component = <span class="fl">1</span><span class="op">:</span><span class="fl">56</span>, 
+  variance_explained = <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span>(<span class="kw">pcs</span><span class="op">$</span><span class="kw">sdev</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="kw">pcs</span><span class="op">$</span><span class="kw">sdev</span>))
 )
 
-<span class="fu"><a href="../reference/limn_xy.html">limn_xy</a></span>(<span class="no">res</span>, <span class="kw">x</span> <span class="kw">=</span> <span class="no">component</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">variance_explained</span>)</pre></body></html></div>
-<div id="htmlwidget-923f31d9ef0fbaf4dd4a" style="width:auto;height:auto;" class="vegawidget html-widget"></div>
-<script type="application/json" data-for="htmlwidget-923f31d9ef0fbaf4dd4a">{"x":{
+<span class="fu"><a href="../reference/limn_xy.html">limn_xy</a></span>(<span class="kw">res</span>, x = <span class="kw">component</span>, y = <span class="kw">variance_explained</span>)
+</pre></div>
+<div id="htmlwidget-28130a4fcc6cad092026" style="width:auto;height:auto;" class="vegawidget html-widget"></div>
+<script type="application/json" data-for="htmlwidget-28130a4fcc6cad092026">{"x":{
   "chart_spec": {
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "data": {
@@ -381,36 +387,46 @@
   }
 },"evals":[],"jsHooks":[]}</script><p>Approximately %70 of the variance in the pdf fits are explained by the first 15 principal components.</p>
 <p>Next we augment our original data with the principal components:</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">pdfsense</span> <span class="kw">&lt;-</span> <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(
-  <span class="no">pdfsense</span>,
-  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>(<span class="no">pcs</span>$<span class="no">x</span>)
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="kw">pdfsense</span> <span class="op">&lt;-</span> <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(
+  <span class="kw">pdfsense</span>, 
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>(<span class="kw">pcs</span><span class="op">$</span><span class="kw">x</span>)
 )
-<span class="no">pdfsense</span>$<span class="no">Type</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">pdfsense</span>$<span class="no">Type</span>)</pre></body></html></div>
+<span class="kw">pdfsense</span><span class="op">$</span><span class="kw">Type</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="kw">pdfsense</span><span class="op">$</span><span class="kw">Type</span>)
+</pre></div>
 <p>We can view a simple tour via<code><a href="../reference/limn_tour.html">limn_tour()</a></code> and color points by their experimental group</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="../reference/limn_tour.html">limn_tour</a></span>(<span class="no">pdfsense</span>, <span class="no">PC1</span>:<span class="no">PC6</span>, <span class="no">Type</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="fu"><a href="../reference/limn_tour.html">limn_tour</a></span>(<span class="kw">pdfsense</span>, <span class="kw">PC1</span><span class="op">:</span><span class="kw">PC6</span>, <span class="kw">Type</span>)
+</pre></div>
 </div>
 <div id="non-linear-embeddings" class="section level2">
 <h2 class="hasAnchor">
 <a href="#non-linear-embeddings" class="anchor"></a>Non-Linear embeddings</h2>
 <p>Now we can set up a non-linear embedding via t-SNE, here we embed all 56 principal components.</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">3099</span>)
-<span class="no">tsne</span> <span class="kw">&lt;-</span> <span class="kw pkg">Rtsne</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/Rtsne/man/Rtsne.html">Rtsne</a></span>(<span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">pdfsense</span>, <span class="no">PC1</span>:<span class="no">PC56</span>),
-                     <span class="kw">pca</span> <span class="kw">=</span> <span class="fl">FALSE</span>,
-                     <span class="kw">normalize</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
-                     <span class="kw">perplexity</span> <span class="kw">=</span> <span class="fl">50</span>,
-                     <span class="kw">exaggeration_factor</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">pdfsense</span>) / <span class="fl">100</span>,
-                     <span class="kw">Y_init</span> <span class="kw">=</span> <span class="fu"><a href="../reference/clamp_sd.html">clamp_sd</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">pdfsense</span>, <span class="no">PC1</span>, <span class="no">PC2</span>)))
-)</pre></body></html></div>
+<div class="sourceCode" id="cb6"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">3099</span>)
+<span class="kw">tsne</span> <span class="op">&lt;-</span> <span class="kw">Rtsne</span>::<span class="fu"><a href="https://rdrr.io/pkg/Rtsne/man/Rtsne.html">Rtsne</a></span>(<span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="kw">pdfsense</span>, <span class="kw">PC1</span><span class="op">:</span><span class="kw">PC56</span>),
+                     pca = <span class="fl">FALSE</span>, 
+                     normalize = <span class="fl">TRUE</span>,
+                     perplexity = <span class="fl">50</span>,
+                     exaggeration_factor = <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="kw">pdfsense</span>) <span class="op">/</span> <span class="fl">100</span>,
+                     Y_init = <span class="fu"><a href="../reference/clamp_sd.html">clamp_sd</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="kw">pdfsense</span>, <span class="kw">PC1</span>, <span class="kw">PC2</span>)))
+)
+</pre></div>
 <p>Again we can augment the embedding onto the pdfsense data:</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">tsne_embedding</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>(<span class="no">tsne</span>$<span class="no">Y</span>)
-<span class="no">tsne_embedding</span> <span class="kw">&lt;-</span> <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">rename</a></span>(<span class="no">tsne_embedding</span>,
-                                <span class="kw">tsneX</span> <span class="kw">=</span> <span class="no">V1</span>, <span class="kw">tsneY</span> <span class="kw">=</span> <span class="no">V2</span>)
-<span class="no">tsne_embedding</span>$<span class="no">Type</span> <span class="kw">&lt;-</span> <span class="no">pdfsense</span>$<span class="no">Type</span></pre></body></html></div>
+<div class="sourceCode" id="cb7"><pre class="downlit">
+<span class="kw">tsne_embedding</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>(<span class="kw">tsne</span><span class="op">$</span><span class="kw">Y</span>)
+<span class="kw">tsne_embedding</span> <span class="op">&lt;-</span> <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(<span class="kw">tsne_embedding</span>,
+                                tsneX = <span class="kw">V1</span>, tsneY = <span class="kw">V2</span>)
+<span class="kw">tsne_embedding</span><span class="op">$</span><span class="kw">Type</span> <span class="op">&lt;-</span> <span class="kw">pdfsense</span><span class="op">$</span><span class="kw">Type</span>
+</pre></div>
 <p>We can view the clusters:</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="../reference/limn_xy.html">limn_xy</a></span>(<span class="no">tsne_embedding</span>, <span class="no">tsneX</span>, <span class="no">tsneY</span>, <span class="no">Type</span>,
-        <span class="kw">brush_transform</span> <span class="kw">=</span> <span class="st">"median"</span>)</pre></body></html></div>
-<div id="htmlwidget-b33ca50b54ba25b35d44" style="width:auto;height:auto;" class="vegawidget html-widget"></div>
-<script type="application/json" data-for="htmlwidget-b33ca50b54ba25b35d44">{"x":{
+<div class="sourceCode" id="cb8"><pre class="downlit">
+<span class="fu"><a href="../reference/limn_xy.html">limn_xy</a></span>(<span class="kw">tsne_embedding</span>, <span class="kw">tsneX</span>, <span class="kw">tsneY</span>, <span class="kw">Type</span>,
+        brush_transform = <span class="st">"median"</span>)
+</pre></div>
+<div id="htmlwidget-a77227a3140924614d65" style="width:auto;height:auto;" class="vegawidget html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a77227a3140924614d65">{"x":{
   "chart_spec": {
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "data": {
@@ -14525,10 +14541,12 @@
     "actions": false
   }
 },"evals":[],"jsHooks":[]}</script><p>We can link a tour view next to the embedding to give us a clear picture of the clustering:</p>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu"><a href="../reference/limn_tour_xylink.html">limn_tour_xylink</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">pdfsense</span>, <span class="no">PC1</span>:<span class="no">PC6</span>, <span class="no">Type</span>),
-                 <span class="kw">y</span> <span class="kw">=</span> <span class="no">tsne_embedding</span>,
-                 <span class="kw">x_color</span> <span class="kw">=</span> <span class="no">Type</span>,
-                 <span class="kw">y_color</span><span class="kw">=</span> <span class="no">Type</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb9"><pre class="downlit">
+<span class="fu"><a href="../reference/limn_tour_xylink.html">limn_tour_xylink</a></span>(x = <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="kw">pdfsense</span>, <span class="kw">PC1</span><span class="op">:</span><span class="kw">PC6</span>, <span class="kw">Type</span>),
+                 y = <span class="kw">tsne_embedding</span>,
+                 x_color = <span class="kw">Type</span>,
+                 y_color= <span class="kw">Type</span>)
+</pre></div>
 </div>
   </div>
 
@@ -14547,7 +14565,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
 </div>
 
       </footer>

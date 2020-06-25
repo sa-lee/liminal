@@ -12,8 +12,8 @@
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/journal/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
@@ -128,12 +128,12 @@
     </div>
 
     <pre class="usage"><span class='fu'>limn_tour</span>(
-  <span class='no'>.data</span>,
-  <span class='no'>cols</span>,
-  <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>tour_path</span> <span class='kw'>=</span> <span class='kw pkg'>tourr</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/tourr/man/grand_tour.html'>grand_tour</a></span>(),
-  <span class='kw'>rescale</span> <span class='kw'>=</span> <span class='no'>clamp</span>,
-  <span class='kw'>morph</span> <span class='kw'>=</span> <span class='no'>morph_center</span>
+  <span class='kw'>.data</span>,
+  <span class='kw'>cols</span>,
+  color = <span class='kw'>NULL</span>,
+  tour_path = <span class='kw'>tourr</span>::<span class='fu'><a href='https://rdrr.io/pkg/tourr/man/grand_tour.html'>grand_tour</a></span>(),
+  rescale = <span class='kw'>clamp</span>,
+  morph = <span class='kw'>morph_center</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -161,13 +161,13 @@ but also works with <code><a href='https://rdrr.io/pkg/tourr/man/guided_tour.htm
     <tr>
       <th>rescale</th>
       <td><p>A function that rescales <code>cols</code>, the default is to
-<code><a href='clamp.html'>clamp()</a></code> the data to lie in the hyperdimensional unit cube. To not perform
+<code>clamp()</code> the data to lie in the hyperdimensional unit cube. To not perform
 any scaling use <code><a href='https://rdrr.io/r/base/identity.html'>identity()</a></code>.</p></td>
     </tr>
     <tr>
       <th>morph</th>
       <td><p>A function that modifies each projection generated,
-the default is to center the projection using <code><a href='morph_center.html'>morph_center()</a></code>.</p></td>
+the default is to center the projection using <code>morph_center()</code>.</p></td>
     </tr>
     </table>
 
@@ -196,16 +196,17 @@ reset double click the legend title.</p></li>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='compute_half_range.html'>compute_half_range()</a></code>,<code><a href='limn_tour_xylink.html'>limn_tour_xylink()</a></code></p></div>
+    <div class='dont-index'><p><code>compute_half_range()</code>,<code>limn_tour_xylink()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='co'># tour the first ten columns of the fake tree data</span>
 <span class='co'># loads the default interface</span>
-<span class='fu'>limn_tour</span>(<span class='no'>fake_trees</span>, <span class='no'>dim1</span>:<span class='no'>dim10</span>)
+<span class='fu'>limn_tour</span>(<span class='kw'>fake_trees</span>, <span class='kw'>dim1</span><span class='op'>:</span><span class='kw'>dim10</span>)
 <span class='co'># perform the same action but now coloring points</span>
-<span class='fu'>limn_tour</span>(<span class='no'>fake_trees</span>, <span class='no'>dim1</span>:<span class='no'>dim10</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>branches</span>)
-}</div></pre>
+<span class='fu'>limn_tour</span>(<span class='kw'>fake_trees</span>, <span class='kw'>dim1</span><span class='op'>:</span><span class='kw'>dim10</span>, color = <span class='kw'>branches</span>)
+}
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -221,7 +222,7 @@ reset double click the legend title.</p></li>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
 </div>
 
       </footer>
