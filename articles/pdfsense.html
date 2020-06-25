@@ -117,8 +117,8 @@
 )
 
 <span class="fu"><a href="../reference/limn_xy.html">limn_xy</a></span>(<span class="no">res</span>, <span class="kw">x</span> <span class="kw">=</span> <span class="no">component</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">variance_explained</span>)</pre></body></html></div>
-<div id="htmlwidget-a673ed16e32caf1eb552" style="width:auto;height:auto;" class="vegawidget html-widget"></div>
-<script type="application/json" data-for="htmlwidget-a673ed16e32caf1eb552">{"x":{
+<div id="htmlwidget-923f31d9ef0fbaf4dd4a" style="width:auto;height:auto;" class="vegawidget html-widget"></div>
+<script type="application/json" data-for="htmlwidget-923f31d9ef0fbaf4dd4a">{"x":{
   "chart_spec": {
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "data": {
@@ -403,14 +403,14 @@
 )</pre></body></html></div>
 <p>Again we can augment the embedding onto the pdfsense data:</p>
 <div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">tsne_embedding</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>(<span class="no">tsne</span>$<span class="no">Y</span>)
-<span class="no">tsne_embedding</span> <span class="kw">&lt;-</span> <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(<span class="no">tsne_embedding</span>,
+<span class="no">tsne_embedding</span> <span class="kw">&lt;-</span> <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">rename</a></span>(<span class="no">tsne_embedding</span>,
                                 <span class="kw">tsneX</span> <span class="kw">=</span> <span class="no">V1</span>, <span class="kw">tsneY</span> <span class="kw">=</span> <span class="no">V2</span>)
 <span class="no">tsne_embedding</span>$<span class="no">Type</span> <span class="kw">&lt;-</span> <span class="no">pdfsense</span>$<span class="no">Type</span></pre></body></html></div>
 <p>We can view the clusters:</p>
 <div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="../reference/limn_xy.html">limn_xy</a></span>(<span class="no">tsne_embedding</span>, <span class="no">tsneX</span>, <span class="no">tsneY</span>, <span class="no">Type</span>,
         <span class="kw">brush_transform</span> <span class="kw">=</span> <span class="st">"median"</span>)</pre></body></html></div>
-<div id="htmlwidget-e98330d1183625470358" style="width:auto;height:auto;" class="vegawidget html-widget"></div>
-<script type="application/json" data-for="htmlwidget-e98330d1183625470358">{"x":{
+<div id="htmlwidget-b33ca50b54ba25b35d44" style="width:auto;height:auto;" class="vegawidget html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b33ca50b54ba25b35d44">{"x":{
   "chart_spec": {
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "data": {
@@ -14547,7 +14547,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
 </div>
 
       </footer>

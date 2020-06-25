@@ -1,8 +1,8 @@
-pandoc: '2.2'
-pkgdown: 1.5.1
+pandoc: 2.7.1
+pkgdown: 1.5.0
 pkgdown_sha: ~
 articles:
   liminal: liminal.html
   pdfsense: pdfsense.html
-last_built: 2020-06-01T05:54Z
+last_built: 2020-06-25T00:25Z
 
