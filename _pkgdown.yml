@@ -1,1 +1,5 @@
+template:
+  params:
+    bootswatch: journal
+
 destination: docs
