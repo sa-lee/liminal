@@ -57,26 +57,9 @@ compute_half_range <- function(.data, center = TRUE) {
   max(sqrt(rowSums(.data^2)))
 }
 
-
-
-# Helpers for setting up data to the stream
-project_onto_basis <- function(ref, basis) {
-  ref %*% basis
-}
-
-
-morph_projection <- function(proj, half_range, morph) {
-  morph(proj) / half_range
-}
-
-tbl_projection <- function(tbl, proj) {
-  stopifnot(c("x", "y") %in% names(tbl))
-  tbl[, c("x", "y")] <- as.data.frame(proj)
-  tbl
-}
-
-
 `%||%` <- function(a, b) {
   if (!is.null(a)) a else b
 }
+
+
 

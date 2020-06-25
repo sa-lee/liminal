@@ -10,8 +10,11 @@
 #' @param rescale A function that rescales `cols`, the default is to
 #' [clamp()] the data to lie in the hyperdimensional unit cube. To not perform
 #' any scaling use [identity()].
-#' @param morph A function that modifies each projection generated,
-#' the default is to center the projection using [morph_center()].
+#' @param morph One of `c("center", "centre", "identity", "radial")`
+#' that rescales each projection along the tour path. The default
+#' is to center the projections and divide by half range. See [morph_center()]
+#' for details.
+
 #'
 #' @return A shiny app object
 #' @details
@@ -42,7 +45,7 @@
 #'}
 #'
 #' @export
-limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour(), rescale = clamp, morph = morph_center) {
+limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour(), rescale = clamp, morph = "center") {
   cols <- rlang::enquo(cols)
   color <- rlang::enquo(color)
   # set up tour parameters
@@ -51,8 +54,11 @@ limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour()
   # setup colors
   color_data <- dplyr::select(.data, !!color)
 
+  # set up transformation function
+  morph_projection <- generate_morph(morph, p_eff = ncol(tour_data))
+
   # generate app
-  server <- limn_tour_server(tour_data, path, color_data, morph)
+  server <- limn_tour_server(tour_data, path, color_data, morph_projection)
   ui <- gadget_tour_ui(title = "liminal tour")
   app <- shinyApp(ui, server)
   runGadget(app)
@@ -174,10 +180,9 @@ limn_tour_server <- function(tour_data, path, color_tbl, morph) {
     })
 
     rct_proj <- reactive({
-      proj <- morph_projection(
+      proj <- morph(
         project_onto_basis(tour_data, selections$proj),
-        rct_half_range(),
-        morph
+        half_range = rct_half_range()
       )
       tbl_projection(init[["source_values"]], proj)
     })
@@ -225,7 +230,7 @@ init_tour <- function(tour_data, path, color_tbl, morph) {
   # intialise views
   start <- path(0)$proj
   source_values <- tour_data %*% start
-  source_values <- morph(source_values) / half_range
+  source_values <- morph(source_values, half_range)
   colnames(source_values) <- c("x", "y")
   source_values <- as.data.frame(source_values)
 
