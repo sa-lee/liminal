@@ -7,7 +7,7 @@
 compute_proj_dist(x, y)
 }
 \arguments{
-\item{x, y}{'matrix' like objects}
+\item{x, y}{'matrix' like objects that have \code{tcrossprod} methods}
 }
 \description{
 Compute Frobenius norm of matrix-like objects x and y

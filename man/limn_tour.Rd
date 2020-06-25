@@ -10,7 +10,7 @@ limn_tour(
   color = NULL,
   tour_path = tourr::grand_tour(),
   rescale = clamp,
-  morph = morph_center
+  morph = "center"
 )
 }
 \arguments{
@@ -29,8 +29,10 @@ but also works with \code{\link[tourr:guided_tour]{tourr::guided_tour()}}.}
 \code{\link[=clamp]{clamp()}} the data to lie in the hyperdimensional unit cube. To not perform
 any scaling use \code{\link[=identity]{identity()}}.}
 
-\item{morph}{A function that modifies each projection generated,
-the default is to center the projection using \code{\link[=morph_center]{morph_center()}}.}
+\item{morph}{One of \code{c("center", "centre", "identity", "radial")}
+that rescales each projection along the tour path. The default
+is to center the projections and divide by half range. See \code{\link[=morph_center]{morph_center()}}
+for details.}
 }
 \value{
 A shiny app object
