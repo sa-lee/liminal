@@ -116,7 +116,6 @@ limn_tour_server <- function(tour_data, tour_path, color_tbl, morph) {
     rct_tour <- rct_tour(path, selections = selections)
 
     rct_axes <- reactive({
-      rct_tour()
       generate_axes(selections$proj, cols)
     })
 
@@ -164,6 +163,10 @@ limn_tour_server <- function(tour_data, tour_path, color_tbl, morph) {
       stopApp(tour_artefacts)
     })
 
+
+    observe({
+      rct_tour()
+    })
 
     output$half_range <- shiny::renderText({
       paste("Tour with half-range:", round(rct_half_range(), 3))
