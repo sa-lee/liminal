@@ -41,6 +41,15 @@ cumulative_radial <- function(r, R, p){
 
 
 # Helpers for setting up data to the stream
+
+tbl_projection <- function(tbl, proj) {
+  stopifnot(c("x", "y") %in% names(tbl))
+  tbl[, c("x", "y")] <- as.data.frame(proj)
+  tbl
+}
+
+
+
 generate_morph <- function(morph, p_eff) {
   switch(morph,
          "identity" =  morph_identity,
@@ -51,16 +60,6 @@ generate_morph <- function(morph, p_eff) {
   )
 }
 
-
-project_onto_basis <- function(ref, basis) {
-  ref %*% basis
-}
-
-tbl_projection <- function(tbl, proj) {
-  stopifnot(c("x", "y") %in% names(tbl))
-  tbl[, c("x", "y")] <- as.data.frame(proj)
-  tbl
-}
 
 
 

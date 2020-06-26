@@ -1,11 +1,13 @@
 # UI functions
+# TODO: consider moving everything to shiny modules
 
-gadget_tour_titlebar <- function(title) {
+gadget_tour_titlebar <- function() {
   # creates a gadget interface, once user clicks done,
   # return current basiis in view
-  gadgetTitleBar(textOutput(outputId = "half_range", inline = TRUE),
-                 left = miniTitleBarCancelButton(), # use escape key or click to end
-                 right = miniTitleBarButton("done", "Done", primary = TRUE)
+  gadgetTitleBar(
+    textOutput(outputId = "half_range", inline = TRUE),
+    left = miniTitleBarCancelButton(), # use escape key or click to end
+    right = miniTitleBarButton("done", "Done", primary = TRUE)
   )
 }
 
@@ -50,9 +52,9 @@ gadget_tour_controls <- function() {
   )
 }
 
-gadget_tour_ui <- function(title = "liminal tour", axis = TRUE) {
+gadget_tour_ui <- function(axis = TRUE) {
   miniPage(
-    gadget_tour_titlebar(title),
+    gadget_tour_titlebar(),
     gadget_tour_main_panel(axis),
     gadget_tour_controls()
   )

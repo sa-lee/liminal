@@ -77,6 +77,24 @@ compute_half_range <- function(.data, center = TRUE) {
   max(sqrt(rowSums(.data^2)))
 }
 
+
+#' Convert data.frame to a matrix and rescale the columns
+#'
+#' @param .data a data.frame to tour
+#' @param cols Columns to tour. This can use a tidyselect specification
+#' such as [tidyselect::starts_with()].
+#' @param rescale One of the clamp functions defined above
+#'
+#' @noRd
+generate_tour_matrix <- function(.data, cols, rescale) {
+  if (is.null(cols)) {
+    tour_data <- as.matrix(.data)
+  } else {
+    tour_data <- as.matrix(dplyr::select(.data, !!cols))
+  }
+  return(rescale(tour_data))
+}
+
 `%||%` <- function(a, b) {
   if (!is.null(a)) a else b
 }

@@ -35,29 +35,41 @@ is to center the projections and divide by half range. See \code{\link[=morph_ce
 for details.}
 }
 \value{
-A shiny app object
+The tour interface loads a shiny app either in the Viewer pane
+if you are using Rstudio or in a browser window. After iterating through
+the tour and and highlighting subsets of interest, you can click the
+'Done' button. This will return a named list with two elements:
+\itemize{
+\item \code{selected_basis}: a matrix consisting of the final projection selected
+\item \code{selected_brush}: a matrix consisting of the bounding box of brush
+}
 }
 \description{
 Tour a high dimensional dataset
 }
 \details{
-The tour interface consists of two views
+The tour interface consists of two views:
 \enumerate{
 \item the tour view which is a dynamic scatterplot
 \item the axis view which shows the direction and magnitude of the
 basis vectors being generated.
-There are several other user controls available:
 }
+
+There are several other user controls available:
 \itemize{
-\item There is a play button, that when pressed will start the tour.
-\item There is also a text view of the half range which is the maximum squared
-Euclidean distance between points in the tour view. The half range
+\item A play button, that when pressed will start the tour animation.
+\item A pause button, that when pressed will pause the tour animation.
+\item The title of the view includes the half range. The half range
 is a scale factor for projections and can be thought of as a way
-of zooming in and out on points. It can be dynamically modified by scrolling
-(via a mouse-wheel). To reset double click the tour view.
-\item The legend can be toggled to highlight groups of points with
-shift+mouse-click. Multiple groups can be selected in this way. To
-reset double click the legend title.
+of zooming in and out on points. It can be  modified by scrolling
+(via a mouse-wheel movement). Double-click to reset to the default
+tour view.
+\item If categorical variable has been used, the legend can be toggled to
+highlight categories of interest with shift + mouse click.
+Multiple categories can be selected in this way. To reset double click
+the legend title.
+\item Brushing can be activtated by shift + mouse drag on the tour view.
+If the tour animation a brush event will pause it.
 }
 }
 \examples{
@@ -71,5 +83,5 @@ limn_tour(fake_trees, dim1:dim10, color = branches)
 
 }
 \seealso{
-\code{\link[=compute_half_range]{compute_half_range()}},\code{\link[=limn_tour_xylink]{limn_tour_xylink()}}
+\code{\link[=compute_half_range]{compute_half_range()}}, \code{\link[=morph_center]{morph_center()}}, \code{\link[=limn_tour_xylink]{limn_tour_xylink()}}
 }
