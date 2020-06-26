@@ -99,7 +99,8 @@ limn_tour_server <- function(tour_data, tour_path, color_tbl, morph) {
     })
 
     # reactiveValues, store current place in tour path
-    selections <- shiny::reactiveValues(proj = start, do_tour = FALSE)
+    selections <- shiny::reactiveValues(proj = start, do_tour = FALSE,
+                                        force_restart = FALSE)
 
 
     # vega-lite event listeners
@@ -113,7 +114,7 @@ limn_tour_server <- function(tour_data, tour_path, color_tbl, morph) {
 
     rct_half_range <- rct_half_range(rct_active_zoom, half_range)
 
-    rct_tour <- rct_tour(path, selections = selections)
+    rct_tour <- rct_tour(path, tour_data, tour_path, selections = selections)
 
     rct_axes <- reactive({
       generate_axes(selections$proj, cols)
@@ -151,7 +152,7 @@ limn_tour_server <- function(tour_data, tour_path, color_tbl, morph) {
     # if restart, pause tour, and generate new tour path
     shiny::observeEvent(input$restart, {
       selections$do_tour <- FALSE
-      path <<- tourr::new_tour(tour_data, tour_path)
+      selections$force_restart <- TRUE
     })
 
     # When the Done button is clicked, return a value
