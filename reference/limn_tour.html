@@ -175,30 +175,41 @@ for details.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A shiny app object</p>
+    <p>The tour interface loads a shiny app either in the Viewer pane
+if you are using Rstudio or in a browser window. After iterating through
+the tour and and highlighting subsets of interest, you can click the
+'Done' button. This will return a named list with two elements:</p><ul>
+<li><p><code>selected_basis</code>: a matrix consisting of the final projection selected</p></li>
+<li><p><code>selected_brush</code>: a matrix consisting of the bounding box of brush</p></li>
+</ul>
+
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The tour interface consists of two views</p><ol>
+    <p>The tour interface consists of two views:</p><ol>
 <li><p>the tour view which is a dynamic scatterplot</p></li>
 <li><p>the axis view which shows the direction and magnitude of the
-basis vectors being generated.
-There are several other user controls available:</p></li>
+basis vectors being generated.</p></li>
 </ol>
-<ul>
-<li><p>There is a play button, that when pressed will start the tour.</p></li>
-<li><p>There is also a text view of the half range which is the maximum squared
-Euclidean distance between points in the tour view. The half range
+
+<p>There are several other user controls available:</p><ul>
+<li><p>A play button, that when pressed will start the tour animation.</p></li>
+<li><p>A pause button, that when pressed will pause the tour animation.</p></li>
+<li><p>The title of the view includes the half range. The half range
 is a scale factor for projections and can be thought of as a way
-of zooming in and out on points. It can be dynamically modified by scrolling
-(via a mouse-wheel). To reset double click the tour view.</p></li>
-<li><p>The legend can be toggled to highlight groups of points with
-shift+mouse-click. Multiple groups can be selected in this way. To
-reset double click the legend title.</p></li>
+of zooming in and out on points. It can be  modified by scrolling
+(via a mouse-wheel movement). Double-click to reset to the default
+tour view.</p></li>
+<li><p>If categorical variable has been used, the legend can be toggled to
+highlight categories of interest with shift + mouse click.
+Multiple categories can be selected in this way. To reset double click
+the legend title.</p></li>
+<li><p>Brushing can be activtated by shift + mouse drag on the tour view.
+If the tour animation a brush event will pause it.</p></li>
 </ul>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code>compute_half_range()</code>,<code>limn_tour_xylink()</code></p></div>
+    <div class='dont-index'><p><code>compute_half_range()</code>, <code>morph_center()</code>, <code>limn_tour_xylink()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {

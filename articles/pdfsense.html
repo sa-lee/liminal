@@ -123,8 +123,8 @@
 
 <span class="fu"><a href="../reference/limn_xy.html">limn_xy</a></span>(<span class="kw">res</span>, x = <span class="kw">component</span>, y = <span class="kw">variance_explained</span>)
 </pre></div>
-<div id="htmlwidget-ce0bcd42f686d54e29a9" style="width:auto;height:auto;" class="vegawidget html-widget"></div>
-<script type="application/json" data-for="htmlwidget-ce0bcd42f686d54e29a9">{"x":{
+<div id="htmlwidget-469fa888bcb938689f8a" style="width:auto;height:auto;" class="vegawidget html-widget"></div>
+<script type="application/json" data-for="htmlwidget-469fa888bcb938689f8a">{"x":{
   "chart_spec": {
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "width": "container",
@@ -412,7 +412,7 @@
                      normalize = <span class="fl">TRUE</span>,
                      perplexity = <span class="fl">50</span>,
                      exaggeration_factor = <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="kw">pdfsense</span>) <span class="op">/</span> <span class="fl">100</span>,
-                     Y_init = <span class="fu"><a href="../reference/clamp_sd.html">clamp_sd</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="kw">pdfsense</span>, <span class="kw">PC1</span>, <span class="kw">PC2</span>)))
+                     Y_init = <span class="fu"><a href="../reference/clamp.html">clamp_sd</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="kw">pdfsense</span>, <span class="kw">PC1</span>, <span class="kw">PC2</span>)))
 )
 </pre></div>
 <p>Again we can augment the embedding onto the pdfsense data:</p>
@@ -427,8 +427,8 @@
 <span class="fu"><a href="../reference/limn_xy.html">limn_xy</a></span>(<span class="kw">tsne_embedding</span>, <span class="kw">tsneX</span>, <span class="kw">tsneY</span>, <span class="kw">Type</span>,
         brush_transform = <span class="st">"median"</span>)
 </pre></div>
-<div id="htmlwidget-9f9f830479939d900113" style="width:auto;height:auto;" class="vegawidget html-widget"></div>
-<script type="application/json" data-for="htmlwidget-9f9f830479939d900113">{"x":{
+<div id="htmlwidget-0f7797f6276815f7bd19" style="width:auto;height:auto;" class="vegawidget html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0f7797f6276815f7bd19">{"x":{
   "chart_spec": {
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "data": {
