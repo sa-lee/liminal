@@ -1,22 +1,36 @@
 # --- Alternative implementations of tourr package internals ---
 
-#' Rescale all columns to lie in unit interval
+#' Rescale all columns of a matrix
 #'
-#' @param .data A 'matrix' like object
-#' @details This function "clamps" all columns in `.data` to fit
-#' onto the `ncol(.data)` dimensional unit cube.
-#' @importFrom matrixStats colRanges
+#' @param .data A numeric matrix
+#'
+#'
+#' @details These functions are used internally by the tour to rescale the
+#' columns of `.data`.
+#'
+#'
+#' @importFrom matrixStats colRanges colMedians colMads colSds
 #' @export
+#'
+#' @examples
+#' mv <- matrix(rnorm(300), ncol = 3)
+#'
+#' clamp(mv)
+#'
+#' clamp_robust(mv)
+#'
+#' clamp_sd(mv)
+#'
+#' @rdname clamps
 clamp <- function(.data) {
   rng <- matrixStats::colRanges(.data)
   vals <- sweep(.data, 2, rng[,1])
   sweep(vals, 2, rng[,2] - rng[, 1], FUN = "/")
 }
 
-#' Rescale all columns by median and IQR
-#' @param .data A 'matrix' like object
-#' @importFrom matrixStats colMedians colMads
+
 #' @export
+#' @rdname clamps
 clamp_robust <- function(.data) {
   centers <- matrixStats::colMedians(.data)
   scales <- matrixStats::colMads(.data)
@@ -24,11 +38,10 @@ clamp_robust <- function(.data) {
   sweep(vals, 2, scales, FUN = "/")
 }
 
-#' Rescale all columns to have same standard deviation
-#' @param .data  A 'matrix' like object
 #' @param sd the value of each columns standard devation
 #' @importFrom matrixStats colSds
 #' @export
+#' @rdname clamps
 clamp_sd <- function(.data, sd = 1e-4) {
   scales <- matrixStats::colSds(.data) / sd
   sweep(.data, 2, scales, FUN = "/")
@@ -41,15 +54,22 @@ compute_proj_dist <- function(x, y) {
   sqrt(sum((tcrossprod(x) - tcrossprod(y))^2))
 }
 
-#' Compute range of axes for bases
+#' Compute range of axes for a tour
 #'
-#' @param .data A 'matrix' like object
+#' @param .data A numeric matrix
 #' @param center Subtract `colMeans(.data)` from each column in `.data`?
 #' Default is TRUE.
 #'
 #' @details This function computes the maximum squared
 #' Euclidean distance of rows in a matrix like object. Mostly used
 #' internally for setting up xy-axis ranges for a tour animation.
+#'
+#' @examples
+#' mv <- matrix(rnorm(300), ncol = 3)
+#'
+#' compute_half_range(mv)
+#'
+#' compute_half_range(mv, center = FALSE)
 #'
 #' @export
 compute_half_range <- function(.data, center = TRUE) {
@@ -60,6 +80,4 @@ compute_half_range <- function(.data, center = TRUE) {
 `%||%` <- function(a, b) {
   if (!is.null(a)) a else b
 }
-
-
 
