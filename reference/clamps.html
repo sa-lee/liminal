@@ -148,8 +148,14 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>These functions are used internally by the tour to rescale the
-columns of <code>.data</code>.</p>
+    <p>These functions are used internally by the tour to rescale all
+columns of <code>.data</code>.</p><ul>
+<li><p><code>clamp()</code> rescales so all values for each column lie in the unit interval</p></li>
+<li><p><code>clamp_robust()</code> rescales by first centering by the median and then scaling
+by MADs</p></li>
+<li><p><code>clamp_sd()</code> rescales all columns to have a fixed standard deviation.</p></li>
+</ul>
+
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>mv</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>300</span>), ncol = <span class='fl'>3</span>)
