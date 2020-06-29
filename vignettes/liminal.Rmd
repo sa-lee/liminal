@@ -12,6 +12,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+library(ggplot2)
+theme_set(theme_bw())
 ```
 
 
@@ -32,11 +34,13 @@ pcs  <- prcomp(fake_trees[, -ncol(fake_trees)])
 head(cumsum(pcs$sdev / sum(pcs$sdev)))
 ```
 
-And visualise the results as interactive scatter plot by augmenting the orginal data
+And visualise the results as scatter plot by augmenting the orginal data
 
 ```{r pca-xy}
 fake_trees <- dplyr::bind_cols(fake_trees, as.data.frame(pcs$x))
-limn_xy(fake_trees, x = PC1, y = PC2, color = branches)
+ggplot(fake_trees, aes(x = PC1, y = PC2, color = branches)) +
+  geom_point() +
+  scale_color_manual(values = limn_pal_tableau10())
 ```
 
 We see some separation of the branches in first two principal components,
@@ -82,7 +86,9 @@ tsne <- Rtsne::Rtsne(dplyr::select(fake_trees, dplyr::starts_with("dim")))
 tsne_df <- data.frame(tsneX = tsne$Y[,1],
                       tsneY = tsne$Y[,2],
                       branches = fake_trees$branches)
-limn_xy(tsne_df, x = tsneX, y = tsneY, color = branches)
+ggplot(tsne_df, aes(x = tsneX, y = tsneY, color = branches)) +
+  geom_point() +
+  scale_color_manual(values = limn_pal_tableau10())
 ```
 
 The topology is a little messed up as the blue branch is now broken into two 

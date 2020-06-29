@@ -12,6 +12,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+library(ggplot2)
+theme_set(theme_bw())
 ```
 
 
@@ -44,7 +46,6 @@ First, we take the load the data as a data.frame:
 
 ```{r pdfsense-prepare}
 library(liminal)
-library(vegawidget)
 data(pdfsense)
 ```
 
@@ -63,7 +64,8 @@ res <- data.frame(
   variance_explained = cumsum(pcs$sdev / sum(pcs$sdev))
 )
 
-limn_xy(res, x = component, y = variance_explained)
+ggplot(res, aes(x = component, y = variance_explained)) +
+  geom_point()
 ```
 
 Approximately %70 of the variance in the pdf fits are explained by the first 15 principal components.
@@ -113,8 +115,10 @@ tsne_embedding$Type <- pdfsense$Type
 We can view the clusters:
 
 ```{r}
-limn_xy(tsne_embedding, tsneX, tsneY, Type,
-        brush_transform = "median")
+ggplot(tsne_embedding, 
+       aes(x = tsneX, y = tsneY, color = Type)) +
+  geom_point() +
+scale_color_manual(values = limn_pal_tableau10())
 ```
 
 

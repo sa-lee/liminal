@@ -33,5 +33,6 @@ Suggests:
     knitr,
     rmarkdown,
     uwot,
-    covr
+    covr,
+    ggplot2
 VignetteBuilder: knitr
