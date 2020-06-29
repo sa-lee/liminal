@@ -4,9 +4,13 @@
 #'
 #' @param .data A numeric matrix
 #'
-#'
-#' @details These functions are used internally by the tour to rescale the
+#' @details These functions are used internally by the tour to rescale all
 #' columns of `.data`.
+#'
+#' * `clamp()` rescales so all values for each column lie in the unit interval
+#' * `clamp_robust()` rescales by first centering by the median and then scaling
+#' by MADs
+#' * `clamp_sd()` rescales all columns to have a fixed standard deviation.
 #'
 #'
 #' @importFrom matrixStats colRanges colMedians colMads colSds

@@ -21,8 +21,14 @@ clamp_sd(.data, sd = 1e-04)
 Rescale all columns of a matrix
 }
 \details{
-These functions are used internally by the tour to rescale the
+These functions are used internally by the tour to rescale all
 columns of \code{.data}.
+\itemize{
+\item \code{clamp()} rescales so all values for each column lie in the unit interval
+\item \code{clamp_robust()} rescales by first centering by the median and then scaling
+by MADs
+\item \code{clamp_sd()} rescales all columns to have a fixed standard deviation.
+}
 }
 \examples{
 mv <- matrix(rnorm(300), ncol = 3)
