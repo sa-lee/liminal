@@ -26,11 +26,10 @@ generate_axes <- function(proj, cols) {
 #'
 #' @noRd
 schema_axes_tour <- function(name, half_range) {
-  json <- file.path(schema_dir(), "biplot.json")
+  json <- file.path(schema_dir(), "tour-biplot.json")
   ans <- jsonlite::fromJSON(json, simplifyDataFrame = FALSE)
-  ans[["data"]][["name"]] <- name
-  ans[["encoding"]][["x"]][["scale"]][["domain"]] <- c(-half_range, half_range)
-  ans[["encoding"]][["y"]][["scale"]][["domain"]] <- c(-half_range, half_range)
+  ans <- set_data_name(ans, name)
+  ans <- set_half_range(ans, half_range)
   ans
 }
 
@@ -43,7 +42,7 @@ schema_axes_tour <- function(name, half_range) {
 #' @noRd
 spec_axes <- function(proj, half_range, cols) {
   axis_tour <- schema_axes_tour("rotations", half_range)
-  axis_tour[["data"]][["values"]] <- generate_axes(proj, cols)
+  axis_tour <- set_data_values(axis_tour, generate_axes(proj, cols))
 
   vegawidget::vegawidget(
     vegawidget::as_vegaspec(axis_tour),

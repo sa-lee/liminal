@@ -92,7 +92,7 @@ limn_tour_server <- function(tour_data, tour_path, color_tbl, morph) {
 
   function(input, output, session) {
     output[["tourView"]] <- vegawidget::renderVegawidget({
-      spec_tour(tour_frame, half_range)
+      spec_tour(tour_frame, color_tbl, half_range)
     })
     output[["axisView"]] <- vegawidget::renderVegawidget({
       spec_axes(start, half_range, cols)

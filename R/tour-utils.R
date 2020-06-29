@@ -1,5 +1,4 @@
 # --- Alternative implementations of tourr package internals ---
-
 #' Rescale all columns of a matrix
 #'
 #' @param .data A numeric matrix
@@ -102,4 +101,93 @@ generate_tour_matrix <- function(.data, cols, rescale) {
 `%||%` <- function(a, b) {
   if (!is.null(a)) a else b
 }
+
+#' Path for pre-defined json specs
+#' @noRd
+schema_dir <- function() {
+  system.file("extdata", "schemas", package = "liminal")
+}
+
+#' Define xy scale domain for spec
+#'
+#' @noRd
+set_half_range <- function(spec, half_range) {
+
+  domain <- c(-half_range, half_range)
+
+  spec[["encoding"]][["x"]][["scale"]][["domain"]] <- domain
+  spec[["encoding"]][["y"]][["scale"]][["domain"]] <- domain
+
+  spec
+}
+
+set_data_name <- function(spec, name) {
+ stopifnot(is.character(name) && length(name) == 1L)
+ spec[["data"]][["name"]] <- name
+ spec
+}
+
+
+set_data_values <- function(spec, values) {
+  spec[["data"]][["values"]] <- values
+  spec
+}
+
+
+color_type <- function(color_vec) {
+  if (is.ordered(color_vec)) return("ordinal")
+  if (is.character(color_vec) || is.factor(color_vec)) return("nominal")
+  if (is.null(color_vec)) return(NULL)
+  "quantitative"
+}
+
+color_scale <- function(color_vec) {
+  if (is.numeric(color_vec)) return(range(color_vec))
+  levels(color_vec) %||% unique(color_vec)
+}
+
+set_encoding_color <- function(spec, color_tbl, color_name, brush = "brush") {
+
+  if (length(color_name) == 0) {
+    spec[["encoding"]][["color"]][["condition"]] <-
+      list(selection = brush, value = "black")
+    return(spec)
+  }
+
+  color_vec <- color_tbl[[1]]
+
+  color_encoding <- list(selection = brush,
+                         field = color_name,
+                         type = color_type(color_vec),
+                         scale = list(domain = color_scale(color_vec)))
+
+  spec[["encoding"]][["color"]][["condition"]] <- color_encoding
+
+  # if color available enable clickable legend
+  spec[["selection"]][["colclick"]]  <- list(type = "multi",
+                                             fields = list(color_name),
+                                             bind = list(legend = "dblclick"))
+
+  spec
+
+}
+
+set_encoding_opacity <- function(spec, alpha) {
+
+  conditions <- setdiff(names(spec[["selection"]]), c("grid"))
+
+  if (length(conditions) > 1) {
+    condition <- list(selection = list(`or` = conditions), value = 1)
+  } else {
+    condition <- list(selection = conditions, value = 1)
+  }
+
+
+  spec[["encoding"]][["opacity"]][["condition"]] <- condition
+  spec[["encoding"]][["opacity"]][["value"]] <- alpha
+
+  spec
+}
+
+opacity_value <- function(nr, pow = 0.3) (1 / nr)^pow
 
