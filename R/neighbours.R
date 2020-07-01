@@ -32,8 +32,8 @@ build_fnn <- function(.data, num_neighbors, .include_self = TRUE) {
   }
 
   fnn <- FNN::get.knn(.data, num_neighbors)
-  idx <- fnn$idx
-  dist <- fnn$dist
+  idx <- fnn$nn.index
+  dist <- fnn$nn.dist
 
   if (.include_self) {
     idx <- cbind(seq_len(nrow(.data)), idx)
