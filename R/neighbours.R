@@ -102,3 +102,8 @@ build_ann <- function(.data,
   search_ann_index(.data, num_neighbors, ann, search_num)
 
 }
+
+
+inx_to_df <- function(idx) {
+  data.frame(row_number = seq_len(nrow(idx)), array = idx)
+}
