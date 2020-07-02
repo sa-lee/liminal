@@ -30,4 +30,64 @@ spec_tour <- function(tour_frame, color_tbl, half_range) {
   )
 }
 
+set_encoding_color_op_linked <- function(layer, color_tbl, color_name) {
+
+  has_colclick <- "colclick" %in% names(layer[["selection"]])
+
+  has_color_col <- length(nchar(gsub("neighbors.", "", color_name))) == 0
+
+  if (has_color_col) {
+    layer[["encoding"]][["color"]][["condition"]] <-
+      list(selection =
+             layer[["encoding"]][["color"]][["condition"]][["selection"]],
+           value = "black")
+    if (has_colclick) {
+      layer[["selection"]] <- layer[["selection"]][1]
+    }
+
+    layer[["encoding"]][["opacity"]][["condition"]][["selection"]] <- "left_brush"
+
+    return(layer)
+  }
+
+  color_vec <- color_tbl[[1]]
+  layer[["encoding"]][["color"]][["condition"]][["field"]] <-
+    color_name
+  layer[["encoding"]][["color"]][["condition"]][["type"]] <-
+    color_type(color_vec)
+  layer[["encoding"]][["color"]][["condition"]][["scale"]][["domain"]] <-
+    color_scale(color_vec)
+
+  if (has_colclick) {
+    layer[["selection"]][["colclick"]][["fields"]] <- list(color_name)
+  }
+
+  layer
+
+}
+
+generate_linked_tour_spec <- function(x_color_tbl, y_color_tbl, half_range) {
+  json <- file.path(schema_dir(), "tour-linked-proto.json")
+  ans <- jsonlite::fromJSON(json, simplifyDataFrame = FALSE)
+
+  embed_cols <- colnames(y_frame)
+  embed_layer <- ans$hconcat[[1]]
+
+  embed_layer[["encoding"]][["x"]][["field"]] <- embed_cols[1]
+  embed_layer[["encoding"]][["y"]][["field"]] <- embed_cols[1]
+  embed_layer <- set_encoding_color_op_linked(embed_layer, y_color_tbl, colnames(y_color_tbl))
+
+  tour_layer <- ans$hconcat[[2]]
+  tour_layer <- set_half_range(tour_layer, half_range)
+  tour_layer <- set_encoding_color_op_linked(tour_layer,
+                                             x_color_tbl,
+                                             paste0("neighbors.", colnames(x_color_tbl)))
+
+  ans$hconcat[[1]] <- embed_layer
+  ans$hconcat[[2]] <- tour_layer
+
+  ans
+
+}
+
 

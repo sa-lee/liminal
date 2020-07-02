@@ -56,118 +56,24 @@ limn_tour_xylink <- function(x,
                              rescale = clamp,
                              morph = morph_center,
                              reference = x) {
-
   # generate tour data
   x_color <- rlang::enquo(x_color)
   x_color_tbl <- dplyr::select(x, !!x_color)
-  # tour cols are everything but color column
-  x_tcols <- dplyr::select(x, !!rlang::quo(-!!x_color))
-  # convert to a matrix
-  tour_data <- init_tour_matrix(x_tcols, cols = NULL, rescale = rescale)
-  # establish the path
-  path <- tourr::new_tour(tour_data, tour_path)
+  # convert to a matrix, tour cols are everything but color column
+  tour_data <- generate_tour_matrix(x,
+                                    !!rlang::quo(-!!x_color),
+                                    rescale = rescale)
+  # set up transformation function
+  morph_projection <- generate_morph(morph, p_eff = ncol(tour_data))
 
-  x_views <- init_tour(tour_data, path, x_color_tbl, morph)
-
-  x_views[["tourView"]][["encoding"]][["color"]][["condition"]][["selection"]] <-
-    list(`or` = list("brush", "y_brush"))
-
-  # generate y_views
+  # check embedding table is valid
+  stopifnot(ncol(y)  == 2 || ncol(y) == 3)
   y_color <- rlang::enquo(y_color)
-  y_views <- y_spec(y, !!y_color)
-
-  # generate reference matrix for kNN
-  reference <- as.matrix(dplyr::select_if(reference, is.numeric))
-
-  # collapse views
+  y_color_tbl <- dplyr::select(y, !!y_color)
 
 
-  hconcat <- list(hconcat = list(x_views[["tourView"]][!names(x_views[["tourView"]]) %in% c("$schema", "data")],
-                                 y_views[["y_spec"]])
-  )
-
-  x_views[["tourView"]] <- c(list(`$schema` = x_views[["tourView"]][["$schema"]],
-                                  datasets =
-                                    list("path" = x_views[["tourView"]][["data"]][["values"]],
-                                         "embed" = y_views[["data"]]),
-                                  data = list(name = "path"),
-                                  transform = list(
-                                    list("window" =  list(list("op" = "row_number", "as" = "row_number"))),
-                                    list("lookup" = "row_number",
-                                         "from" = list("data" = list("name" = "embed"),
-                                                       "key" = "row_number",
-                                                       "fields" = names(y_views[["data"]])[seq_len(ncol(y))])
-                                    )
-  )),
-  hconcat)
-
-  server <- function(input, output, session) {
-    output[["tourView"]] <- vegawidget::renderVegawidget(
-      vegawidget::vegawidget(
-        vegawidget::as_vegaspec(x_views[["tourView"]]),
-        embed = vegawidget::vega_embed(actions = FALSE, tooltip = FALSE)
-      )
-    )
-    output[["axisView"]] <- vegawidget::renderVegawidget(
-      vegawidget::vegawidget(
-        vegawidget::as_vegaspec(x_views[["axisView"]]),
-        embed = vegawidget::vega_embed(actions = FALSE, tooltip = FALSE),
-      )
-    )
-
-    # reactives
-    selections <- shiny::reactiveValues(proj = path(0)$proj)
-
-    rct_active_zoom <-  vegawidget::vw_shiny_get_signal("tourView",
-                                                        name = "grid",
-                                                        body_value = "value")
-
-    rct_active_brush <- vegawidget::vw_shiny_get_signal("tourView",
-                                                        name = "brush",
-                                                        body_value = "value")
-
-    rct_embed_brush <- vegawidget::vw_shiny_get_signal("tourView",
-                                                       name = "y_brush",
-                                                       body_value = "value")
-
-    rct_half_range <- rct_half_range(rct_active_zoom, x_views[["half_range"]])
-    rct_x_brush_active <- rct_pause(rct_active_brush)
-    rct_y_brush_active <- rct_pause(rct_embed_brush)
-
-    rct_play <- shiny::eventReactive(input$play, input$play > 0)
-
-    rct_neighbours <- shiny::reactive({
-      if (!identical(input$brush_selector, "linked")) {
-        message("Computing k-NN with paramaters k = ", input$brush_knn)
-        find_knn(reference, input$brush_knn)
-      }
-    })
-
-    # these set up streaming for tour view
-    rct_tour <- rct_tour(path,
-                         rct_event = rct_x_brush_active,
-                         rct_refresh = rct_play,
-                         selections = selections,
-                         session = session)
-
-    rct_axes <- stream_axes(rct_tour, x_views[["cols"]])
-    rct_proj <- stream_proj(tour_data,
-                            x_views[["source_values"]],
-                            selections,
-                            rct_half_range,
-                            morph)
-
-    # observers
-    vegawidget::vw_shiny_set_data("axisView", "rotations", rct_axes())
-
-    # only update data to the tour view
-    vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())
-
-    output$half_range <- shiny::renderPrint({
-      # protects against initial NULL
-      rct_half_range()
-    })
-  }
+  # augment y with row_number
+  y$row_number <- seq_len(nrow(y))
 
   # generate app
   ui <- limn_tour_ui("linked", nr = nrow(x) - 1L)
@@ -176,101 +82,107 @@ limn_tour_xylink <- function(x,
 }
 
 
-y_spec <- function(y, y_color) {
-  # set up linked data
-  y_color <- rlang::enquo(y_color)
-  y_data <- dplyr::select(y, dplyr::everything(), !!y_color)
-  stopifnot(ncol(y_data) <= 3)
+limn_tour_linked_server <- function(tour_data, tour_path, color_tbl, morph,
+                                    y_data, y_color_tbl) {
+  path <- tourr::new_tour(tour_data, tour_path)
 
-  xf <- names(y_data)[1]
-  yf <- names(y_data)[2]
-  colf <- names(y_data)[3]
-  coltype <- color_type(y_data[,3])
+  half_range <- compute_half_range(tour_data)
 
-  domain_x <- range(y_data[[xf]], na.rm = TRUE)
-  domain_y <- range(y_data[[yf]], na.rm = TRUE)
-  domain <- range(c(domain_x, domain_y))
+  start <- path(0)$proj
 
-  encoding <- list(encoding =
-                     list(x = list(field = xf, type = "quantitative", scale = list(domain = domain)),
-                          y = list(field = yf, type = "quantitative", scale = list(domain = domain)),
-                          color = list(
-                            condition = list(
-                              selection = list(`or` = list("y_brush", "brush")),
-                              field = colf,
-                              type = coltype
-                            ),
-                            value = "grey"
+  cols <- colnames(tour_data)
 
-                          ),
-                          opacity = list(
-                            condition = list(selection = "colclick", value = 0.9),
-                            value = opacity_value(nrow(y_data))
-                          )
-                     )
-  )
+  tour_frame <- generate_tour_frame(tour_data, start, half_range,
+                                    color_tbl, morph)
 
-  mark <- list(mark = list(type = "circle"))
-  selection <- list(selection = list("y_brush" = list(type = "interval")))
+  function(input, output, session) {
+    output[["tourView"]] <- renderVegawidget({
+      spec_tour(tour_frame, color_tbl, half_range)
+    })
 
-  y_spec <- c(encoding,
-              mark,
-              selection)
-  list(data = dplyr::mutate(y_data, row_number = seq_len(nrow(y_data))),
-       y_spec = y_spec)
-}
-
-inside_brush <- function(cols, vals, brush) {
-  dplyr::between(vals[[cols[1]]],
-                 brush[[cols[1]]][[1]],
-                 brush[[cols[1]]][[2]]) &
-    dplyr::between(vals[[cols[2]]],
-                   brush[[cols[2]]][[1]],
-                   brush[[cols[2]]][[2]])
-}
+    # reactiveValues, store current place in tour path
+    selections <- shiny::reactiveValues(proj = start, do_tour = FALSE,
+                                        force_restart = FALSE)
 
 
-#' @importFrom rlang ":="
-transient_brush_update <- function(vals, brush, current, view, name, session) {
-  view <- match.arg(view, c("x", "y"))
-  not_in_view <- setdiff(c("x", "y"), view)
-  target <-paste0("selected", toupper(view))
-  if (length(brush) > 0) {
-    cols <- names(brush)
-    current[[view]] <-  inside_brush(cols, vals, brush)
-    vals <- dplyr::bind_cols(
-      dplyr::select(vals, -target),
-      !!rlang::sym(target) := current[[view]]
-    )
-  } else {
-    current[[view]] <- current[[not_in_view]]
+    # vega-lite event listeners
+    # listen for zoom and brush events
+    rct_active_zoom <-  vw_shiny_get_signal("tourView",
+                                            name = "grid",
+                                            body_value = "value")
+    # listen for brush events on tour layer
+    rct_active_brush <- vw_shiny_get_signal("tourView",
+                                            name = "right_brush",
+                                            body_value = "value")
+
+    # listen for brush events on embed layer
+    rct_embed_brush <- vw_shiny_get_signal("tourView",
+                                           name = "left_brush",
+                                           body_value = "value")
+
+    rct_half_range <- rct_half_range(rct_active_zoom, half_range)
+
+    rct_tour <- rct_tour(path, tour_data, tour_path, selections = selections)
+
+    rct_proj <- reactive({
+      proj <- morph(
+        tour_data %*% selections$proj,
+        half_range = rct_half_range()
+      )
+      tbl_projection(tour_frame, proj)
+    })
+
+
+
+    vw_shiny_set_data("tourView", "embed", y_data)
+
+    vw_shiny_set_data("tourView", "path", rct_proj())
+
+
+    # if play button is pressed start tour
+    shiny::observeEvent(input$play, {
+      selections$do_tour <-  input$play
+    })
+
+    # if pause button is pressed stop tour
+    shiny::observeEvent(input$pause, {
+      selections$do_tour <- FALSE
+    })
+
+    # if brush is active stop tour
+    shiny::observeEvent(rct_active_brush(), {
+      selections$do_tour <- length(rct_active_brush()) == 0
+    })
+
+
+    # if restart, pause tour, and generate new tour path
+    shiny::observeEvent(input$restart, {
+      selections$do_tour <- FALSE
+      selections$force_restart <- TRUE
+    })
+
+    # When the Done button is clicked, return a value
+    observeEvent(input$done, {
+      tour_artefacts <- list(
+        selected_basis = selections$proj,
+        selected_points = rct_active_brush()
+      )
+      stopApp(tour_artefacts)
+    })
+
+
+    observe({
+      rct_tour()
+    })
+
+    output$half_range <- shiny::renderText({
+      paste("Tour with half-range:", round(rct_half_range(), 3))
+    })
+
   }
 
-  message_view(name, vals, session)
-
-}
-
-message_view <- function(name, vals, session) {
-  message <- list(outputId = "tourView",
-                  name = name,
-                  data_insert = vals ,
-                  data_remove = TRUE,
-                  run = TRUE)
-  session$sendCustomMessage("changeData", message)
 }
 
 
-selection_sequence <- function(logic) {
-  switch(logic,
-         "independent" = `%||%`,
-         "and" = `&`,
-         "or" = `|`,
-         stop("Unknown option:", logic)
-  )
-}
 
-# idea for getting NN to work,
-# create a new layer that contains the indexes
-# filter that data based on a selection
-# the layer encoding is the one that colours points etc,
-# while the layer above is the driver for the selections
+
