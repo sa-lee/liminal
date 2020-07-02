@@ -107,3 +107,13 @@ build_ann <- function(.data,
 inx_to_df <- function(idx) {
   data.frame(row_number = seq_len(nrow(idx)), array = idx)
 }
+
+nest_by_neighbours <- function(tbl, idx) {
+  row_number <- as.vector(row(idx))
+  expand_tbl <- tbl[as.vector(idx), ]
+
+  dplyr::group_nest(expand_tbl,
+                    row_number = row_number,
+                    .key = "neighbors")
+}
+
