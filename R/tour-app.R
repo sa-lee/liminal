@@ -91,10 +91,10 @@ limn_tour_server <- function(tour_data, tour_path, color_tbl, morph) {
                                     color_tbl, morph)
 
   function(input, output, session) {
-    output[["tourView"]] <- vegawidget::renderVegawidget({
+    output[["tourView"]] <- renderVegawidget({
       spec_tour(tour_frame, color_tbl, half_range)
     })
-    output[["axisView"]] <- vegawidget::renderVegawidget({
+    output[["axisView"]] <- renderVegawidget({
       spec_axes(start, half_range, cols)
     })
 
@@ -105,10 +105,10 @@ limn_tour_server <- function(tour_data, tour_path, color_tbl, morph) {
 
     # vega-lite event listeners
     # listen for zoom and brush events
-    rct_active_zoom <-  vegawidget::vw_shiny_get_signal("tourView",
+    rct_active_zoom <-  vw_shiny_get_signal("tourView",
                                             name = "grid",
                                             body_value = "value")
-    rct_active_brush <- vegawidget::vw_shiny_get_signal("tourView",
+    rct_active_brush <- vw_shiny_get_signal("tourView",
                                                      name = "brush",
                                                      body_value = "value")
 
@@ -129,8 +129,8 @@ limn_tour_server <- function(tour_data, tour_path, color_tbl, morph) {
     })
 
     # observers
-    vegawidget::vw_shiny_set_data("axisView", "rotations", rct_axes())
-    vegawidget::vw_shiny_set_data("tourView", "path", rct_proj())
+    vw_shiny_set_data("axisView", "rotations", rct_axes())
+    vw_shiny_set_data("tourView", "path", rct_proj())
 
 
     # if play button is pressed start tour
