@@ -11,8 +11,6 @@ find_knn <- function(.data,
                      .include_self = TRUE) {
 
   nr <- nrow(.data)
-  nc <- ncol(.data)
-
   # smallish data use FNN
   if (nr <= 4096  && metric == "euclidean") {
     return(build_fnn(.data, num_neighbors, .include_self))
@@ -104,16 +102,32 @@ build_ann <- function(.data,
 }
 
 
-inx_to_df <- function(idx) {
-  data.frame(row_number = seq_len(nrow(idx)), array = idx)
+
+reference_data_knn <- function(ref) {
+
+  if (is(ref, "data.frame")) {
+    return(model.matrix(~ . - 1, na.fail(ref)))
+  }
+
+  if (is(ref, "dist")) {
+    return(as.matrix(na.fail(ref)))
+  }
+
+  stopifnot(is(ref, "matrix"))
+
+  na.fail(ref)
 }
 
-nest_by_neighbours <- function(tbl, idx) {
-  row_number <- as.vector(row(idx))
-  expand_tbl <- tbl[as.vector(idx), ]
 
-  dplyr::group_nest(expand_tbl,
-                    row_number = row_number,
-                    .key = "neighbors")
+nest_by_neighbours <- function(tbl, idx) {
+  if (is(idx, "matrix")) {
+    tbl <- tbl[as.vector(idx), ]
+    idx <- as.vector(row(idx))
+
+  } else {
+    stopifnot(length(idx) == nrow(tbl))
+  }
+
+  dplyr::group_nest(tbl, row_number = idx, .key = "neighbors")
 }
 

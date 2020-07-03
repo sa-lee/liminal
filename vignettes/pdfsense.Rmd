@@ -118,7 +118,7 @@ We can view the clusters:
 ggplot(tsne_embedding, 
        aes(x = tsneX, y = tsneY, color = Type)) +
   geom_point() +
-scale_color_manual(values = limn_pal_tableau10())
+  scale_color_manual(values = limn_pal_tableau10())
 ```
 
 

@@ -14,7 +14,6 @@
 #' is to compute from all numeric columns in `x`.
 #'
 #' @details
-#' The linked tour interface consists of three views:
 #'  1. The tour view on the left is a dynamic and interactive scatterplot. Brushing on the tour view
 #'  is activated with the shift key plus a mouse drag. By default it will
 #'  highlight corresponding points in the xy view and pause the animation.
@@ -54,54 +53,81 @@ limn_tour_xylink <- function(x,
                              y_color = NULL,
                              tour_path = tourr::grand_tour(),
                              rescale = clamp,
-                             morph = morph_center,
-                             reference = x) {
+                             morph = "center",
+                             reference = NULL) {
+
+  if (!identical(nrow(x), nrow(y))) {
+    stop("x and y should have same number of rows")
+  }
+
   # generate tour data
   x_color <- rlang::enquo(x_color)
   x_color_tbl <- dplyr::select(x, !!x_color)
+  x_data <- dplyr::select(x, !!rlang::quo(-!!x_color))
   # convert to a matrix, tour cols are everything but color column
-  tour_data <- generate_tour_matrix(x,
-                                    !!rlang::quo(-!!x_color),
+  tour_data <- generate_tour_matrix(x_data,
+                                    NULL,
                                     rescale = rescale)
   # set up transformation function
   morph_projection <- generate_morph(morph, p_eff = ncol(tour_data))
 
   # check embedding table is valid
   stopifnot(ncol(y)  == 2 || ncol(y) == 3)
+  # augment y with row_number
+  y$row_number <- seq_len(nrow(y))
   y_color <- rlang::enquo(y_color)
   y_color_tbl <- dplyr::select(y, !!y_color)
 
-
-  # augment y with row_number
-  y$row_number <- seq_len(nrow(y))
+  if (is.null(reference)) {
+    reference <- reference_data_knn(x_data)
+  } else {
+    if (!identical(nrow(reference), nrow(x))) {
+      stop("x and reference should have same number of rows")
+    }
+    reference <- reference_data_knn(reference)
+  }
 
   # generate app
-  ui <- limn_tour_ui("linked", nr = nrow(x) - 1L)
-  shiny::shinyApp(ui, server)
+  ui <- gadget_linked_ui()
 
+
+  server <- limn_tour_linked_server(tour_data,
+                                    tour_path,
+                                    x_color_tbl,
+                                    morph_projection,
+                                    y,
+                                    y_color_tbl,
+                                    reference)
+
+  app <- shinyApp(ui, server)
+  runGadget(app)
 }
 
 
-limn_tour_linked_server <- function(tour_data, tour_path, color_tbl, morph,
-                                    y_data, y_color_tbl) {
+limn_tour_linked_server <- function(tour_data, tour_path, x_color_tbl, morph,
+                                    y_data, y_color_tbl, reference) {
   path <- tourr::new_tour(tour_data, tour_path)
 
   half_range <- compute_half_range(tour_data)
 
   start <- path(0)$proj
 
-  cols <- colnames(tour_data)
-
   tour_frame <- generate_tour_frame(tour_data, start, half_range,
-                                    color_tbl, morph)
+                                    x_color_tbl, morph)
+  # init k = 1 neighbours
+  idx <- seq_len(nrow(tour_frame))
+
+  x_data <- nest_by_neighbours(tour_frame, idx)
 
   function(input, output, session) {
     output[["tourView"]] <- renderVegawidget({
-      spec_tour(tour_frame, color_tbl, half_range)
+      spec_linked_tour(x_data, y_data, x_color_tbl, y_color_tbl, half_range)
     })
 
     # reactiveValues, store current place in tour path
-    selections <- shiny::reactiveValues(proj = start, do_tour = FALSE,
+    selections <- shiny::reactiveValues(proj = start,
+                                        idx = idx,
+                                        do_tour = FALSE,
                                         force_restart = FALSE)
 
 
@@ -125,19 +151,20 @@ limn_tour_linked_server <- function(tour_data, tour_path, color_tbl, morph,
     rct_tour <- rct_tour(path, tour_data, tour_path, selections = selections)
 
     rct_proj <- reactive({
+
       proj <- morph(
         tour_data %*% selections$proj,
-        half_range = rct_half_range()
+        half_range = half_range
       )
       tbl_projection(tour_frame, proj)
     })
 
+    rct_x_frame <- reactive({
+      nest_by_neighbours(rct_proj(), selections$idx)
+    })
 
 
-    vw_shiny_set_data("tourView", "embed", y_data)
-
-    vw_shiny_set_data("tourView", "path", rct_proj())
-
+    vw_shiny_set_data("tourView", "path", rct_x_frame())
 
     # if play button is pressed start tour
     shiny::observeEvent(input$play, {
@@ -165,9 +192,23 @@ limn_tour_linked_server <- function(tour_data, tour_path, color_tbl, morph,
     observeEvent(input$done, {
       tour_artefacts <- list(
         selected_basis = selections$proj,
-        selected_points = rct_active_brush()
+        selected_tour_points = rct_active_brush(),
+        selected_embed_points = rct_embed_brush()
       )
       stopApp(tour_artefacts)
+    })
+
+    observeEvent(input$k, {
+      if (is.null(input$k)) {
+        return()
+      }
+      if (input$k == 1) {
+        selections$idx <- idx
+      } else {
+        selections$idx <-
+          find_knn(reference, num_neighbors = input$k)$idx
+      }
+      selections$do_tour <- FALSE
     })
 
 
@@ -180,9 +221,4 @@ limn_tour_linked_server <- function(tour_data, tour_path, color_tbl, morph,
     })
 
   }
-
 }
-
-
-
-

@@ -34,7 +34,8 @@ set_encoding_color_op_linked <- function(layer, color_tbl, color_name) {
 
   has_colclick <- "colclick" %in% names(layer[["selection"]])
 
-  has_color_col <- length(nchar(gsub("neighbors.", "", color_name))) == 0
+  field_title <- gsub("neighbors.", "", color_name)
+  has_color_col <- length(nchar(field_title)) == 0
 
   if (has_color_col) {
     layer[["encoding"]][["color"]][["condition"]] <-
@@ -57,6 +58,7 @@ set_encoding_color_op_linked <- function(layer, color_tbl, color_name) {
     color_type(color_vec)
   layer[["encoding"]][["color"]][["condition"]][["scale"]][["domain"]] <-
     color_scale(color_vec)
+  layer[["encoding"]][["color"]][["condition"]][["legend"]] <- list(title = field_title)
 
   if (has_colclick) {
     layer[["selection"]][["colclick"]][["fields"]] <- list(color_name)
@@ -66,7 +68,7 @@ set_encoding_color_op_linked <- function(layer, color_tbl, color_name) {
 
 }
 
-generate_linked_tour_spec <- function(x_color_tbl, y_color_tbl, half_range) {
+generate_linked_tour_spec <- function(x_frame, y_frame, x_color_tbl, y_color_tbl, half_range) {
   json <- file.path(schema_dir(), "tour-linked-proto.json")
   ans <- jsonlite::fromJSON(json, simplifyDataFrame = FALSE)
 
@@ -74,7 +76,12 @@ generate_linked_tour_spec <- function(x_color_tbl, y_color_tbl, half_range) {
   embed_layer <- ans$hconcat[[1]]
 
   embed_layer[["encoding"]][["x"]][["field"]] <- embed_cols[1]
-  embed_layer[["encoding"]][["y"]][["field"]] <- embed_cols[1]
+  embed_layer[["encoding"]][["x"]][["scale"]] <-
+    list(domain = range(y_frame[[embed_cols[1]]]))
+  embed_layer[["encoding"]][["y"]][["field"]] <- embed_cols[2]
+  embed_layer[["encoding"]][["y"]][["scale"]] <-
+    list(domain = range(y_frame[[embed_cols[2]]]))
+
   embed_layer <- set_encoding_color_op_linked(embed_layer, y_color_tbl, colnames(y_color_tbl))
 
   tour_layer <- ans$hconcat[[2]]
@@ -83,11 +90,25 @@ generate_linked_tour_spec <- function(x_color_tbl, y_color_tbl, half_range) {
                                              x_color_tbl,
                                              paste0("neighbors.", colnames(x_color_tbl)))
 
+  ans$transform[[2]]$flatten <- list("neighbors")
+
   ans$hconcat[[1]] <- embed_layer
   ans$hconcat[[2]] <- tour_layer
 
-  ans
+  ans$datasets$path <- x_frame
+  ans$datasets$embed <- y_frame
 
+  ans
 }
 
+spec_linked_tour <- function(x_frame, y_frame, x_color_tbl, y_color_tbl, half_range) {
+  view_tour <-
+    generate_linked_tour_spec(x_frame, y_frame,
+                              x_color_tbl, y_color_tbl, half_range)
+
+  vegawidget::vegawidget(
+    vegawidget::as_vegaspec(view_tour),
+    embed = vegawidget::vega_embed(actions = FALSE, tooltip = FALSE)
+  )
+}
 
