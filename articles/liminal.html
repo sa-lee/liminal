@@ -133,10 +133,10 @@
 <p>The topology is a little messed up as the blue branch is now broken into two distinct pieces.</p>
 <p>We can see where our embedding is different via a linked tour:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="fu"><a href="../reference/limn_tour_xylink.html">limn_tour_xylink</a></span>(<span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="kw">fake_trees</span>, <span class="kw">PC1</span><span class="op">:</span><span class="kw">PC10</span>, <span class="kw">branches</span>),
-                 <span class="kw">tsne_df</span>,
-                 x_color = <span class="kw">branches</span>, 
-                 y_color = <span class="kw">branches</span>)
+<span class="fu"><a href="../reference/limn_tour_link.html">limn_tour_link</a></span>(<span class="kw">tsne_df</span>,
+               <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="kw">fake_trees</span>, <span class="kw">PC1</span><span class="op">:</span><span class="kw">PC10</span>, <span class="kw">branches</span>),
+               tour_color = <span class="kw">branches</span>, 
+               embed_color = <span class="kw">branches</span>)
 </pre></div>
 <p>This function requires two tables that will be linked together in seperate views. The tour interface is the same as above, except now brushing on the tour view will highlight points on the right hand side scatter plot. The right side scatterplot view is an interactive scatterplot. Brushing on the right view is activated via click and drag movements. It will highlight points in the tour view but the type of highlighting depends on the brush mode selected, the default is simple linked brushing. There are two other brushing modes that can be modified via radio buttons. Both neighbors and distance based brushing operate on the k-NN graph obtained from the control panel.</p>
   </div>

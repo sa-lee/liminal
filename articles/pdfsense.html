@@ -120,10 +120,16 @@
 )
 
 <span class="fu">ggplot</span>(<span class="kw">res</span>, <span class="fu">aes</span>(x = <span class="kw">component</span>, y = <span class="kw">variance_explained</span>)) <span class="op">+</span>
-  <span class="fu">geom_point</span>()
+  <span class="fu">geom_point</span>() <span class="op">+</span>
+  <span class="fu">scale_x_continuous</span>(
+    breaks = <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0</span>, <span class="fl">60</span>, by = <span class="fl">5</span>)
+  ) <span class="op">+</span>
+  <span class="fu">scale_y_continuous</span>(
+    labels = <span class="fu">function</span>(<span class="kw">x</span>) <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="fl">100</span><span class="op">*</span><span class="kw">x</span>, <span class="st">"%"</span>)
+  )
 </pre></div>
 <p><img src="pdfsense_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
-<p>Approximately %70 of the variance in the pdf fits are explained by the first 15 principal components.</p>
+<p>Approximately 70% of the variance in the pdf fits are explained by the first 15 principal components.</p>
 <p>Next we augment our original data with the principal components:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="kw">pdfsense</span> <span class="op">&lt;-</span> <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(
@@ -143,22 +149,23 @@
 <p>Now we can set up a non-linear embedding via t-SNE, here we embed all 56 principal components.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">3099</span>)
-<span class="kw">tsne</span> <span class="op">&lt;-</span> <span class="kw">Rtsne</span>::<span class="fu"><a href="https://rdrr.io/pkg/Rtsne/man/Rtsne.html">Rtsne</a></span>(<span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="kw">pdfsense</span>, <span class="kw">PC1</span><span class="op">:</span><span class="kw">PC56</span>),
-                     pca = <span class="fl">FALSE</span>, 
-                     normalize = <span class="fl">TRUE</span>,
-                     perplexity = <span class="fl">50</span>,
-                     exaggeration_factor = <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="kw">pdfsense</span>) <span class="op">/</span> <span class="fl">100</span>,
-                     Y_init = <span class="fu"><a href="../reference/clamp.html">clamp_sd</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="kw">pdfsense</span>, <span class="kw">PC1</span>, <span class="kw">PC2</span>)))
+<span class="kw">start</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clamp.html">clamp_sd</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="kw">pdfsense</span>, <span class="kw">PC1</span>, <span class="kw">PC2</span>)))
+<span class="kw">tsne</span> <span class="op">&lt;-</span> <span class="kw">Rtsne</span>::<span class="fu"><a href="https://rdrr.io/pkg/Rtsne/man/Rtsne.html">Rtsne</a></span>(
+  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="kw">pdfsense</span>, <span class="kw">PC1</span><span class="op">:</span><span class="kw">PC56</span>),
+  pca = <span class="fl">FALSE</span>, 
+  normalize = <span class="fl">TRUE</span>,
+  perplexity = <span class="fl">50</span>,
+  exaggeration_factor = <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="kw">pdfsense</span>) <span class="op">/</span> <span class="fl">100</span>,
+  Y_init = <span class="kw">start</span>
 )
 </pre></div>
-<p>Again we can augment the embedding onto the pdfsense data:</p>
+<p>Once we have run t-SNE we tidy it into a <code>data.frame</code>, to perform a linked tour.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit">
 <span class="kw">tsne_embedding</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>(<span class="kw">tsne</span><span class="op">$</span><span class="kw">Y</span>)
-<span class="kw">tsne_embedding</span> <span class="op">&lt;-</span> <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(<span class="kw">tsne_embedding</span>,
-                                tsneX = <span class="kw">V1</span>, tsneY = <span class="kw">V2</span>)
+<span class="kw">tsne_embedding</span> <span class="op">&lt;-</span> <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(<span class="kw">tsne_embedding</span>, tsneX = <span class="kw">V1</span>, tsneY = <span class="kw">V2</span>)
 <span class="kw">tsne_embedding</span><span class="op">$</span><span class="kw">Type</span> <span class="op">&lt;-</span> <span class="kw">pdfsense</span><span class="op">$</span><span class="kw">Type</span>
 </pre></div>
-<p>We can view the clusters:</p>
+<p>We can view the clusters using a static scatter plot:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit">
 <span class="fu">ggplot</span>(<span class="kw">tsne_embedding</span>, 
        <span class="fu">aes</span>(x = <span class="kw">tsneX</span>, y = <span class="kw">tsneY</span>, color = <span class="kw">Type</span>)) <span class="op">+</span>
@@ -168,10 +175,12 @@
 <p><img src="pdfsense_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p>We can link a tour view next to the embedding to give us a clear picture of the clustering:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="fu"><a href="../reference/limn_tour_xylink.html">limn_tour_xylink</a></span>(x = <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="kw">pdfsense</span>, <span class="kw">PC1</span><span class="op">:</span><span class="kw">PC6</span>, <span class="kw">Type</span>),
-                 y = <span class="kw">tsne_embedding</span>,
-                 x_color = <span class="kw">Type</span>,
-                 y_color= <span class="kw">Type</span>)
+<span class="fu"><a href="../reference/limn_tour_link.html">limn_tour_link</a></span>(
+  tour_data = <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="kw">pdfsense</span>, <span class="kw">PC1</span><span class="op">:</span><span class="kw">PC6</span>, <span class="kw">Type</span>),
+  embed_data = <span class="kw">tsne_embedding</span>,
+  tour_color = <span class="kw">Type</span>,
+  embed_color = <span class="kw">Type</span>
+)
 </pre></div>
 </div>
   </div>

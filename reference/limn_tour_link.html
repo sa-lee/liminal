@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Tour a high dimensional dataset — limn_tour • liminal</title>
+<title>Link a 2-d embedding with a tour — limn_tour_link • liminal</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Tour a high dimensional dataset — limn_tour" />
-<meta property="og:description" content="Tour a high dimensional dataset" />
+<meta property="og:title" content="Link a 2-d embedding with a tour — limn_tour_link" />
+<meta property="og:description" content="Link a 2-d embedding with a tour" />
 
 
 
@@ -118,108 +118,104 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Tour a high dimensional dataset</h1>
+    <h1>Link a 2-d embedding with a tour</h1>
     
-    <div class="hidden name"><code>limn_tour.Rd</code></div>
+    <div class="hidden name"><code>limn_tour_link.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Tour a high dimensional dataset</p>
+    <p>Link a 2-d embedding with a tour</p>
     </div>
 
-    <pre class="usage"><span class='fu'>limn_tour</span>(
-  <span class='kw'>.data</span>,
-  <span class='kw'>cols</span>,
-  color = <span class='kw'>NULL</span>,
+    <pre class="usage"><span class='fu'>limn_tour_link</span>(
+  <span class='kw'>embed_data</span>,
+  <span class='kw'>tour_data</span>,
+  embed_color = <span class='kw'>NULL</span>,
+  tour_color = <span class='kw'>NULL</span>,
   tour_path = <span class='kw'>tourr</span>::<span class='fu'><a href='https://rdrr.io/pkg/tourr/man/grand_tour.html'>grand_tour</a></span>(),
   rescale = <span class='kw'>clamp</span>,
-  morph = <span class='st'>"center"</span>
+  morph = <span class='st'>"center"</span>,
+  reference = <span class='kw'>NULL</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.data</th>
-      <td><p>a data.frame to tour</p></td>
+      <th>embed_data</th>
+      <td><p>A <code>data.frame</code> representing embedding coordinates</p></td>
     </tr>
     <tr>
-      <th>cols</th>
-      <td><p>Columns to tour. This can use a tidyselect specification
-such as <code><a href='https://tidyselect.r-lib.org/reference/starts_with.html'>tidyselect::starts_with()</a></code>.</p></td>
+      <th>tour_data</th>
+      <td><p>A <code>data.frame</code> that is linked to <code>.coords</code> to tour</p></td>
     </tr>
     <tr>
-      <th>color</th>
-      <td><p>A variable name in <code>.data</code>, mapping to the color aesthetic, if
-NULL points will be colored black.</p></td>
+      <th>embed_color</th>
+      <td><p>An optional bare column name in <code>embed</code> for color
+mapping the points in the embedding view.</p></td>
+    </tr>
+    <tr>
+      <th>tour_color</th>
+      <td><p>An optional bare column name in ``, for color
+mapping the points in the tour view.</p></td>
     </tr>
     <tr>
       <th>tour_path</th>
-      <td><p>the tour path to take, the default is <code><a href='https://rdrr.io/pkg/tourr/man/grand_tour.html'>tourr::grand_tour()</a></code>
-but also works with <code><a href='https://rdrr.io/pkg/tourr/man/guided_tour.html'>tourr::guided_tour()</a></code>.</p></td>
+      <td><p>the tour path to take, the default is <code><a href='https://rdrr.io/pkg/tourr/man/grand_tour.html'>tourr::grand_tour()</a></code>.</p></td>
     </tr>
     <tr>
       <th>rescale</th>
-      <td><p>A function that rescales <code>cols</code>, the default is to
-<code>clamp()</code> the data to lie in the hyperdimensional unit cube. To not perform
-any scaling use <code><a href='https://rdrr.io/r/base/identity.html'>identity()</a></code>.</p></td>
+      <td><p>A function that rescales tour columns. Default is <code>clamp()</code>
+To not perform any scaling use <code><a href='https://rdrr.io/r/base/identity.html'>identity()</a></code>.</p></td>
     </tr>
     <tr>
       <th>morph</th>
       <td><p>One of <code><a href='https://rdrr.io/r/base/c.html'>c("center", "centre", "identity", "radial")</a></code>
 that rescales each projection along the tour path. The default
 is to center the projections and divide by half range. See <code>morph_center()</code>
-for details.</p></td>
+for details for each of these functions.</p></td>
+    </tr>
+    <tr>
+      <th>reference</th>
+      <td><p>an optional data set to compute a nearest neighbors from.
+By default the <code>reference</code> is set to <code>NULL</code> in which case neighbors will be
+computed from <code>tour_data</code>. Otherwise <code>data.frame</code>, <code>matrix</code> or <code>dist</code>
+objects can be used.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>The tour interface loads a shiny app either in the Viewer pane
-if you are using Rstudio or in a browser window. After iterating through
-the tour and and highlighting subsets of interest, you can click the
-'Done' button. This will return a named list with two elements:</p><ul>
-<li><p><code>selected_basis</code>: a matrix consisting of the final projection selected</p></li>
-<li><p><code>selected_brush</code>: a matrix consisting of the bounding box of brush</p></li>
-</ul>
-
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The tour interface consists of two views:</p><ol>
-<li><p>the tour view which is a dynamic scatterplot</p></li>
+    
+<ol>
+<li><p>The tour view on the left is a dynamic and interactive scatterplot. Brushing on the tour view
+is activated with the shift key plus a mouse drag. By default it will
+highlight corresponding points in the xy view and pause the animation.</p></li>
+<li><p>The xy view on the right is an interactive scatterplot. Brushing on the xy view
+will highlight points in the tour view and is activated via a mouse drag,
+the type of highlighting depends on the brush mode selected.</p></li>
 <li><p>the axis view which shows the direction and magnitude of the
-basis vectors being generated.</p></li>
+basis vectors being generated.
+There are several other user controls available:</p></li>
 </ol>
-
-<p>There are several other user controls available:</p><ul>
-<li><p>A play button, that when pressed will start the tour animation.</p></li>
-<li><p>A pause button, that when pressed will pause the tour animation.</p></li>
-<li><p>The title of the view includes the half range. The half range
+<ul>
+<li><p>There is a play button, that when pressed will start the tour.</p></li>
+<li><p>There is also a text view of the half range which is the maximum squared
+Euclidean distance between points in the tour view. The half range
 is a scale factor for projections and can be thought of as a way
-of zooming in and out on points. It can be  modified by scrolling
-(via a mouse-wheel movement). Double-click to reset to the default
-tour view.</p></li>
-<li><p>If categorical variable has been used, the legend can be toggled to
-highlight categories of interest with shift + mouse click.
-Multiple categories can be selected in this way. To reset double click
-the legend title.</p></li>
-<li><p>Brushing can be activtated by shift + mouse drag on the tour view.
-If the tour animation a brush event will pause it.</p></li>
+of zooming in and out on points. It can be dynamically modified by scrolling
+(via a mouse-wheel). To reset double click the tour view.</p></li>
+<li><p>The legend can be toggled to highlight groups of points with
+shift+mouse-click. Multiple groups can be selected in this way. To
+reset double click the legend title.</p></li>
+<li><p>There are different brushing modes that can be modified via
+radio buttons. Both neighbors and distance based brushing operate
+on the k-NN graph obtained from the control panel.</p></li>
 </ul>
 
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><code>compute_half_range()</code>, <code>morph_center()</code>, <code>limn_tour_link()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='co'># tour the first ten columns of the fake tree data</span>
-<span class='co'># loads the default interface</span>
-<span class='fu'>limn_tour</span>(<span class='kw'>fake_trees</span>, <span class='kw'>dim1</span><span class='op'>:</span><span class='kw'>dim10</span>)
-<span class='co'># perform the same action but now coloring points</span>
-<span class='fu'>limn_tour</span>(<span class='kw'>fake_trees</span>, <span class='kw'>dim1</span><span class='op'>:</span><span class='kw'>dim10</span>, color = <span class='kw'>branches</span>)
-}
-</div></pre>
+    <pre class="examples"></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
