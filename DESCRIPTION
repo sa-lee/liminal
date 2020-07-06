@@ -25,7 +25,8 @@ Imports:
     matrixStats,
     FNN,
     RcppAnnoy,
-    methods
+    methods,
+    stats
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
 Suggests: 

@@ -48,7 +48,7 @@
 #'
 #'
 #'
-#' @seealso [compute_half_range()], [morph_center()], [limn_tour_xylink()]
+#' @seealso [compute_half_range()], [morph_center()], [limn_tour_link()]
 #' @examples
 #' \dontrun{
 #' # tour the first ten columns of the fake tree data

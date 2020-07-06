@@ -97,10 +97,10 @@ distinct pieces.
 We can see where our embedding is different via a linked tour:
 
 ```{r, eval = FALSE}
-limn_tour_xylink(dplyr::select(fake_trees, PC1:PC10, branches),
-                 tsne_df,
-                 x_color = branches, 
-                 y_color = branches)
+limn_tour_link(tsne_df,
+               dplyr::select(fake_trees, PC1:PC10, branches),
+               tour_color = branches, 
+               embed_color = branches)
 ```
  This function requires two tables that will be linked together in seperate views. The tour interface is the same as above, except now
  brushing on the tour view will highlight points on the right hand side

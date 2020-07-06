@@ -83,5 +83,5 @@ limn_tour(fake_trees, dim1:dim10, color = branches)
 
 }
 \seealso{
-\code{\link[=compute_half_range]{compute_half_range()}}, \code{\link[=morph_center]{morph_center()}}, \code{\link[=limn_tour_xylink]{limn_tour_xylink()}}
+\code{\link[=compute_half_range]{compute_half_range()}}, \code{\link[=morph_center]{morph_center()}}, \code{\link[=limn_tour_link]{limn_tour_link()}}
 }

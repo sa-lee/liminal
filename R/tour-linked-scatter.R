@@ -1,17 +1,23 @@
-#' View a tour, linked to a scatter plot.
+#' Link a 2-d embedding with a tour
 #'
-#' @param x a `data.frame` or `tibble` to tour
-#' @param y a `data.frame` to link to `x`, representing a scatter plot
-#' @param x_color an optional bare column name in `x`, for the color mapping in the tour view
-#' @param y_color an optional bare column name for the colour mapping the linked view
+#' @param embed_data A `data.frame` representing embedding coordinates
+#' @param tour_data A `data.frame` that is linked to `.coords` to tour
+#' @param embed_color An optional bare column name in `embed` for color
+#' mapping the points in the embedding view.
+#' @param tour_color An optional bare column name in ``, for color
+#' mapping the points in the tour view.
 #' @param tour_path the tour path to take, the default is [tourr::grand_tour()].
 #' @param rescale A function that rescales tour columns. Default is [clamp()]
 #' To not perform any scaling use [identity()].
-#' @param morph A callback function that modifies the projection, default is to
-#' center the projection using [morph_center()].
-#' @param reference an optional data.frame or matrix to compute
-#' nearest neighbors from, must have same number of rows as `x`, the default
-#' is to compute from all numeric columns in `x`.
+#' @param morph One of `c("center", "centre", "identity", "radial")`
+#' that rescales each projection along the tour path. The default
+#' is to center the projections and divide by half range. See [morph_center()]
+#' for details for each of these functions.
+#'
+#' @param reference an optional data set to compute a nearest neighbors from.
+#' By default the `reference` is set to `NULL` in which case neighbors will be
+#' computed from `tour_data`. Otherwise `data.frame`, `matrix` or `dist`
+#' objects can be used.
 #'
 #' @details
 #'  1. The tour view on the left is a dynamic and interactive scatterplot. Brushing on the tour view
@@ -42,47 +48,54 @@
 #' # another layout based on t-SNE
 #' # loads the default interface
 #' tsne <- Rtsne::Rtsne(dplyr::select(fake_trees, dplyr::starts_with("dim")))
-#' tsne_df <- data.frame(tsneX = tsne$Y[,1], tsneY = tsne$Y[,2], branches = fake_trees$branches)
-#' limn_tour_xylink(dplyr::select(fake_trees, dim1:dim10, branches), tsne_df, x_color = branches, y_color = branches)
-#' }
+#' tsne_df <- data.frame(tsneX = tsne$Y[,1],
+#'                       tsneY = tsne$Y[,2],
+#'                       branches = fake_trees$branches)
+#' limn_tour_link(
+#'   tsne_df,
+#'   dplyr::select(fake_trees, dim1:dim10, branches),
+#'   embed_color = branches
+#'   tour_color = branches
+#' )
+#'}
 #'
 #' @export
-limn_tour_xylink <- function(x,
-                             y,
-                             x_color = NULL,
-                             y_color = NULL,
-                             tour_path = tourr::grand_tour(),
-                             rescale = clamp,
-                             morph = "center",
-                             reference = NULL) {
+limn_tour_link <- function(embed_data,
+                           tour_data,
+                           embed_color = NULL,
+                           tour_color = NULL,
+                           tour_path = tourr::grand_tour(),
+                           rescale = clamp,
+                           morph = "center",
+                           reference = NULL) {
 
-  if (!identical(nrow(x), nrow(y))) {
-    stop("x and y should have same number of rows")
+  if (!identical(nrow(tour_data), nrow(embed_data))) {
+    stop("tour_data and embed_data should have same number of rows")
   }
 
   # generate tour data
-  x_color <- rlang::enquo(x_color)
-  x_color_tbl <- dplyr::select(x, !!x_color)
-  x_data <- dplyr::select(x, !!rlang::quo(-!!x_color))
+  tour_color <- rlang::enquo(tour_color)
+  x_color_tbl <- dplyr::select(tour_data, !!tour_color)
+  x_data <- dplyr::select(tour_data, !!rlang::quo(-!!tour_color))
   # convert to a matrix, tour cols are everything but color column
-  tour_data <- generate_tour_matrix(x_data,
+  tour_matrix <- generate_tour_matrix(x_data,
                                     NULL,
                                     rescale = rescale)
   # set up transformation function
-  morph_projection <- generate_morph(morph, p_eff = ncol(tour_data))
+  morph_projection <- generate_morph(morph, p_eff = ncol(tour_matrix))
 
   # check embedding table is valid
-  stopifnot(ncol(y)  == 2 || ncol(y) == 3)
-  # augment y with row_number
-  y$row_number <- seq_len(nrow(y))
-  y_color <- rlang::enquo(y_color)
-  y_color_tbl <- dplyr::select(y, !!y_color)
+  stopifnot(ncol(embed_data)  == 2 || ncol(embed_data) == 3)
+  # augment embed_data with row_number
+  embed_data$row_number <- seq_len(nrow(embed_data))
+  embed_color <- rlang::enquo(embed_color)
+  y_color_tbl <- dplyr::select(embed_data, !!embed_color)
 
   if (is.null(reference)) {
     reference <- reference_data_knn(x_data)
   } else {
-    if (!identical(nrow(reference), nrow(x))) {
-      stop("x and reference should have same number of rows")
+    if (!identical(nrow(reference), nrow(tour_matrix))) {
+      stop("tour_data and reference should have same number of rows")
     }
     reference <- reference_data_knn(reference)
   }
@@ -91,11 +104,11 @@ limn_tour_xylink <- function(x,
   ui <- gadget_linked_ui()
 
 
-  server <- limn_tour_linked_server(tour_data,
+  server <- limn_tour_linked_server(tour_matrix,
                                     tour_path,
                                     x_color_tbl,
                                     morph_projection,
-                                    y,
+                                    embed_data,
                                     y_color_tbl,
                                     reference)
 

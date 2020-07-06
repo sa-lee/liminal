@@ -103,6 +103,9 @@ build_ann <- function(.data,
 
 
 
+#' Set up data for passing to knn method
+#' @importFrom stats model.matrix na.fail
+#' @noRd
 reference_data_knn <- function(ref) {
 
   if (is(ref, "data.frame")) {
@@ -119,6 +122,7 @@ reference_data_knn <- function(ref) {
 }
 
 
+
 nest_by_neighbours <- function(tbl, idx) {
   if (is(idx, "matrix")) {
     tbl <- tbl[as.vector(idx), ]
@@ -127,7 +131,6 @@ nest_by_neighbours <- function(tbl, idx) {
   } else {
     stopifnot(length(idx) == nrow(tbl))
   }
-
   dplyr::group_nest(tbl, row_number = idx, .key = "neighbors")
 }
 
