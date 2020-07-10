@@ -2,7 +2,7 @@
 #'
 #' @param proj a projection
 #' @param half_range scale factor for projection
-#' @param p_eff  dimensionality of basis
+#' @param p_eff  Effective dimensionality of reference data set.
 #'
 #' @export
 #' @rdname morphs
@@ -32,24 +32,29 @@ morph_radial <- function(proj, half_range, p_eff) {
   cbind(x = rad * cos(ang), y = rad * sin(ang))
 }
 
-# cumulative distribution, fraction of points within radius r
-# given 2D projection of hypersphere with radius R in p dimensions
+#' CDF radial transform
+#'
+#' @param r the radius of the 2-d projection
+#' @param R the radius of the reference hypersphere
+#' @param p the dimensionality of the the reference hypersphere
+#'
+#' @details Computes the fraction of points within radius r
+#' given a 2D projection of hypersphere with radius R in p dimensions
+#'
+#' @noRd
 cumulative_radial <- function(r, R, p){
   1 - (1 - (r/R)^2)^(p/2)
 }
 
 
 
-# Helpers for setting up data to the stream
-
-tbl_projection <- function(tbl, proj) {
-  stopifnot(c("x", "y") %in% names(tbl))
-  tbl[, c("x", "y")] <- as.data.frame(proj)
-  tbl
-}
-
-
-
+#' Given a character name giving the morph, generate a callback function
+#'
+#' @param morph A character(1) vector equal to one of
+#' c("center", "centre", "radial", "identity")
+#'
+#' @return a function if morph is valid otherwise throws an error
+#' @noRd
 generate_morph <- function(morph, p_eff) {
   switch(morph,
          "identity" =  morph_identity,
@@ -59,7 +64,3 @@ generate_morph <- function(morph, p_eff) {
          stop("Unknown morph function:", morph)
   )
 }
-
-
-
-

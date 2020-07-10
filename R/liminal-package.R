@@ -3,18 +3,15 @@
 #' liminal is an R package for constructing interactive visualisations designed
 #' for exploratory high-dimensional data analysis. It's main purpose is to
 #' combine tours with (non-linear) dimension reduction algorithms to provide a
-#' more holistic view of the geometry and topology of dataset. These
+#' more holistic view of the geometry and topology of a dataset. These
 #' are designed for data analysts first, so they render either inside the
-#' RStudio Viewer pane or from a web-browser.
+#' RStudio Viewer pane or from a web-browser using `shiny`.
 #'
-#' There are three main functions for generating visualisations:
+#' There are two main functions for generating tour interfaces:
+#'   * The basic tour scatter via [limn_tour()]
+#'   * Linking tours to another view [limn_tour_link()]
 #'
-#'   * Simple interactive scatter plots with `limn_xy()` and `limn_xycol()`
-#'   * Generating tours via `limn_tour()`
-#'   * Linking tours to another view `limn_tour_link()`
-#'
-#'
-#' For more details on the features of liminal, read the vignettes:
+#' For more details on the features and usage of liminal, see the vignettes:
 #' `browseVignettes(package = "liminal")`
 #' @import vegawidget
 #' @import shiny

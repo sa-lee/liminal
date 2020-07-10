@@ -17,7 +17,7 @@ morph_radial(proj, half_range, p_eff)
 
 \item{half_range}{scale factor for projection}
 
-\item{p_eff}{dimensionality of basis}
+\item{p_eff}{Effective dimensionality of reference data set.}
 }
 \description{
 Morphing Projections
