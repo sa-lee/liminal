@@ -133,4 +133,3 @@ nest_by_neighbours <- function(tbl, idx) {
   }
   dplyr::group_nest(tbl, row_number = idx, .key = "neighbors")
 }
-

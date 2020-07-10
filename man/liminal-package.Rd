@@ -21,11 +21,6 @@ There are three main functions for generating visualisations:
 \item Linking tours to another view \code{limn_tour_link()}
 }
 
-User interactions can be customised via brush compostions
-\itemize{
-\item ...
-}
-
 For more details on the features of liminal, read the vignettes:
 \code{browseVignettes(package = "liminal")}
 }

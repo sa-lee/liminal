@@ -13,8 +13,6 @@
 #'   * Generating tours via `limn_tour()`
 #'   * Linking tours to another view `limn_tour_link()`
 #'
-#' User interactions can be customised via brush compostions
-#'   * ...
 #'
 #' For more details on the features of liminal, read the vignettes:
 #' `browseVignettes(package = "liminal")`
