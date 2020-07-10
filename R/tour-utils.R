@@ -191,3 +191,9 @@ set_encoding_opacity <- function(spec, alpha) {
 
 opacity_value <- function(nr, pow = 0.3) (1 / nr)^pow
 
+
+tbl_projection <- function(tbl, proj) {
+  stopifnot(c("x", "y") %in% names(tbl))
+  tbl[, c("x", "y")] <- as.data.frame(proj)
+  tbl
+}

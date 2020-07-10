@@ -47,7 +47,6 @@
 #'    If the tour animation a brush event will pause it.
 #'
 #'
-#'
 #' @seealso [compute_half_range()], [morph_center()], [limn_tour_link()]
 #' @examples
 #' \dontrun{
