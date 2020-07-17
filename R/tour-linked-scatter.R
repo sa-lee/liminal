@@ -166,9 +166,25 @@ limn_tour_linked_server <- function(tour_data, tour_path, x_color_tbl, morph,
 
       proj <- morph(
         tour_data %*% selections$proj,
-        half_range = half_range
+        half_range = rct_half_range()
       )
       tbl_projection(tour_frame, proj)
+    })
+
+    rct_neighbors <- reactive({
+
+      if (is.null(input$k)) return()
+      if (is.na(input$k)) return()
+
+      if (input$k == 1)  {
+        selections$idx <- idx
+      }
+      else {
+        selections$idx <- find_knn(reference, num_neighbors = input$k)$idx
+      }
+
+      selections$do_tour <- FALSE
+
     })
 
     vw_shiny_set_data("tourView", "path", rct_proj())
@@ -204,20 +220,6 @@ limn_tour_linked_server <- function(tour_data, tour_path, x_color_tbl, morph,
       )
       stopApp(tour_artefacts)
     })
-
-    observeEvent(input$k, {
-      if (is.null(input$k)) {
-        return()
-      }
-      if (input$k == 1) {
-        selections$idx <- idx
-      } else {
-        selections$idx <-
-          find_knn(reference, num_neighbors = input$k)$idx
-      }
-      selections$do_tour <- FALSE
-    })
-
 
     observe({
       rct_tour()
