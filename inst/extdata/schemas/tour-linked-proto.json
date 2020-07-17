@@ -20,13 +20,8 @@
                "name":"path"
             },
             "key":"row_number",
-            "fields":["row_number", "neighbors"]
+            "fields":["row_number", "x", "y"]
          }
-      },
-      {
-         "flatten":[
-            "neighbors"
-         ]
       }
    ],
    "hconcat":[
@@ -130,7 +125,7 @@
          },
          "encoding":{
             "x":{
-               "field":"neighbors.x",
+               "field":"x",
                "type":"quantitative",
                "axis":{
                   "title":"",
@@ -147,7 +142,7 @@
                }
             },
             "y":{
-               "field":"neighbors.y",
+               "field": "y",
                "type":"quantitative",
                "axis":{
                   "title":"",
