@@ -129,16 +129,15 @@ limn_tour_linked_server <- function(tour_data, tour_path, x_color_tbl, morph,
                                     x_color_tbl, morph)
   # init k = 1 neighbours
   idx <- seq_len(nrow(tour_frame))
-
-  x_data <- nest_by_neighbours(tour_frame, idx)
+  tour_frame$row_number <- idx
 
   function(input, output, session) {
     output[["tourView"]] <- renderVegawidget({
-      spec_linked_tour(x_data, y_data, x_color_tbl, y_color_tbl, half_range)
+      spec_linked_tour(tour_frame, y_data, x_color_tbl, y_color_tbl, half_range)
     })
 
     # reactiveValues, store current place in tour path
-    selections <- shiny::reactiveValues(proj = start,
+    selections <- reactiveValues(proj = start,
                                         idx = idx,
                                         do_tour = FALSE,
                                         force_restart = FALSE)
@@ -172,31 +171,26 @@ limn_tour_linked_server <- function(tour_data, tour_path, x_color_tbl, morph,
       tbl_projection(tour_frame, proj)
     })
 
-    rct_x_frame <- reactive({
-      nest_by_neighbours(rct_proj(), selections$idx)
-    })
-
-
-    vw_shiny_set_data("tourView", "path", rct_x_frame())
+    vw_shiny_set_data("tourView", "path", rct_proj())
 
     # if play button is pressed start tour
-    shiny::observeEvent(input$play, {
+    observeEvent(input$play, {
       selections$do_tour <-  input$play
     })
 
     # if pause button is pressed stop tour
-    shiny::observeEvent(input$pause, {
+    observeEvent(input$pause, {
       selections$do_tour <- FALSE
     })
 
     # if brush is active stop tour
-    shiny::observeEvent(rct_active_brush(), {
+    observeEvent(rct_active_brush(), {
       selections$do_tour <- length(rct_active_brush()) == 0
     })
 
 
     # if restart, pause tour, and generate new tour path
-    shiny::observeEvent(input$restart, {
+    observeEvent(input$restart, {
       selections$do_tour <- FALSE
       selections$force_restart <- TRUE
     })
@@ -229,7 +223,7 @@ limn_tour_linked_server <- function(tour_data, tour_path, x_color_tbl, morph,
       rct_tour()
     })
 
-    output$half_range <- shiny::renderText({
+    output$half_range <- renderText({
       paste("Tour with half-range:", round(rct_half_range(), 3))
     })
 

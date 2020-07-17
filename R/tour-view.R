@@ -34,8 +34,7 @@ set_encoding_color_op_linked <- function(layer, color_tbl, color_name) {
 
   has_colclick <- "colclick" %in% names(layer[["selection"]])
 
-  field_title <- gsub("neighbors.", "", color_name)
-  has_color_col <- length(nchar(field_title)) == 0
+  has_color_col <- length(color_name) == 0
 
   if (has_color_col) {
     layer[["encoding"]][["color"]][["condition"]] <-
@@ -58,7 +57,7 @@ set_encoding_color_op_linked <- function(layer, color_tbl, color_name) {
     color_type(color_vec)
   layer[["encoding"]][["color"]][["condition"]][["scale"]][["domain"]] <-
     color_scale(color_vec)
-  layer[["encoding"]][["color"]][["condition"]][["legend"]] <- list(title = field_title)
+  layer[["encoding"]][["color"]][["condition"]][["legend"]] <- list(title = color_name)
 
   if (has_colclick) {
     layer[["selection"]][["colclick"]][["fields"]] <- list(color_name)
@@ -82,15 +81,20 @@ generate_linked_tour_spec <- function(x_frame, y_frame, x_color_tbl, y_color_tbl
   embed_layer[["encoding"]][["y"]][["scale"]] <-
     list(domain = range(y_frame[[embed_cols[2]]]))
 
-  embed_layer <- set_encoding_color_op_linked(embed_layer, y_color_tbl, colnames(y_color_tbl))
+  embed_layer <-
+    set_encoding_color_op_linked(embed_layer,
+                                 y_color_tbl,
+                                 colnames(y_color_tbl))
 
   tour_layer <- ans$hconcat[[2]]
   tour_layer <- set_half_range(tour_layer, half_range)
-  tour_layer <- set_encoding_color_op_linked(tour_layer,
-                                             x_color_tbl,
-                                             paste0("neighbors.", colnames(x_color_tbl)))
+  tour_layer <-
+    set_encoding_color_op_linked(tour_layer,
+                                 x_color_tbl,
+                                 colnames(x_color_tbl))
 
-  ans$transform[[2]]$flatten <- list("neighbors")
+  ans$transform[[1]]$from$fields <- c(ans$transform[[1]]$from$fields,
+                                      colnames(x_color_tbl))
 
   ans$hconcat[[1]] <- embed_layer
   ans$hconcat[[2]] <- tour_layer
