@@ -122,6 +122,12 @@ reference_data_knn <- function(ref) {
 }
 
 
+nn_as_edge_df <- function(idx) {
+  from <- as.vector(row(idx))
+  to <- as.vector(idx)
+  data.frame(from, to)
+}
+
 
 nest_by_neighbours <- function(tbl, idx) {
   if (is(idx, "matrix")) {
