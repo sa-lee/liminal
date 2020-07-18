@@ -143,7 +143,18 @@ color_type <- function(color_vec) {
 
 color_scale <- function(color_vec) {
   if (is.numeric(color_vec)) return(range(color_vec))
-  levels(color_vec) %||% unique(color_vec)
+  levels(color_vec) %||% sort(unique(color_vec))
+}
+
+color_scheme <- function(domain, scheme = NULL) {
+  if (!is.null(scheme)) return(scheme)
+
+  if (is.numeric(domain)) return("viridis")
+
+  if (length(domain) <= 10) return("tableau10")
+
+  return("tableau20")
+
 }
 
 set_encoding_color <- function(spec, color_tbl, color_name, brush = "brush") {
@@ -155,11 +166,14 @@ set_encoding_color <- function(spec, color_tbl, color_name, brush = "brush") {
   }
 
   color_vec <- color_tbl[[1]]
+  domain <- color_scale(color_vec)
+  scheme <- color_scheme(domain)
 
   color_encoding <- list(selection = brush,
                          field = color_name,
                          type = color_type(color_vec),
-                         scale = list(domain = color_scale(color_vec)))
+                         scale = list(domain = color_scale(color_vec),
+                                      scheme = scheme))
 
   spec[["encoding"]][["color"]][["condition"]] <- color_encoding
 

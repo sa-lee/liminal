@@ -54,7 +54,7 @@
 #' limn_tour_link(
 #'   tsne_df,
 #'   dplyr::select(fake_trees, dim1:dim10, branches),
-#'   embed_color = branches
+#'   embed_color = branches,
 #'   tour_color = branches
 #' )
 #'}

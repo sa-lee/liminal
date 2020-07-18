@@ -51,13 +51,18 @@ set_encoding_color_op_linked <- function(layer, color_tbl, color_name) {
   }
 
   color_vec <- color_tbl[[1]]
+  domain <- color_scale(color_vec)
+  scheme <- color_scheme(domain)
+
+
   layer[["encoding"]][["color"]][["condition"]][["field"]] <-
     color_name
   layer[["encoding"]][["color"]][["condition"]][["type"]] <-
     color_type(color_vec)
-  layer[["encoding"]][["color"]][["condition"]][["scale"]][["domain"]] <-
-    color_scale(color_vec)
-  layer[["encoding"]][["color"]][["condition"]][["legend"]] <- list(title = color_name)
+  layer[["encoding"]][["color"]][["condition"]][["scale"]][["domain"]] <- domain
+  layer[["encoding"]][["color"]][["condition"]][["scale"]][["scheme"]] <- scheme
+  layer[["encoding"]][["color"]][["condition"]][["legend"]] <-
+    list(title = color_name)
 
   if (has_colclick) {
     layer[["selection"]][["colclick"]][["fields"]] <- list(color_name)
