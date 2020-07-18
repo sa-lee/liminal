@@ -83,7 +83,7 @@ tsne_df <- data.frame(tsneX = tsne$Y[,1],
 limn_tour_link(
   tsne_df,
   dplyr::select(fake_trees, dim1:dim10, branches),
-  embed_color = branches
+  embed_color = branches,
   tour_color = branches
 )
 }
