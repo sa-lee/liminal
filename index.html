@@ -76,14 +76,27 @@
 <a href="#liminal" class="anchor"></a>liminal</h1></div>
 <!-- badges: start -->
 
-<p>The goal of <code>liminal</code> is to provide diagnostics and visual analytics for understanding embedding algorithms such as tSNE. It has been <a href="https://distill.pub/2016/misread-tsne/">shown</a> that in order to produce an ‘effective’ embedding one may have to play with hyperparamters and various settings for these algorithms.</p>
-<p><code>liminal</code> aims to increase the effective use of these algorithms by combining them with interactive and dynamic graphics (via the vegawidget and shiny packages) and with a technique from multivariate statistics called the tour (via the tourr package). Briefly, a tour is a sequence of interpolated projections of multivariate data onto lower dimensional space. The sequence is displayed as a dynamic visualisation, and enables us to see the shadows the high dimensional data makes in a lower dimensional view. By combining the tour with embedding algorithms, we can see the following:</p>
+<p>The goal of <strong>liminal</strong> is to provide complementary visualisations for use with understanding embedding algorithms such as tSNE. It has been <a href="https://distill.pub/2016/misread-tsne/">shown</a> that in order to produce an ‘effective’ embedding one may have to play with hyperparamters and various settings for these algorithms.</p>
+<p>See the <a href="https://sa-lee.github.io/liminal/articles/liminal.html">liminal vignette</a> for details of package usage.</p>
+<div id="quick-start" class="section level2">
+<h2 class="hasAnchor">
+<a href="#quick-start" class="anchor"></a>Quick Start</h2>
+<p>The development version of <strong>liminal</strong> can be installed as follows:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="co"># install.packages("remotes")</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"sa-lee/liminal"</span><span class="op">)</span></pre></div>
+</div>
+<div id="about" class="section level2">
+<h2 class="hasAnchor">
+<a href="#about" class="anchor"></a>About</h2>
+<p><strong>liminal</strong> aims to assist with the use of embedding algorithms by combining them with interactive and dynamic graphics (via the <strong>vegawidget</strong> and <strong>shiny</strong> packages) and with a technique from multivariate statistics called the tour (via the <strong>tourr</strong> package). Briefly, a tour is a sequence of interpolated projections of multivariate data onto lower dimensional space. The sequence is displayed as a dynamic visualisation, and enables us to see the shadows the high dimensional data makes in a lower dimensional view. By combining the tour with embedding algorithms, we can see the following:</p>
 <ol>
 <li>whether distances in the embedding view are meaningful</li>
 <li>the local and global structure of the data</li>
 <li>identify ‘interesting’ shapes or points in the data</li>
 </ol>
-<p>See the <a href="https://sa-lee.github.io/liminal/articles/liminal.html">liminal vignette</a> for details of package usage.</p>
+<p>The <strong>liminal</strong> package easily incorporates into a exploratory data analysis workflow, and tracks user events such as brushes for downstream analysis.</p>
+</div>
 </div>
   </div>
 
@@ -112,9 +125,7 @@
   <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle:experimental"></a></li>
 <li><a href="https://github.com/sa-lee/liminal/actions"><img src="https://github.com/sa-lee/liminal/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
-<li><a href="https://codecov.io/gh/sa-lee/liminal?branch=master"><img src="https://codecov.io/gh/sa-lee/liminal/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
 </ul>
 </div>
 </div>
