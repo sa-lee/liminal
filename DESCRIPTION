@@ -35,5 +35,6 @@ Suggests:
     rmarkdown,
     uwot,
     covr,
-    ggplot2
+    ggplot2,
+    testthat
 VignetteBuilder: knitr
