@@ -7,8 +7,8 @@
 limn_tour_link(
   embed_data,
   tour_data,
-  embed_color = NULL,
-  tour_color = NULL,
+  cols,
+  color = NULL,
   tour_path = tourr::grand_tour(),
   rescale = clamp,
   morph = "center",
@@ -18,13 +18,13 @@ limn_tour_link(
 \arguments{
 \item{embed_data}{A \code{data.frame} representing embedding coordinates}
 
-\item{tour_data}{A \code{data.frame} that is linked to \code{.coords} to tour}
+\item{tour_data}{A \code{data.frame} that is linked to \code{embed_data} to tour}
 
-\item{embed_color}{An optional bare column name in \code{embed} for color
-mapping the points in the embedding view.}
+\item{cols}{Columns in \code{tour_data} to tour. This can use a \code{tidyselect} specification
+such as \code{\link[tidyselect:starts_with]{tidyselect::starts_with()}}.}
 
-\item{tour_color}{An optional bare column name in ``, for color
-mapping the points in the tour view.}
+\item{color}{An optional bare column name in either \code{embed_data} or \code{tour_data} for color
+mapping the points in the views. If NULL points will be colored black.}
 
 \item{tour_path}{the tour path to take, the default is \code{\link[tourr:grand_tour]{tourr::grand_tour()}}.}
 
@@ -40,6 +40,10 @@ for details for each of these functions.}
 By default the \code{reference} is set to \code{NULL} in which case neighbors will be
 computed from \code{tour_data}. Otherwise \code{data.frame}, \code{matrix} or \code{dist}
 objects can be used.}
+}
+\value{
+After pressing the Done button on the interface, a list of artefacts
+is returned to the R session.
 }
 \description{
 Link a 2-d embedding with a tour
@@ -77,15 +81,20 @@ on the k-NN graph obtained from the control panel.
 # another layout based on t-SNE
 # loads the default interface
 tsne <- Rtsne::Rtsne(dplyr::select(fake_trees, dplyr::starts_with("dim")))
-tsne_df <- data.frame(tsneX = tsne$Y[,1],
-                      tsneY = tsne$Y[,2],
-                      branches = fake_trees$branches)
+tsne_df <- data.frame(tsneX = tsne$Y[,1], tsneY = tsne$Y[,2])
 limn_tour_link(
   tsne_df,
   dplyr::select(fake_trees, dim1:dim10, branches),
-  embed_color = branches,
-  tour_color = branches
+  color = branches,
 )
+# assigning to an object will return a list of artefacts after clicking
+# done on the tourr
+res <- limn_tour_link(
+  tsne_df,
+  dplyr::select(fake_trees, dim1:dim10, branches),
+  color = branches,
+)
+
 }
 
 }

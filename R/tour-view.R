@@ -72,7 +72,7 @@ set_encoding_color_op_linked <- function(layer, color_tbl, color_name) {
 
 }
 
-generate_linked_tour_spec <- function(x_frame, y_frame, x_color_tbl, y_color_tbl, half_range) {
+generate_linked_tour_spec <- function(x_frame, y_frame, color_tbl, half_range) {
   json <- file.path(schema_dir(), "tour-linked-proto.json")
   ans <- jsonlite::fromJSON(json, simplifyDataFrame = FALSE)
 
@@ -88,18 +88,18 @@ generate_linked_tour_spec <- function(x_frame, y_frame, x_color_tbl, y_color_tbl
 
   embed_layer <-
     set_encoding_color_op_linked(embed_layer,
-                                 y_color_tbl,
-                                 colnames(y_color_tbl))
+                                 color_tbl,
+                                 colnames(color_tbl))
 
   tour_layer <- ans$hconcat[[2]]
   tour_layer <- set_half_range(tour_layer, half_range)
   tour_layer <-
     set_encoding_color_op_linked(tour_layer,
-                                 x_color_tbl,
-                                 colnames(x_color_tbl))
+                                 color_tbl,
+                                 colnames(color_tbl))
 
   ans$transform[[1]]$from$fields <- c(ans$transform[[1]]$from$fields,
-                                      colnames(x_color_tbl))
+                                      colnames(color_tbl))
 
   ans$hconcat[[1]] <- embed_layer
   ans$hconcat[[2]] <- tour_layer
@@ -110,10 +110,9 @@ generate_linked_tour_spec <- function(x_frame, y_frame, x_color_tbl, y_color_tbl
   ans
 }
 
-spec_linked_tour <- function(x_frame, y_frame, x_color_tbl, y_color_tbl, half_range) {
+spec_linked_tour <- function(x_frame, y_frame, color_tbl, half_range) {
   view_tour <-
-    generate_linked_tour_spec(x_frame, y_frame,
-                              x_color_tbl, y_color_tbl, half_range)
+    generate_linked_tour_spec(x_frame, y_frame, color_tbl, half_range)
 
   vegawidget::vegawidget(
     vegawidget::as_vegaspec(view_tour),

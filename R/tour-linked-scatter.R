@@ -1,11 +1,11 @@
 #' Link a 2-d embedding with a tour
 #'
 #' @param embed_data A `data.frame` representing embedding coordinates
-#' @param tour_data A `data.frame` that is linked to `.coords` to tour
-#' @param embed_color An optional bare column name in `embed` for color
-#' mapping the points in the embedding view.
-#' @param tour_color An optional bare column name in ``, for color
-#' mapping the points in the tour view.
+#' @param tour_data A `data.frame` that is linked to `embed_data` to tour
+#' @param cols Columns in `tour_data` to tour. This can use a `tidyselect` specification
+#' such as [tidyselect::starts_with()].
+#' @param color An optional bare column name in either `embed_data` or `tour_data` for color
+#' mapping the points in the views. If NULL points will be colored black.
 #' @param tour_path the tour path to take, the default is [tourr::grand_tour()].
 #' @param rescale A function that rescales tour columns. Default is [clamp()]
 #' To not perform any scaling use [identity()].
@@ -41,29 +41,36 @@
 #'  * There are different brushing modes that can be modified via
 #'    radio buttons. Both neighbors and distance based brushing operate
 #'    on the k-NN graph obtained from the control panel.
-#
+#' @return After pressing the Done button on the interface, a list of artefacts
+#' is returned to the R session.
+#'
 #' @examples
 #' \dontrun{
 #' # tour the first ten columns of the fake tree data and link to the
 #' # another layout based on t-SNE
 #' # loads the default interface
 #' tsne <- Rtsne::Rtsne(dplyr::select(fake_trees, dplyr::starts_with("dim")))
-#' tsne_df <- data.frame(tsneX = tsne$Y[,1],
-#'                       tsneY = tsne$Y[,2],
-#'                       branches = fake_trees$branches)
+#' tsne_df <- data.frame(tsneX = tsne$Y[,1], tsneY = tsne$Y[,2])
 #' limn_tour_link(
 #'   tsne_df,
 #'   dplyr::select(fake_trees, dim1:dim10, branches),
-#'   embed_color = branches,
-#'   tour_color = branches
+#'   color = branches,
 #' )
+#' # assigning to an object will return a list of artefacts after clicking
+#' # done on the tourr
+#' res <- limn_tour_link(
+#'   tsne_df,
+#'   dplyr::select(fake_trees, dim1:dim10, branches),
+#'   color = branches,
+#' )
+#'
 #'}
 #'
 #' @export
 limn_tour_link <- function(embed_data,
                            tour_data,
-                           embed_color = NULL,
-                           tour_color = NULL,
+                           cols,
+                           color = NULL,
                            tour_path = tourr::grand_tour(),
                            rescale = clamp,
                            morph = "center",
@@ -73,26 +80,35 @@ limn_tour_link <- function(embed_data,
     stop("tour_data and embed_data should have same number of rows")
   }
 
-  # generate tour data
-  tour_color <- rlang::enquo(tour_color)
-  x_color_tbl <- dplyr::select(tour_data, !!tour_color)
-  x_data <- dplyr::select(tour_data, !!rlang::quo(-!!tour_color))
-  # convert to a matrix, tour cols are everything but color column
-  tour_matrix <- generate_tour_matrix(x_data,
-                                    NULL,
-                                    rescale = rescale)
-  # set up transformation function
-  morph_projection <- generate_morph(morph, p_eff = ncol(tour_matrix))
-
   # check embedding table is valid
   stopifnot(ncol(embed_data)  == 2 || ncol(embed_data) == 3)
   # augment embed_data with row_number
   embed_data$row_number <- seq_len(nrow(embed_data))
-  embed_color <- rlang::enquo(embed_color)
-  y_color_tbl <- dplyr::select(embed_data, !!embed_color)
+
+  cols <- rlang::enquo(cols)
+  color <- rlang::enquo(color)
+
+  # setup colors
+  if (!rlang::quo_is_null(color)) {
+    # is color specification in tour data?
+    color_data <- try(dplyr::select(tour_data, !!color), silent = TRUE)
+    # column not found...
+    if (inherits(color_data, "try-error")) {
+      # try embed data, if not there through an error
+      color_data <- dplyr::select(embed_data, !!color)
+    }
+  } else {
+    color_data <- NULL
+  }
+
+  # generate tour data
+  tour_matrix <- generate_tour_matrix(tour_data, cols, rescale = rescale)
+  # set up transformation function
+  morph_projection <- generate_morph(morph, p_eff = ncol(tour_matrix))
+
 
   if (is.null(reference)) {
-    reference <- reference_data_knn(x_data)
+    reference <- reference_data_knn(dplyr::select(tour_data, !!cols))
   } else {
     if (!identical(nrow(reference), nrow(tour_matrix))) {
       stop("tour_data and reference should have same number of rows")
@@ -106,10 +122,9 @@ limn_tour_link <- function(embed_data,
 
   server <- limn_tour_linked_server(tour_matrix,
                                     tour_path,
-                                    x_color_tbl,
+                                    color_data,
                                     morph_projection,
                                     embed_data,
-                                    y_color_tbl,
                                     reference)
 
   app <- shinyApp(ui, server)
@@ -117,23 +132,22 @@ limn_tour_link <- function(embed_data,
 }
 
 
-limn_tour_linked_server <- function(tour_data, tour_path, x_color_tbl, morph,
-                                    y_data, y_color_tbl, reference) {
+limn_tour_linked_server <- function(tour_data, tour_path, color_data, morph,
+                                    embed_data, reference) {
   path <- tourr::new_tour(tour_data, tour_path)
 
   half_range <- compute_half_range(tour_data)
 
   start <- path(0)$proj
 
-  tour_frame <- generate_tour_frame(tour_data, start, half_range,
-                                    x_color_tbl, morph)
+  tour_frame <- generate_tour_frame(tour_data, start, half_range, color_data, morph)
   # init k = 1 neighbours
   idx <- seq_len(nrow(tour_frame))
   tour_frame$row_number <- idx
 
   function(input, output, session) {
     output[["tourView"]] <- renderVegawidget({
-      spec_linked_tour(tour_frame, y_data, x_color_tbl, y_color_tbl, half_range)
+      spec_linked_tour(tour_frame, embed_data, color_data, half_range)
     })
 
     # reactiveValues, store current place in tour path
@@ -215,8 +229,8 @@ limn_tour_linked_server <- function(tour_data, tour_path, x_color_tbl, morph,
     observeEvent(input$done, {
       tour_artefacts <- list(
         selected_basis = selections$proj,
-        selected_tour_points = rct_active_brush(),
-        selected_embed_points = rct_embed_brush()
+        tour_brush_box = rct_active_brush(),
+        embed_brush_box = rct_embed_brush()
       )
       stopApp(tour_artefacts)
     })

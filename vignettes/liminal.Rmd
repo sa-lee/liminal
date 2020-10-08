@@ -84,9 +84,8 @@ set.seed(2099)
 tsne <- Rtsne::Rtsne(dplyr::select(fake_trees, dplyr::starts_with("dim")))
 
 tsne_df <- data.frame(tsneX = tsne$Y[,1],
-                      tsneY = tsne$Y[,2],
-                      branches = fake_trees$branches)
-ggplot(tsne_df, aes(x = tsneX, y = tsneY, color = branches)) +
+                      tsneY = tsne$Y[,2])
+ggplot(tsne_df, aes(x = tsneX, y = tsneY, color = fake_trees$branches)) +
   geom_point() +
   scale_color_manual(values = limn_pal_tableau10())
 ```
@@ -98,9 +97,9 @@ We can see where our embedding is different via a linked tour:
 
 ```{r, eval = FALSE}
 limn_tour_link(tsne_df,
-               dplyr::select(fake_trees, PC1:PC10, branches),
-               tour_color = branches, 
-               embed_color = branches)
+               fake_trees,
+               cols = PC1:PC10,
+               color = branches)
 ```
  This function requires two tables that will be linked together in seperate views. The tour interface is the same as above, except now
  brushing on the tour view will highlight points on the right hand side

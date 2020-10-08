@@ -133,12 +133,9 @@ a clear picture of the clustering:
 
 ```{r, eval = FALSE}
 limn_tour_link(
-  tour_data = dplyr::select(pdfsense, PC1:PC6, Type),
+  tour_data = pdfsense,
   embed_data = tsne_embedding,
-  tour_color = Type,
-  embed_color = Type
+  cols = PC1:PC6,
+  color = Type
 )
 ```
-
-
-
