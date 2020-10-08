@@ -3,6 +3,7 @@
 export(clamp)
 export(clamp_robust)
 export(clamp_sd)
+export(clamp_standardize)
 export(compute_half_range)
 export(compute_proj_dist)
 export(limn_pal_tableau10)

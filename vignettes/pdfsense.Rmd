@@ -100,7 +100,7 @@ Now we can set up a non-linear embedding via t-SNE, here
 we embed all 56 principal components.
 ```{r}
 set.seed(3099)
-start <- clamp_sd(as.matrix(dplyr::select(pdfsense, PC1, PC2)))
+start <- clamp_sd(as.matrix(dplyr::select(pdfsense, PC1, PC2)), sd = 1e-4)
 tsne <- Rtsne::Rtsne(
   dplyr::select(pdfsense, PC1:PC56),
   pca = FALSE, 
