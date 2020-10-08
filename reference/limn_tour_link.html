@@ -72,19 +72,13 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">liminal</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5.9999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.9999</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../articles/liminal.html">Get started</a>
 </li>
 <li>
@@ -127,16 +121,16 @@
     <p>Link a 2-d embedding with a tour</p>
     </div>
 
-    <pre class="usage"><span class='fu'>limn_tour_link</span>(
-  <span class='kw'>embed_data</span>,
-  <span class='kw'>tour_data</span>,
-  embed_color = <span class='kw'>NULL</span>,
-  tour_color = <span class='kw'>NULL</span>,
-  tour_path = <span class='kw'>tourr</span>::<span class='fu'><a href='https://rdrr.io/pkg/tourr/man/grand_tour.html'>grand_tour</a></span>(),
-  rescale = <span class='kw'>clamp</span>,
-  morph = <span class='st'>"center"</span>,
-  reference = <span class='kw'>NULL</span>
-)</pre>
+    <pre class="usage"><span class='fu'>limn_tour_link</span><span class='op'>(</span>
+  <span class='va'>embed_data</span>,
+  <span class='va'>tour_data</span>,
+  <span class='va'>cols</span>,
+  color <span class='op'>=</span> <span class='cn'>NULL</span>,
+  tour_path <span class='op'>=</span> <span class='fu'>tourr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/tourr/man/grand_tour.html'>grand_tour</a></span><span class='op'>(</span><span class='op'>)</span>,
+  rescale <span class='op'>=</span> <span class='va'>clamp</span>,
+  morph <span class='op'>=</span> <span class='st'>"center"</span>,
+  reference <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -147,17 +141,17 @@
     </tr>
     <tr>
       <th>tour_data</th>
-      <td><p>A <code>data.frame</code> that is linked to <code>.coords</code> to tour</p></td>
+      <td><p>A <code>data.frame</code> that is linked to <code>embed_data</code> to tour</p></td>
     </tr>
     <tr>
-      <th>embed_color</th>
-      <td><p>An optional bare column name in <code>embed</code> for color
-mapping the points in the embedding view.</p></td>
+      <th>cols</th>
+      <td><p>Columns in <code>tour_data</code> to tour. This can use a <code>tidyselect</code> specification
+such as <code><a href='https://tidyselect.r-lib.org/reference/starts_with.html'>tidyselect::starts_with()</a></code>.</p></td>
     </tr>
     <tr>
-      <th>tour_color</th>
-      <td><p>An optional bare column name in ``, for color
-mapping the points in the tour view.</p></td>
+      <th>color</th>
+      <td><p>An optional bare column name in either <code>embed_data</code> or <code>tour_data</code> for color
+mapping the points in the views. If NULL points will be colored black.</p></td>
     </tr>
     <tr>
       <th>tour_path</th>
@@ -165,14 +159,14 @@ mapping the points in the tour view.</p></td>
     </tr>
     <tr>
       <th>rescale</th>
-      <td><p>A function that rescales tour columns. Default is <code>clamp()</code>
+      <td><p>A function that rescales tour columns. Default is <code><a href='clamp.html'>clamp()</a></code>
 To not perform any scaling use <code><a href='https://rdrr.io/r/base/identity.html'>identity()</a></code>.</p></td>
     </tr>
     <tr>
       <th>morph</th>
       <td><p>One of <code><a href='https://rdrr.io/r/base/c.html'>c("center", "centre", "identity", "radial")</a></code>
 that rescales each projection along the tour path. The default
-is to center the projections and divide by half range. See <code>morph_center()</code>
+is to center the projections and divide by half range. See <code><a href='morph_center.html'>morph_center()</a></code>
 for details for each of these functions.</p></td>
     </tr>
     <tr>
@@ -184,6 +178,10 @@ objects can be used.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>After pressing the Done button on the interface, a list of artefacts
+is returned to the R session.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     
@@ -215,21 +213,27 @@ on the k-NN graph obtained from the control panel.</p></li>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># tour the first ten columns of the fake tree data and link to the</span>
 <span class='co'># another layout based on t-SNE</span>
 <span class='co'># loads the default interface</span>
-<span class='kw'>tsne</span> <span class='op'>&lt;-</span> <span class='kw'>Rtsne</span>::<span class='fu'><a href='https://rdrr.io/pkg/Rtsne/man/Rtsne.html'>Rtsne</a></span>(<span class='kw'>dplyr</span>::<span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='kw'>fake_trees</span>, <span class='kw'>dplyr</span>::<span class='fu'><a href='https://tidyselect.r-lib.org/reference/starts_with.html'>starts_with</a></span>(<span class='st'>"dim"</span>)))
-<span class='kw'>tsne_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(tsneX = <span class='kw'>tsne</span><span class='op'>$</span><span class='kw'>Y</span>[,<span class='fl'>1</span>],
-                      tsneY = <span class='kw'>tsne</span><span class='op'>$</span><span class='kw'>Y</span>[,<span class='fl'>2</span>],
-                      branches = <span class='kw'>fake_trees</span><span class='op'>$</span><span class='kw'>branches</span>)
-<span class='fu'>limn_tour_link</span>(
-  <span class='kw'>tsne_df</span>,
-  <span class='kw'>dplyr</span>::<span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='kw'>fake_trees</span>, <span class='kw'>dim1</span><span class='op'>:</span><span class='kw'>dim10</span>, <span class='kw'>branches</span>),
-  embed_color = <span class='kw'>branches</span>,
-  tour_color = <span class='kw'>branches</span>
-)
-}
+<span class='va'>tsne</span> <span class='op'>&lt;-</span> <span class='fu'>Rtsne</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/Rtsne/man/Rtsne.html'>Rtsne</a></span><span class='op'>(</span><span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>fake_trees</span>, <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://tidyselect.r-lib.org/reference/starts_with.html'>starts_with</a></span><span class='op'>(</span><span class='st'>"dim"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>tsne_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>tsneX <span class='op'>=</span> <span class='va'>tsne</span><span class='op'>$</span><span class='va'>Y</span><span class='op'>[</span>,<span class='fl'>1</span><span class='op'>]</span>, tsneY <span class='op'>=</span> <span class='va'>tsne</span><span class='op'>$</span><span class='va'>Y</span><span class='op'>[</span>,<span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span>
+<span class='fu'>limn_tour_link</span><span class='op'>(</span>
+  <span class='va'>tsne_df</span>,
+  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>fake_trees</span>, <span class='va'>dim1</span><span class='op'>:</span><span class='va'>dim10</span>, <span class='va'>branches</span><span class='op'>)</span>,
+  color <span class='op'>=</span> <span class='va'>branches</span>,
+<span class='op'>)</span>
+<span class='co'># assigning to an object will return a list of artefacts after clicking</span>
+<span class='co'># done on the tourr</span>
+<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>limn_tour_link</span><span class='op'>(</span>
+  <span class='va'>tsne_df</span>,
+  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>fake_trees</span>, <span class='va'>dim1</span><span class='op'>:</span><span class='va'>dim10</span>, <span class='va'>branches</span><span class='op'>)</span>,
+  color <span class='op'>=</span> <span class='va'>branches</span>,
+<span class='op'>)</span>
+
+<span class='op'>}</span>
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -246,7 +250,7 @@ on the k-NN graph obtained from the control panel.</p></li>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

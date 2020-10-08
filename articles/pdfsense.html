@@ -31,18 +31,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">liminal</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5.9999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.9999</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../articles/liminal.html">Get started</a>
 </li>
@@ -101,87 +95,78 @@
 </ul>
 <p>First, we take the load the data as a data.frame:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">liminal</span>)
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="kw">pdfsense</span>)
-</pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">liminal</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">pdfsense</span><span class="op">)</span></pre></div>
 </div>
 <div id="linear-embeddings-and-the-tour" class="section level2">
 <h2 class="hasAnchor">
 <a href="#linear-embeddings-and-the-tour" class="anchor"></a>Linear embeddings and the tour</h2>
 <p>First we can estimate all <code><a href="https://rdrr.io/r/base/nrow.html">nrow(pdfsense)</a></code> principal components using on the parton distribution fits:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="kw">pcs</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html">prcomp</a></span>(<span class="kw">pdfsense</span>[, <span class="fl">7</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span>(<span class="kw">pdfsense</span>)])
-</pre></div>
+<span class="va">pcs</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html">prcomp</a></span><span class="op">(</span><span class="va">pdfsense</span><span class="op">[</span>, <span class="fl">7</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">pdfsense</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></pre></div>
 <p>Using this data structure, we can produce a screeplot:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="kw">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(
-  component = <span class="fl">1</span><span class="op">:</span><span class="fl">56</span>, 
-  variance_explained = <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span>(<span class="kw">pcs</span><span class="op">$</span><span class="kw">sdev</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="kw">pcs</span><span class="op">$</span><span class="kw">sdev</span>))
-)
+<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
+  component <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">56</span>, 
+  variance_explained <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span><span class="op">(</span><span class="va">pcs</span><span class="op">$</span><span class="va">sdev</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">pcs</span><span class="op">$</span><span class="va">sdev</span><span class="op">)</span><span class="op">)</span>
+<span class="op">)</span>
 
-<span class="fu">ggplot</span>(<span class="kw">res</span>, <span class="fu">aes</span>(x = <span class="kw">component</span>, y = <span class="kw">variance_explained</span>)) <span class="op">+</span>
-  <span class="fu">geom_point</span>() <span class="op">+</span>
-  <span class="fu">scale_x_continuous</span>(
-    breaks = <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0</span>, <span class="fl">60</span>, by = <span class="fl">5</span>)
-  ) <span class="op">+</span>
-  <span class="fu">scale_y_continuous</span>(
-    labels = <span class="fu">function</span>(<span class="kw">x</span>) <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="fl">100</span><span class="op">*</span><span class="kw">x</span>, <span class="st">"%"</span>)
-  )
-</pre></div>
+<span class="fu">ggplot</span><span class="op">(</span><span class="va">res</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">component</span>, y <span class="op">=</span> <span class="va">variance_explained</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">scale_x_continuous</span><span class="op">(</span>
+    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">60</span>, by <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op">+</span>
+  <span class="fu">scale_y_continuous</span><span class="op">(</span>
+    labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="fl">100</span><span class="op">*</span><span class="va">x</span>, <span class="st">"%"</span><span class="op">)</span>
+  <span class="op">)</span></pre></div>
 <p><img src="pdfsense_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
 <p>Approximately 70% of the variance in the pdf fits are explained by the first 15 principal components.</p>
 <p>Next we augment our original data with the principal components:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="kw">pdfsense</span> <span class="op">&lt;-</span> <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(
-  <span class="kw">pdfsense</span>, 
-  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>(<span class="kw">pcs</span><span class="op">$</span><span class="kw">x</span>)
-)
-<span class="kw">pdfsense</span><span class="op">$</span><span class="kw">Type</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="kw">pdfsense</span><span class="op">$</span><span class="kw">Type</span>)
-</pre></div>
+<span class="va">pdfsense</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span><span class="op">(</span>
+  <span class="va">pdfsense</span>, 
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">pcs</span><span class="op">$</span><span class="va">x</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="va">pdfsense</span><span class="op">$</span><span class="va">Type</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">pdfsense</span><span class="op">$</span><span class="va">Type</span><span class="op">)</span></pre></div>
 <p>We can view a simple tour via<code><a href="../reference/limn_tour.html">limn_tour()</a></code> and color points by their experimental group</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="fu"><a href="../reference/limn_tour.html">limn_tour</a></span>(<span class="kw">pdfsense</span>, <span class="kw">PC1</span><span class="op">:</span><span class="kw">PC6</span>, <span class="kw">Type</span>)
-</pre></div>
+<span class="fu"><a href="../reference/limn_tour.html">limn_tour</a></span><span class="op">(</span><span class="va">pdfsense</span>, <span class="va">PC1</span><span class="op">:</span><span class="va">PC6</span>, <span class="va">Type</span><span class="op">)</span></pre></div>
 </div>
 <div id="non-linear-embeddings" class="section level2">
 <h2 class="hasAnchor">
 <a href="#non-linear-embeddings" class="anchor"></a>Non-Linear embeddings</h2>
 <p>Now we can set up a non-linear embedding via t-SNE, here we embed all 56 principal components.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">3099</span>)
-<span class="kw">start</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clamp.html">clamp_sd</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="kw">pdfsense</span>, <span class="kw">PC1</span>, <span class="kw">PC2</span>)))
-<span class="kw">tsne</span> <span class="op">&lt;-</span> <span class="kw">Rtsne</span>::<span class="fu"><a href="https://rdrr.io/pkg/Rtsne/man/Rtsne.html">Rtsne</a></span>(
-  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="kw">pdfsense</span>, <span class="kw">PC1</span><span class="op">:</span><span class="kw">PC56</span>),
-  pca = <span class="fl">FALSE</span>, 
-  normalize = <span class="fl">TRUE</span>,
-  perplexity = <span class="fl">50</span>,
-  exaggeration_factor = <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="kw">pdfsense</span>) <span class="op">/</span> <span class="fl">100</span>,
-  Y_init = <span class="kw">start</span>
-)
-</pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">3099</span><span class="op">)</span>
+<span class="va">start</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clamp.html">clamp_sd</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">pdfsense</span>, <span class="va">PC1</span>, <span class="va">PC2</span><span class="op">)</span><span class="op">)</span>, sd <span class="op">=</span> <span class="fl">1e-4</span><span class="op">)</span>
+<span class="va">tsne</span> <span class="op">&lt;-</span> <span class="fu">Rtsne</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Rtsne/man/Rtsne.html">Rtsne</a></span><span class="op">(</span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">pdfsense</span>, <span class="va">PC1</span><span class="op">:</span><span class="va">PC56</span><span class="op">)</span>,
+  pca <span class="op">=</span> <span class="cn">FALSE</span>, 
+  normalize <span class="op">=</span> <span class="cn">TRUE</span>,
+  perplexity <span class="op">=</span> <span class="fl">50</span>,
+  exaggeration_factor <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">pdfsense</span><span class="op">)</span> <span class="op">/</span> <span class="fl">100</span>,
+  Y_init <span class="op">=</span> <span class="va">start</span>
+<span class="op">)</span></pre></div>
 <p>Once we have run t-SNE we tidy it into a <code>data.frame</code>, to perform a linked tour.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="kw">tsne_embedding</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>(<span class="kw">tsne</span><span class="op">$</span><span class="kw">Y</span>)
-<span class="kw">tsne_embedding</span> <span class="op">&lt;-</span> <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(<span class="kw">tsne_embedding</span>, tsneX = <span class="kw">V1</span>, tsneY = <span class="kw">V2</span>)
-<span class="kw">tsne_embedding</span><span class="op">$</span><span class="kw">Type</span> <span class="op">&lt;-</span> <span class="kw">pdfsense</span><span class="op">$</span><span class="kw">Type</span>
-</pre></div>
+<span class="va">tsne_embedding</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">tsne</span><span class="op">$</span><span class="va">Y</span><span class="op">)</span>
+<span class="va">tsne_embedding</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span><span class="va">tsne_embedding</span>, tsneX <span class="op">=</span> <span class="va">V1</span>, tsneY <span class="op">=</span> <span class="va">V2</span><span class="op">)</span>
+<span class="va">tsne_embedding</span><span class="op">$</span><span class="va">Type</span> <span class="op">&lt;-</span> <span class="va">pdfsense</span><span class="op">$</span><span class="va">Type</span></pre></div>
 <p>We can view the clusters using a static scatter plot:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="fu">ggplot</span>(<span class="kw">tsne_embedding</span>, 
-       <span class="fu">aes</span>(x = <span class="kw">tsneX</span>, y = <span class="kw">tsneY</span>, color = <span class="kw">Type</span>)) <span class="op">+</span>
-  <span class="fu">geom_point</span>() <span class="op">+</span>
-  <span class="fu">scale_color_manual</span>(values = <span class="fu"><a href="../reference/limn_pal_tableau10.html">limn_pal_tableau10</a></span>())
-</pre></div>
+<span class="fu">ggplot</span><span class="op">(</span><span class="va">tsne_embedding</span>, 
+       <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">tsneX</span>, y <span class="op">=</span> <span class="va">tsneY</span>, color <span class="op">=</span> <span class="va">Type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="../reference/limn_pal_tableau10.html">limn_pal_tableau10</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></pre></div>
 <p><img src="pdfsense_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p>We can link a tour view next to the embedding to give us a clear picture of the clustering:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="fu"><a href="../reference/limn_tour_link.html">limn_tour_link</a></span>(
-  tour_data = <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="kw">pdfsense</span>, <span class="kw">PC1</span><span class="op">:</span><span class="kw">PC6</span>, <span class="kw">Type</span>),
-  embed_data = <span class="kw">tsne_embedding</span>,
-  tour_color = <span class="kw">Type</span>,
-  embed_color = <span class="kw">Type</span>
-)
-</pre></div>
+<span class="fu"><a href="../reference/limn_tour_link.html">limn_tour_link</a></span><span class="op">(</span>
+  tour_data <span class="op">=</span> <span class="va">pdfsense</span>,
+  embed_data <span class="op">=</span> <span class="va">tsne_embedding</span>,
+  cols <span class="op">=</span> <span class="va">PC1</span><span class="op">:</span><span class="va">PC6</span>,
+  color <span class="op">=</span> <span class="va">Type</span>
+<span class="op">)</span></pre></div>
 </div>
   </div>
 
@@ -200,7 +185,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

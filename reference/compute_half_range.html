@@ -72,19 +72,13 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">liminal</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5.9999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.9999</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../articles/liminal.html">Get started</a>
 </li>
 <li>
@@ -127,7 +121,7 @@
     <p>Compute range of axes for a tour</p>
     </div>
 
-    <pre class="usage"><span class='fu'>compute_half_range</span>(<span class='kw'>.data</span>, center = <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>compute_half_range</span><span class='op'>(</span><span class='va'>.data</span>, center <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -150,10 +144,13 @@ Euclidean distance of rows in a matrix like object. Mostly used
 internally for setting up xy-axis ranges for a tour animation.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>mv</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>300</span>), ncol = <span class='fl'>3</span>)
+    <pre class="examples"><div class='input'><span class='va'>mv</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>300</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
 
-<span class='fu'>compute_half_range</span>(<span class='kw'>mv</span>)</div><div class='output co'>#&gt; [1] 3.464107</div><div class='input'>
-<span class='fu'>compute_half_range</span>(<span class='kw'>mv</span>, center = <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; [1] 3.668993</div><div class='input'></div></pre>
+<span class='fu'>compute_half_range</span><span class='op'>(</span><span class='va'>mv</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 3.464107</div><div class='input'>
+<span class='fu'>compute_half_range</span><span class='op'>(</span><span class='va'>mv</span>, center <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 3.668993</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -169,7 +166,7 @@ internally for setting up xy-axis ranges for a tour animation.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

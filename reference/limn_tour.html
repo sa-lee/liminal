@@ -72,19 +72,13 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">liminal</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5.9999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.9999</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../articles/liminal.html">Get started</a>
 </li>
 <li>
@@ -127,14 +121,14 @@
     <p>Tour a high dimensional dataset</p>
     </div>
 
-    <pre class="usage"><span class='fu'>limn_tour</span>(
-  <span class='kw'>.data</span>,
-  <span class='kw'>cols</span>,
-  color = <span class='kw'>NULL</span>,
-  tour_path = <span class='kw'>tourr</span>::<span class='fu'><a href='https://rdrr.io/pkg/tourr/man/grand_tour.html'>grand_tour</a></span>(),
-  rescale = <span class='kw'>clamp</span>,
-  morph = <span class='st'>"center"</span>
-)</pre>
+    <pre class="usage"><span class='fu'>limn_tour</span><span class='op'>(</span>
+  <span class='va'>.data</span>,
+  <span class='va'>cols</span>,
+  color <span class='op'>=</span> <span class='cn'>NULL</span>,
+  tour_path <span class='op'>=</span> <span class='fu'>tourr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/tourr/man/grand_tour.html'>grand_tour</a></span><span class='op'>(</span><span class='op'>)</span>,
+  rescale <span class='op'>=</span> <span class='va'>clamp</span>,
+  morph <span class='op'>=</span> <span class='st'>"center"</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -161,14 +155,14 @@ but also works with <code><a href='https://rdrr.io/pkg/tourr/man/guided_tour.htm
     <tr>
       <th>rescale</th>
       <td><p>A function that rescales <code>cols</code>, the default is to
-<code>clamp()</code> the data to lie in the hyperdimensional unit cube. To not perform
+<code><a href='clamp.html'>clamp()</a></code> the data to lie in the hyperdimensional unit cube. To not perform
 any scaling use <code><a href='https://rdrr.io/r/base/identity.html'>identity()</a></code>.</p></td>
     </tr>
     <tr>
       <th>morph</th>
       <td><p>One of <code><a href='https://rdrr.io/r/base/c.html'>c("center", "centre", "identity", "radial")</a></code>
 that rescales each projection along the tour path. The default
-is to center the projections and divide by half range. See <code>morph_center()</code>
+is to center the projections and divide by half range. See <code><a href='morph_center.html'>morph_center()</a></code>
 for details.</p></td>
     </tr>
     </table>
@@ -209,16 +203,17 @@ If the tour animation a brush event will pause it.</p></li>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code>compute_half_range()</code>, <code>morph_center()</code>, <code>limn_tour_link()</code></p></div>
+    <div class='dont-index'><p><code><a href='compute_half_range.html'>compute_half_range()</a></code>, <code><a href='morph_center.html'>morph_center()</a></code>, <code><a href='limn_tour_link.html'>limn_tour_link()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># tour the first ten columns of the fake tree data</span>
 <span class='co'># loads the default interface</span>
-<span class='fu'>limn_tour</span>(<span class='kw'>fake_trees</span>, <span class='kw'>dim1</span><span class='op'>:</span><span class='kw'>dim10</span>)
+<span class='fu'>limn_tour</span><span class='op'>(</span><span class='va'>fake_trees</span>, <span class='va'>dim1</span><span class='op'>:</span><span class='va'>dim10</span><span class='op'>)</span>
 <span class='co'># perform the same action but now coloring points</span>
-<span class='fu'>limn_tour</span>(<span class='kw'>fake_trees</span>, <span class='kw'>dim1</span><span class='op'>:</span><span class='kw'>dim10</span>, color = <span class='kw'>branches</span>)
-}
+<span class='fu'>limn_tour</span><span class='op'>(</span><span class='va'>fake_trees</span>, <span class='va'>dim1</span><span class='op'>:</span><span class='va'>dim10</span>, color <span class='op'>=</span> <span class='va'>branches</span><span class='op'>)</span>
+<span class='op'>}</span>
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -235,7 +230,7 @@ If the tour animation a brush event will pause it.</p></li>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>
