@@ -68,7 +68,7 @@ tour view.
 highlight categories of interest with shift + mouse click.
 Multiple categories can be selected in this way. To reset double click
 the legend title.
-\item Brushing can be activtated by shift + mouse drag on the tour view.
+\item Brushing is activated by moving the mouse on the tour view.
 If the tour animation a brush event will pause it.
 }
 }

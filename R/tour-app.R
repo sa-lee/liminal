@@ -43,7 +43,7 @@
 #'    highlight categories of interest with shift + mouse click.
 #'    Multiple categories can be selected in this way. To reset double click
 #'    the legend title.
-#'  * Brushing can be activtated by shift + mouse drag on the tour view.
+#'  * Brushing is activated by moving the mouse on the tour view.
 #'    If the tour animation a brush event will pause it.
 #'
 #'
@@ -158,7 +158,7 @@ limn_tour_server <- function(tour_data, tour_path, color_tbl, morph) {
     observeEvent(input$done, {
       tour_artefacts <- list(
         selected_basis = selections$proj,
-        selected_points = rct_active_brush()
+        tour_brush_box = rct_active_brush()
       )
       stopApp(tour_artefacts)
     })
