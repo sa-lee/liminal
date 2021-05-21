@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -80,51 +82,51 @@
     
     
 <p>Let’s take a look at a high-dimensional tree structured data set:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">liminal</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">fake_trees</span><span class="op">)</span>
-<span class="co">#&gt; [1] 3000  101</span></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">liminal</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">fake_trees</span><span class="op">)</span>
+<span class="co">#&gt; [1] 3000  101</span></code></pre></div>
 <p>This data set has 3000 observations and 100 numeric variables, and has ten branches. We can generate principal components:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="va">pcs</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html">prcomp</a></span><span class="op">(</span><span class="va">fake_trees</span><span class="op">[</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">fake_trees</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">pcs</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="va">fake_trees</span><span class="op">[</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">fake_trees</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>
 <span class="co"># var explained</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span><span class="op">(</span><span class="va">pcs</span><span class="op">$</span><span class="va">sdev</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">pcs</span><span class="op">$</span><span class="va">sdev</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; [1] 0.05569726 0.09768259 0.13586130 0.17200716 0.20405094 0.23398570</span></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum</a></span><span class="op">(</span><span class="va">pcs</span><span class="op">$</span><span class="va">sdev</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">pcs</span><span class="op">$</span><span class="va">sdev</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; [1] 0.05569726 0.09768259 0.13586130 0.17200716 0.20405094 0.23398570</span></code></pre></div>
 <p>And visualise the results as scatter plot by augmenting the orginal data</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="va">fake_trees</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span><span class="op">(</span><span class="va">fake_trees</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">pcs</span><span class="op">$</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fake_trees</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_cols</a></span><span class="op">(</span><span class="va">fake_trees</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">pcs</span><span class="op">$</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>
 <span class="fu">ggplot</span><span class="op">(</span><span class="va">fake_trees</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">PC1</span>, y <span class="op">=</span> <span class="va">PC2</span>, color <span class="op">=</span> <span class="va">branches</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="../reference/limn_pal_tableau10.html">limn_pal_tableau10</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></pre></div>
+  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="../reference/palettes.html">limn_pal_tableau10</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="liminal_files/figure-html/pca-xy-1.png" width="700"></p>
 <p>We see some separation of the branches in first two principal components, however, we can’t see each of the branches clearly or their relation to each other.</p>
 <p>We can tour the components that represent most of the variation in the data to get an idea of underlying structure. The code below generates a dynamic scatter plot by touring the first fifteen principal components.</p>
 <p>The following code generates a shiny application, the provides an interface to the tour:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="co"># this loads a shiny app</span>
-<span class="fu"><a href="../reference/limn_tour.html">limn_tour</a></span><span class="op">(</span><span class="va">fake_trees</span>, <span class="va">PC1</span><span class="op">:</span><span class="va">PC15</span>, color <span class="op">=</span> <span class="va">branches</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># this loads a shiny app</span>
+<span class="fu"><a href="../reference/limn_tour.html">limn_tour</a></span><span class="op">(</span><span class="va">fake_trees</span>, <span class="va">PC1</span><span class="op">:</span><span class="va">PC15</span>, color <span class="op">=</span> <span class="va">branches</span><span class="op">)</span></code></pre></div>
 <p>The interace consists of the tour view which is a dynamic scatterplot and an axis view which corresponds to magnitude and direction of the generated basis vectors.</p>
 <p>Brushing on the tour view is activated with the shift key plus a mouse drag. It will highlight points that fall inside the brush and pause the current view.</p>
 <p>There are several additional interactions available on this view: * There is a play button, that when pressed will start the tour. * There is also a text view of the half range which is the maximum squared Euclidean distance between points in the tour view. The half range is a scale factor for projections and can be thought of as a way of zooming in and out on points. It can be dynamically modified by scrolling (via a mouse-wheel). To reset double click the tour view. * The legend can be toggled to highlight groups of points with shift+mouse-click. Multiple groups can be selected in this way. To reset double click the legend title.</p>
 <p>From tour view, we can see that the blue branch is hidden and forms the backbone of the tree.</p>
 <p>We can also compare this to t-SNE embedding run with default settings:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">2099</span><span class="op">)</span>
-<span class="va">tsne</span> <span class="op">&lt;-</span> <span class="fu">Rtsne</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Rtsne/man/Rtsne.html">Rtsne</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">fake_trees</span>, <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="st">"dim"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2099</span><span class="op">)</span>
+<span class="va">tsne</span> <span class="op">&lt;-</span> <span class="fu">Rtsne</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Rtsne/man/Rtsne.html" class="external-link">Rtsne</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">fake_trees</span>, <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="st">"dim"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 
-<span class="va">tsne_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>tsneX <span class="op">=</span> <span class="va">tsne</span><span class="op">$</span><span class="va">Y</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>,
+<span class="va">tsne_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>tsneX <span class="op">=</span> <span class="va">tsne</span><span class="op">$</span><span class="va">Y</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>,
                       tsneY <span class="op">=</span> <span class="va">tsne</span><span class="op">$</span><span class="va">Y</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span><span class="op">)</span>
 <span class="fu">ggplot</span><span class="op">(</span><span class="va">tsne_df</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">tsneX</span>, y <span class="op">=</span> <span class="va">tsneY</span>, color <span class="op">=</span> <span class="va">fake_trees</span><span class="op">$</span><span class="va">branches</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="../reference/limn_pal_tableau10.html">limn_pal_tableau10</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></pre></div>
+  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="../reference/palettes.html">limn_pal_tableau10</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="liminal_files/figure-html/tsne-xy-1.png" width="700"></p>
 <p>The topology is a little messed up as the blue branch is now broken into two distinct pieces.</p>
 <p>We can see where our embedding is different via a linked tour:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="fu"><a href="../reference/limn_tour_link.html">limn_tour_link</a></span><span class="op">(</span><span class="va">tsne_df</span>,
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/limn_tour_link.html">limn_tour_link</a></span><span class="op">(</span><span class="va">tsne_df</span>,
                <span class="va">fake_trees</span>,
                cols <span class="op">=</span> <span class="va">PC1</span><span class="op">:</span><span class="va">PC10</span>,
-               color <span class="op">=</span> <span class="va">branches</span><span class="op">)</span></pre></div>
+               color <span class="op">=</span> <span class="va">branches</span><span class="op">)</span></code></pre></div>
 <p>This function requires two tables that will be linked together in seperate views. The tour interface is the same as above, except now brushing on the tour view will highlight points on the right hand side scatter plot. The right side scatterplot view is an interactive scatterplot. Brushing on the right view is activated via click and drag movements. It will highlight points in the tour view but the type of highlighting depends on the brush mode selected, the default is simple linked brushing. There are two other brushing modes that can be modified via radio buttons. Both neighbors and distance based brushing operate on the k-NN graph obtained from the control panel.</p>
   </div>
 
@@ -137,11 +139,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Stuart Lee.</p>
+  <p></p>
+<p>Developed by Stuart Lee.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link external-link">pkgdown</a> 1.6.1.9001.</p>
 </div>
 
       </footer>
@@ -149,6 +153,8 @@
 
   
 
+
+  
 
   </body>
 </html>

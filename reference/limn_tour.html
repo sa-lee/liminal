@@ -45,6 +45,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -56,9 +58,16 @@
 
 
 
+
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -121,14 +130,14 @@
     <p>Tour a high dimensional dataset</p>
     </div>
 
-    <pre class="usage"><span class='fu'>limn_tour</span><span class='op'>(</span>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>limn_tour</span><span class='op'>(</span>
   <span class='va'>.data</span>,
   <span class='va'>cols</span>,
   color <span class='op'>=</span> <span class='cn'>NULL</span>,
   tour_path <span class='op'>=</span> <span class='fu'>tourr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/tourr/man/grand_tour.html'>grand_tour</a></span><span class='op'>(</span><span class='op'>)</span>,
   rescale <span class='op'>=</span> <span class='va'>clamp</span>,
   morph <span class='op'>=</span> <span class='st'>"center"</span>
-<span class='op'>)</span></pre>
+<span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -155,14 +164,14 @@ but also works with <code><a href='https://rdrr.io/pkg/tourr/man/guided_tour.htm
     <tr>
       <th>rescale</th>
       <td><p>A function that rescales <code>cols</code>, the default is to
-<code><a href='clamp.html'>clamp()</a></code> the data to lie in the hyperdimensional unit cube. To not perform
+<code><a href='clamps.html'>clamp()</a></code> the data to lie in the hyperdimensional unit cube. To not perform
 any scaling use <code><a href='https://rdrr.io/r/base/identity.html'>identity()</a></code>.</p></td>
     </tr>
     <tr>
       <th>morph</th>
-      <td><p>One of <code><a href='https://rdrr.io/r/base/c.html'>c("center", "centre", "identity", "radial")</a></code>
+      <td><p>One of <code>c("center", "centre", "identity", "radial")</code>
 that rescales each projection along the tour path. The default
-is to center the projections and divide by half range. See <code><a href='morph_center.html'>morph_center()</a></code>
+is to center the projections and divide by half range. See <code><a href='morphs.html'>morph_center()</a></code>
 for details.</p></td>
     </tr>
     </table>
@@ -203,18 +212,18 @@ If the tour animation a brush event will pause it.</p></li>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='compute_half_range.html'>compute_half_range()</a></code>, <code><a href='morph_center.html'>morph_center()</a></code>, <code><a href='limn_tour_link.html'>limn_tour_link()</a></code></p></div>
+    <div class='dont-index'><p><code><a href='compute_half_range.html'>compute_half_range()</a></code>, <code><a href='morphs.html'>morph_center()</a></code>, <code><a href='limn_tour_link.html'>limn_tour_link()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='co'># tour the first ten columns of the fake tree data</span>
-<span class='co'># loads the default interface</span>
-<span class='fu'>limn_tour</span><span class='op'>(</span><span class='va'>fake_trees</span>, <span class='va'>dim1</span><span class='op'>:</span><span class='va'>dim10</span><span class='op'>)</span>
-<span class='co'># perform the same action but now coloring points</span>
-<span class='fu'>limn_tour</span><span class='op'>(</span><span class='va'>fake_trees</span>, <span class='va'>dim1</span><span class='op'>:</span><span class='va'>dim10</span>, color <span class='op'>=</span> <span class='va'>branches</span><span class='op'>)</span>
-<span class='op'>}</span>
-
-</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='co'># tour the first ten columns of the fake tree data</span></span>
+<span class='r-in'><span class='co'># loads the default interface</span></span>
+<span class='r-in'><span class='fu'>limn_tour</span><span class='op'>(</span><span class='va'>fake_trees</span>, <span class='va'>dim1</span><span class='op'>:</span><span class='va'>dim10</span><span class='op'>)</span></span>
+<span class='r-in'><span class='co'># perform the same action but now coloring points</span></span>
+<span class='r-in'><span class='fu'>limn_tour</span><span class='op'>(</span><span class='va'>fake_trees</span>, <span class='va'>dim1</span><span class='op'>:</span><span class='va'>dim10</span>, color <span class='op'>=</span> <span class='va'>branches</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'></span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -226,11 +235,11 @@ If the tour animation a brush event will pause it.</p></li>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Stuart Lee.</p>
+  <p><p>Developed by Stuart Lee.</p></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p></p>
 </div>
 
       </footer>
@@ -238,6 +247,8 @@ If the tour animation a brush event will pause it.</p></li>
 
   
 
+
+  
 
   </body>
 </html>
