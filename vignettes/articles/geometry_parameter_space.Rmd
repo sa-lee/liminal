@@ -1,5 +1,6 @@
 ---
 title: "pdfsense: or understanding high dimensional parameter space"
+bibliography: pdfsense.bib
 ---
 
 ```{r, include = FALSE}
@@ -12,15 +13,16 @@ theme_set(theme_bw())
 ```
 
 
-This example is modified from the paper by Laa et al., here we show how we can
-use a tour to explore principal components space and any non-linear structure and clusters via non-linear embeddings.
+This example is modified from the examples tours described in @Cook2018-jm.
+Here we use a tour to explore principal components space and 
+any non-linear structure and clusters via t-SNE.
 
 ## Setting up the data 
 
 Data were obtained from CT14HERA2 parton distribution function
-fits as used in Laa et al., 2018. There are 28 directions in the parameter
+fits as used in @Cook2018-jm. There are 28 directions in the parameter
 space of parton distribution function fit, each point in the variables
-labelled X1-X56 indicate moving +- 1 standard devation from the 'best' 
+labelled X1-X56 indicate moving +- 1 standard deviation from the 'best' 
 (maximum likelihood estimate) fit of the function. Each observation has
 all predictions of the corresponding measurement from an experiment. 
  (see table 3 in that paper for more explicit details). 
@@ -30,7 +32,7 @@ The remaining columns are:
  * InFit: A flag indicating whether an observation entered the fit of
    CT14HERA2 parton distribution function
  * Type: First number of ID
- * ID: contains the identifier of experiment, 1XX/2XX/5XX correpsonds
+ * ID: contains the identifier of experiment, 1XX/2XX/5XX corresponds
  to Deep Inelastic Scattering (DIS) / Vector Boson Production (VBP) / 
   Strong Interaction (JET). Every ID points to an experimental paper.   
  * pt: the per experiment observational id
@@ -134,3 +136,6 @@ limn_tour_link(
   color = Type
 )
 ```
+
+
+# References {-}

@@ -1,6 +1,8 @@
 ---
-title: "liminal"
+title: "Explore embeddings with liminal!"
+author: "Stuart Lee"
 output: rmarkdown::html_vignette
+bibliography: liminal.bib
 vignette: >
   %\VignetteIndexEntry{liminal}
   %\VignetteEngine{knitr::rmarkdown}
@@ -18,7 +20,9 @@ theme_set(theme_bw())
 
 
 Let's take a look at a high-dimensional
-tree structured data set:
+tree structured data set, which is adapted from the default example in 
+the phateR package [@Moon2019-ne].
+
 
 ```{r init}
 library(liminal)
@@ -34,7 +38,7 @@ pcs  <- prcomp(fake_trees[, -ncol(fake_trees)])
 head(cumsum(pcs$sdev / sum(pcs$sdev)))
 ```
 
-And visualise the results as scatter plot by augmenting the orginal data
+And visualise the results as scatter plot by augmenting the original data
 
 ```{r pca-xy}
 fake_trees <- dplyr::bind_cols(fake_trees, as.data.frame(pcs$x))
@@ -56,7 +60,7 @@ The following code generates a shiny application, the provides an interface to t
 # this loads a shiny app
 limn_tour(fake_trees, PC1:PC15, color = branches)
 ```
-The interace consists of the tour view which is a dynamic scatterplot
+The interface consists of the tour view which is a dynamic scatterplot
 and an axis view which corresponds to magnitude and direction of 
 the generated basis vectors. 
 
@@ -101,7 +105,9 @@ limn_tour_link(tsne_df,
                cols = PC1:PC10,
                color = branches)
 ```
- This function requires two tables that will be linked together in seperate views. The tour interface is the same as above, except now
+ This function requires two tables that will be linked together in separate views. The tour interface is the same as above, except now
  brushing on the tour view will highlight points on the right hand side
  scatter plot. The right side scatterplot view is an interactive scatterplot. Brushing on the right view is activated via click and drag movements. It will highlight points in the tour view but the type of highlighting depends on the brush mode selected, the default is simple
- linked brushing. There are two other brushing modes that can be modified via radio buttons. Both neighbors and distance based brushing operate on the k-NN graph obtained from the control panel.
+ linked brushing.
+
+
