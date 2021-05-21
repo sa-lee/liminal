@@ -21,7 +21,6 @@ generate_tour_spec <- function(tour_frame, color_tbl, half_range) {
 }
 
 spec_tour <- function(tour_frame, color_tbl, half_range) {
-
   view_tour <- generate_tour_spec(tour_frame, color_tbl, half_range)
 
   vegawidget::vegawidget(
@@ -31,16 +30,17 @@ spec_tour <- function(tour_frame, color_tbl, half_range) {
 }
 
 set_encoding_color_op_linked <- function(layer, color_tbl, color_name) {
-
   has_colclick <- "colclick" %in% names(layer[["selection"]])
 
   has_color_col <- length(color_name) == 0
 
   if (has_color_col) {
     layer[["encoding"]][["color"]][["condition"]] <-
-      list(selection =
-             layer[["encoding"]][["color"]][["condition"]][["selection"]],
-           value = "black")
+      list(
+        selection =
+          layer[["encoding"]][["color"]][["condition"]][["selection"]],
+        value = "black"
+      )
     if (has_colclick) {
       layer[["selection"]] <- layer[["selection"]][1]
     }
@@ -69,7 +69,6 @@ set_encoding_color_op_linked <- function(layer, color_tbl, color_name) {
   }
 
   layer
-
 }
 
 generate_linked_tour_spec <- function(x_frame, y_frame, color_tbl, half_range) {
@@ -87,19 +86,25 @@ generate_linked_tour_spec <- function(x_frame, y_frame, color_tbl, half_range) {
     list(domain = range(y_frame[[embed_cols[2]]]))
 
   embed_layer <-
-    set_encoding_color_op_linked(embed_layer,
-                                 color_tbl,
-                                 colnames(color_tbl))
+    set_encoding_color_op_linked(
+      embed_layer,
+      color_tbl,
+      colnames(color_tbl)
+    )
 
   tour_layer <- ans$hconcat[[2]]
   tour_layer <- set_half_range(tour_layer, half_range)
   tour_layer <-
-    set_encoding_color_op_linked(tour_layer,
-                                 color_tbl,
-                                 colnames(color_tbl))
+    set_encoding_color_op_linked(
+      tour_layer,
+      color_tbl,
+      colnames(color_tbl)
+    )
 
-  ans$transform[[1]]$from$fields <- c(ans$transform[[1]]$from$fields,
-                                      colnames(color_tbl))
+  ans$transform[[1]]$from$fields <- c(
+    ans$transform[[1]]$from$fields,
+    colnames(color_tbl)
+  )
 
   ans$hconcat[[1]] <- embed_layer
   ans$hconcat[[2]] <- tour_layer
@@ -119,4 +124,3 @@ spec_linked_tour <- function(x_frame, y_frame, color_tbl, half_range) {
     embed = vegawidget::vega_embed(actions = FALSE, tooltip = FALSE)
   )
 }
-

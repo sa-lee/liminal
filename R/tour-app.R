@@ -55,7 +55,7 @@
 #' limn_tour(fake_trees, dim1:dim10)
 #' # perform the same action but now coloring points
 #' limn_tour(fake_trees, dim1:dim10, color = branches)
-#'}
+#' }
 #'
 #' @export
 limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour(), rescale = clamp, morph = "center") {
@@ -77,7 +77,6 @@ limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour()
 
 
 limn_tour_server <- function(tour_data, tour_path, color_tbl, morph) {
-
   path <- tourr::new_tour(tour_data, tour_path)
 
   half_range <- compute_half_range(tour_data)
@@ -86,8 +85,10 @@ limn_tour_server <- function(tour_data, tour_path, color_tbl, morph) {
 
   cols <- colnames(tour_data)
 
-  tour_frame <- generate_tour_frame(tour_data, start, half_range,
-                                    color_tbl, morph)
+  tour_frame <- generate_tour_frame(
+    tour_data, start, half_range,
+    color_tbl, morph
+  )
 
   function(input, output, session) {
     output[["tourView"]] <- renderVegawidget({
@@ -98,18 +99,22 @@ limn_tour_server <- function(tour_data, tour_path, color_tbl, morph) {
     })
 
     # reactiveValues, store current place in tour path
-    selections <- shiny::reactiveValues(proj = start, do_tour = FALSE,
-                                        force_restart = FALSE)
+    selections <- shiny::reactiveValues(
+      proj = start, do_tour = FALSE,
+      force_restart = FALSE
+    )
 
 
     # vega-lite event listeners
     # listen for zoom and brush events
-    rct_active_zoom <-  vw_shiny_get_signal("tourView",
-                                            name = "grid",
-                                            body_value = "value")
+    rct_active_zoom <- vw_shiny_get_signal("tourView",
+      name = "grid",
+      body_value = "value"
+    )
     rct_active_brush <- vw_shiny_get_signal("tourView",
-                                                     name = "brush",
-                                                     body_value = "value")
+      name = "brush",
+      body_value = "value"
+    )
 
     rct_half_range <- rct_half_range(rct_active_zoom, half_range)
 
@@ -134,7 +139,7 @@ limn_tour_server <- function(tour_data, tour_path, color_tbl, morph) {
 
     # if play button is pressed start tour
     shiny::observeEvent(input$play, {
-      selections$do_tour <-  input$play
+      selections$do_tour <- input$play
     })
 
     # if pause button is pressed stop tour
@@ -171,6 +176,5 @@ limn_tour_server <- function(tour_data, tour_path, color_tbl, morph) {
     output$half_range <- shiny::renderText({
       paste("Tour with half-range:", round(rct_half_range(), 3))
     })
-
   }
 }

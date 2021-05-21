@@ -9,22 +9,19 @@ find_knn <- function(.data,
                      num_neighbors = 10,
                      metric = c("euclidean", "cosine", "manhattan"),
                      .include_self = TRUE) {
-
   nr <- nrow(.data)
   # smallish data use FNN
-  if (nr <= 4096  && metric == "euclidean") {
+  if (nr <= 4096 && metric == "euclidean") {
     return(build_fnn(.data, num_neighbors, .include_self))
   }
 
   # otherwise use ANN
   build_ann(.data, num_neighbors, metric)
-
 }
 
 
 #' @importFrom FNN get.knn
 build_fnn <- function(.data, num_neighbors, .include_self = TRUE) {
-
   if (.include_self) {
     num_neighbors <- num_neighbors - 1
   }
@@ -39,16 +36,15 @@ build_fnn <- function(.data, num_neighbors, .include_self = TRUE) {
   }
 
   list(idx = idx, dist = dist)
-
 }
 
 #' @importFrom methods new is
 new_ann <- function(metric, nc) {
   switch(metric,
-         "euclidean" = methods::new(RcppAnnoy::AnnoyEuclidean, nc),
-         "cosine" = methods::new(RcppAnnoy::AnnoyAngular, nc),
-         "manhattan" = methods::new(RcppAnnoy::AnnoyManhattan, nc),
-         stop("Unknown metric:", metric)
+    "euclidean" = methods::new(RcppAnnoy::AnnoyEuclidean, nc),
+    "cosine" = methods::new(RcppAnnoy::AnnoyAngular, nc),
+    "manhattan" = methods::new(RcppAnnoy::AnnoyManhattan, nc),
+    stop("Unknown metric:", metric)
   )
 }
 
@@ -75,15 +71,14 @@ search_ann_index <- function(.data,
   dist <- matrix(0, nrow = nr, ncol = num_neighbors)
 
   for (i in seq_len(nr)) {
-    ans <- ann$getNNsByVectorList(.data[i,], num_neighbors, search_num, TRUE)
+    ans <- ann$getNNsByVectorList(.data[i, ], num_neighbors, search_num, TRUE)
     stopifnot(length(ans$item) == num_neighbors)
     idx[i, ] <- ans$item
     dist[i, ] <- ans$distance
-
   }
 
   if (methods::is(ann, "Rcpp_AnnoyAngular")) {
-    dist <- 0.5 * (dist*dist)
+    dist <- 0.5 * (dist * dist)
   }
 
   list(idx = idx + 1L, dist = dist)
@@ -94,11 +89,9 @@ build_ann <- function(.data,
                       metric,
                       n_trees = 50,
                       search_num = 2 * n_trees * num_neighbors) {
-
   ann <- build_ann_index(.data, metric, n_trees)
 
   search_ann_index(.data, num_neighbors, ann, search_num)
-
 }
 
 
@@ -107,7 +100,6 @@ build_ann <- function(.data,
 #' @importFrom stats model.matrix na.fail
 #' @noRd
 reference_data_knn <- function(ref) {
-
   if (is(ref, "data.frame")) {
     return(model.matrix(~ . - 1, na.fail(ref)))
   }
@@ -133,7 +125,6 @@ nest_by_neighbours <- function(tbl, idx) {
   if (is(idx, "matrix")) {
     tbl <- tbl[as.vector(idx), ]
     idx <- as.vector(row(idx))
-
   } else {
     stopifnot(length(idx) == nrow(tbl))
   }

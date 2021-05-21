@@ -22,7 +22,6 @@ compute_proj_dist <- function(x, y) {
 #' compute_half_range(mv)
 #'
 #' compute_half_range(mv, center = FALSE)
-#'
 #' @export
 compute_half_range <- function(.data, center = TRUE) {
   if (center) .data <- scale(.data, scale = FALSE)
@@ -61,7 +60,6 @@ schema_dir <- function() {
 #'
 #' @noRd
 set_half_range <- function(spec, half_range) {
-
   domain <- c(-half_range, half_range)
 
   spec[["encoding"]][["x"]][["scale"]][["domain"]] <- domain
@@ -71,9 +69,9 @@ set_half_range <- function(spec, half_range) {
 }
 
 set_data_name <- function(spec, name) {
- stopifnot(is.character(name) && length(name) == 1L)
- spec[["data"]][["name"]] <- name
- spec
+  stopifnot(is.character(name) && length(name) == 1L)
+  spec[["data"]][["name"]] <- name
+  spec
 }
 
 
@@ -84,30 +82,42 @@ set_data_values <- function(spec, values) {
 
 
 color_type <- function(color_vec) {
-  if (is.ordered(color_vec)) return("ordinal")
-  if (is.character(color_vec) || is.factor(color_vec)) return("nominal")
-  if (is.null(color_vec)) return(NULL)
+  if (is.ordered(color_vec)) {
+    return("ordinal")
+  }
+  if (is.character(color_vec) || is.factor(color_vec)) {
+    return("nominal")
+  }
+  if (is.null(color_vec)) {
+    return(NULL)
+  }
   "quantitative"
 }
 
 color_scale <- function(color_vec) {
-  if (is.numeric(color_vec)) return(range(color_vec))
+  if (is.numeric(color_vec)) {
+    return(range(color_vec))
+  }
   levels(color_vec) %||% sort(unique(color_vec))
 }
 
 color_scheme <- function(domain, scheme = NULL) {
-  if (!is.null(scheme)) return(scheme)
+  if (!is.null(scheme)) {
+    return(scheme)
+  }
 
-  if (is.numeric(domain)) return("viridis")
+  if (is.numeric(domain)) {
+    return("viridis")
+  }
 
-  if (length(domain) <= 10) return("tableau10")
+  if (length(domain) <= 10) {
+    return("tableau10")
+  }
 
   return("tableau20")
-
 }
 
 set_encoding_color <- function(spec, color_tbl, color_name, brush = "brush") {
-
   if (length(color_name) == 0) {
     spec[["encoding"]][["color"]][["condition"]] <-
       list(selection = brush, value = "black")
@@ -118,25 +128,29 @@ set_encoding_color <- function(spec, color_tbl, color_name, brush = "brush") {
   domain <- color_scale(color_vec)
   scheme <- color_scheme(domain)
 
-  color_encoding <- list(selection = brush,
-                         field = color_name,
-                         type = color_type(color_vec),
-                         scale = list(domain = color_scale(color_vec),
-                                      scheme = scheme))
+  color_encoding <- list(
+    selection = brush,
+    field = color_name,
+    type = color_type(color_vec),
+    scale = list(
+      domain = color_scale(color_vec),
+      scheme = scheme
+    )
+  )
 
   spec[["encoding"]][["color"]][["condition"]] <- color_encoding
 
   # if color available enable clickable legend
-  spec[["selection"]][["colclick"]]  <- list(type = "multi",
-                                             fields = list(color_name),
-                                             bind = list(legend = "dblclick"))
+  spec[["selection"]][["colclick"]] <- list(
+    type = "multi",
+    fields = list(color_name),
+    bind = list(legend = "dblclick")
+  )
 
   spec
-
 }
 
 set_encoding_opacity <- function(spec, alpha) {
-
   conditions <- setdiff(names(spec[["selection"]]), c("grid"))
 
   if (length(conditions) > 1) {
@@ -153,7 +167,6 @@ set_encoding_opacity <- function(spec, alpha) {
 }
 
 opacity_value <- function(nr, pow = 0.3) (1 / nr)^pow
-
 
 tbl_projection <- function(tbl, proj) {
   stopifnot(c("x", "y") %in% names(tbl))

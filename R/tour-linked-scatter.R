@@ -50,7 +50,7 @@
 #' # another layout based on t-SNE
 #' # loads the default interface
 #' tsne <- Rtsne::Rtsne(dplyr::select(fake_trees, dplyr::starts_with("dim")))
-#' tsne_df <- data.frame(tsneX = tsne$Y[,1], tsneY = tsne$Y[,2])
+#' tsne_df <- data.frame(tsneX = tsne$Y[, 1], tsneY = tsne$Y[, 2])
 #' limn_tour_link(
 #'   tsne_df,
 #'   dplyr::select(fake_trees, dim1:dim10, branches),
@@ -63,8 +63,7 @@
 #'   dplyr::select(fake_trees, dim1:dim10, branches),
 #'   color = branches,
 #' )
-#'
-#'}
+#' }
 #'
 #' @export
 limn_tour_link <- function(embed_data,
@@ -75,13 +74,12 @@ limn_tour_link <- function(embed_data,
                            rescale = clamp,
                            morph = "center",
                            reference = NULL) {
-
   if (!identical(nrow(tour_data), nrow(embed_data))) {
     stop("tour_data and embed_data should have same number of rows")
   }
 
   # check embedding table is valid
-  stopifnot(ncol(embed_data)  == 2 || ncol(embed_data) == 3)
+  stopifnot(ncol(embed_data) == 2 || ncol(embed_data) == 3)
   # augment embed_data with row_number
   embed_data$row_number <- seq_len(nrow(embed_data))
 
@@ -120,12 +118,14 @@ limn_tour_link <- function(embed_data,
   ui <- gadget_linked_ui()
 
 
-  server <- limn_tour_linked_server(tour_matrix,
-                                    tour_path,
-                                    color_data,
-                                    morph_projection,
-                                    embed_data,
-                                    reference)
+  server <- limn_tour_linked_server(
+    tour_matrix,
+    tour_path,
+    color_data,
+    morph_projection,
+    embed_data,
+    reference
+  )
 
   app <- shinyApp(ui, server)
   runGadget(app)
@@ -151,33 +151,37 @@ limn_tour_linked_server <- function(tour_data, tour_path, color_data, morph,
     })
 
     # reactiveValues, store current place in tour path
-    selections <- reactiveValues(proj = start,
-                                        idx = idx,
-                                        do_tour = FALSE,
-                                        force_restart = FALSE)
+    selections <- reactiveValues(
+      proj = start,
+      idx = idx,
+      do_tour = FALSE,
+      force_restart = FALSE
+    )
 
 
     # vega-lite event listeners
     # listen for zoom and brush events
-    rct_active_zoom <-  vw_shiny_get_signal("tourView",
-                                            name = "grid",
-                                            body_value = "value")
+    rct_active_zoom <- vw_shiny_get_signal("tourView",
+      name = "grid",
+      body_value = "value"
+    )
     # listen for brush events on tour layer
     rct_active_brush <- vw_shiny_get_signal("tourView",
-                                            name = "right_brush",
-                                            body_value = "value")
+      name = "right_brush",
+      body_value = "value"
+    )
 
     # listen for brush events on embed layer
     rct_embed_brush <- vw_shiny_get_signal("tourView",
-                                           name = "left_brush",
-                                           body_value = "value")
+      name = "left_brush",
+      body_value = "value"
+    )
 
     rct_half_range <- rct_half_range(rct_active_zoom, half_range)
 
     rct_tour <- rct_tour(path, tour_data, tour_path, selections = selections)
 
     rct_proj <- reactive({
-
       proj <- morph(
         tour_data %*% selections$proj,
         half_range = rct_half_range()
@@ -186,11 +190,14 @@ limn_tour_linked_server <- function(tour_data, tour_path, color_data, morph,
     })
 
     rct_neighbors <- reactive({
+      if (is.null(input$k)) {
+        return()
+      }
+      if (is.na(input$k)) {
+        return()
+      }
 
-      if (is.null(input$k)) return()
-      if (is.na(input$k)) return()
-
-      if (input$k == 1)  {
+      if (input$k == 1) {
         selections$idx <- idx
       }
       else {
@@ -198,14 +205,13 @@ limn_tour_linked_server <- function(tour_data, tour_path, color_data, morph,
       }
 
       selections$do_tour <- FALSE
-
     })
 
     vw_shiny_set_data("tourView", "path", rct_proj())
 
     # if play button is pressed start tour
     observeEvent(input$play, {
-      selections$do_tour <-  input$play
+      selections$do_tour <- input$play
     })
 
     # if pause button is pressed stop tour
@@ -242,6 +248,5 @@ limn_tour_linked_server <- function(tour_data, tour_path, color_data, morph,
     output$half_range <- renderText({
       paste("Tour with half-range:", round(rct_half_range(), 3))
     })
-
   }
 }

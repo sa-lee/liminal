@@ -22,7 +22,7 @@ morph_radial <- function(proj, half_range, p_eff) {
   stopifnot(ncol(proj) == 2L)
   proj <- scale(proj, scale = FALSE)
   rad <- sqrt(rowSums(proj^2))
-  ang <- atan2(proj[,1], proj[,2])
+  ang <- atan2(proj[, 1], proj[, 2])
   # transform with cumulative to get uniform distribution in radius
   rad <- cumulative_radial(rad, half_range, p_eff)
   # square-root is the inverse of the cumulative of a uniform disk
@@ -42,8 +42,8 @@ morph_radial <- function(proj, half_range, p_eff) {
 #' given a 2D projection of hypersphere with radius R in p dimensions
 #'
 #' @noRd
-cumulative_radial <- function(r, R, p){
-  1 - (1 - (r/R)^2)^(p/2)
+cumulative_radial <- function(r, R, p) {
+  1 - (1 - (r / R)^2)^(p / 2)
 }
 
 
@@ -57,10 +57,10 @@ cumulative_radial <- function(r, R, p){
 #' @noRd
 generate_morph <- function(morph, p_eff) {
   switch(morph,
-         "identity" =  morph_identity,
-         "center" = morph_center,
-         "centre" = morph_center,
-         "radial" = function(proj, half_range) morph_radial(proj, half_range, p_eff),
-         stop("Unknown morph function:", morph)
+    "identity" =  morph_identity,
+    "center" = morph_center,
+    "centre" = morph_center,
+    "radial" = function(proj, half_range) morph_radial(proj, half_range, p_eff),
+    stop("Unknown morph function:", morph)
   )
 }

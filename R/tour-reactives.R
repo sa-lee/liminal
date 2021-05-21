@@ -17,12 +17,13 @@ rct_tour <- function(plan, tour_data, tour_path, selections, aps = 1, fps = 8) {
   current <- plan(0)
   shiny::reactive({
     play <- selections[["do_tour"]]
-    play <- current$step >= 0 && play
 
+    play <- current$step >= 0 && play
     if (play) {
-      current <<- plan(aps/fps)
+      current <<- plan(aps / fps)
+      print(current)
       selections[["proj"]] <- current$proj
-      shiny::invalidateLater(1000*aps/fps)
+      shiny::invalidateLater(1000 * aps / fps)
     }
 
     restart <- selections[["force_restart"]]

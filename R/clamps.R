@@ -24,12 +24,11 @@
 #' clamp_sd(mv)
 #'
 #' clamp_standardize(mv)
-#'
 #' @rdname clamps
 clamp <- function(.data) {
   rng <- matrixStats::colRanges(.data)
-  vals <- sweep(.data, 2, rng[,1])
-  sweep(vals, 2, rng[,2] - rng[, 1], FUN = "/")
+  vals <- sweep(.data, 2, rng[, 1])
+  sweep(vals, 2, rng[, 2] - rng[, 1], FUN = "/")
 }
 
 

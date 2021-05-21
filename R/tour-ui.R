@@ -15,28 +15,27 @@ gadget_tour_main_panel <- function(axis = TRUE, height = "100%", width = height)
   tour_view <- vegawidgetOutput("tourView", height = height, width = width)
 
   if (axis) {
-    flex_row <- c(1,2)
+    flex_row <- c(1, 2)
     axis_view <- vegawidgetOutput("axisView", height = height, width = width)
     main_panel <- miniContentPanel(
       padding = 0,
       fillCol(
         fillRow(axis_view, tour_view, flex = flex_row),
-        #half_range_view,
+        # half_range_view,
         flex = 1
       ), scrollable = FALSE
     )
   } else {
-    main_panel <-   miniContentPanel(padding = 0,
-                                     fillCol(
-                                       flex = 1,
-                                       tour_view
-                                     )
+    main_panel <- miniContentPanel(
+      padding = 0,
+      fillCol(
+        flex = 1,
+        tour_view
+      )
     )
-
   }
 
   main_panel
-
 }
 
 
@@ -65,20 +64,27 @@ gadget_linked_ui <- function() {
   miniPage(
     gadget_tour_titlebar(),
     miniTabstripPanel(
-      miniTabPanel("Controls", icon = icon("sliders"),
-                   miniContentPanel(
-                     numericInput("k", "Neighbors:",
-                                  value = 1, min = 1, max = 25),
-                     radioButtons("metric",
-                                  "Distance Metric",
-                                  selected = "euclidean",
-                                  choices = c("euclidean",
-                                              "cosine",
-                                              "manhattan"))                                  )
+      miniTabPanel("Controls",
+        icon = icon("sliders"),
+        miniContentPanel(
+          numericInput("k", "Neighbors:",
+            value = 1, min = 1, max = 25
+          ),
+          radioButtons("metric",
+            "Distance Metric",
+            selected = "euclidean",
+            choices = c(
+              "euclidean",
+              "cosine",
+              "manhattan"
+            )
+          )
+        )
       ),
-      miniTabPanel("Embed + Tour", icon = icon("map-o"),
-                   gadget_tour_main_panel(axis = FALSE),
-                   gadget_tour_controls()
+      miniTabPanel("Embed + Tour",
+        icon = icon("map-o"),
+        gadget_tour_main_panel(axis = FALSE),
+        gadget_tour_controls()
       )
     )
   )
