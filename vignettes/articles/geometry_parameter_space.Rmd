@@ -1,10 +1,5 @@
 ---
 title: "pdfsense: or understanding high dimensional parameter space"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{pdfsense}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
