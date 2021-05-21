@@ -81,7 +81,7 @@ on the k-NN graph obtained from the control panel.
 # another layout based on t-SNE
 # loads the default interface
 tsne <- Rtsne::Rtsne(dplyr::select(fake_trees, dplyr::starts_with("dim")))
-tsne_df <- data.frame(tsneX = tsne$Y[,1], tsneY = tsne$Y[,2])
+tsne_df <- data.frame(tsneX = tsne$Y[, 1], tsneY = tsne$Y[, 2])
 limn_tour_link(
   tsne_df,
   dplyr::select(fake_trees, dim1:dim10, branches),
@@ -94,7 +94,6 @@ res <- limn_tour_link(
   dplyr::select(fake_trees, dim1:dim10, branches),
   color = branches,
 )
-
 }
 
 }

@@ -26,5 +26,4 @@ mv <- matrix(rnorm(300), ncol = 3)
 compute_half_range(mv)
 
 compute_half_range(mv, center = FALSE)
-
 }

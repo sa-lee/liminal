@@ -1,7 +1,7 @@
 Package: liminal
 Type: Package
 Title: Multivariate Data Visualization With Tours and Embeddings
-Version: 0.0.7.9999
+Version: 0.0.8.9999
 Authors@R: person(given = "Stuart", 
                   family = "Lee",
                   role = c("aut", "cre"),
@@ -22,9 +22,7 @@ Imports:
     jsonlite,
     rlang,
     dplyr,
-    matrixStats,
-    methods,
-    stats
+    matrixStats
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Suggests: 
