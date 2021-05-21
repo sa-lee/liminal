@@ -23,8 +23,6 @@ Imports:
     rlang,
     dplyr,
     matrixStats,
-    FNN,
-    RcppAnnoy,
     methods,
     stats
 Roxygen: list(markdown = TRUE)
