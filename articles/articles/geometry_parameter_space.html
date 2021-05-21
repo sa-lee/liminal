@@ -81,16 +81,16 @@
 
     
     
-<p>This example is modified from the paper by Laa et al., here we show how we can use a tour to explore principal components space and any non-linear structure and clusters via non-linear embeddings.</p>
+<p>This example is modified from the examples tours described in <span class="citation">Cook, Laa, and Valencia (2018)</span>. Here we use a tour to explore principal components space and any non-linear structure and clusters via t-SNE.</p>
 <div id="setting-up-the-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#setting-up-the-data" class="anchor" aria-hidden="true"></a>Setting up the data</h2>
-<p>Data were obtained from CT14HERA2 parton distribution function fits as used in Laa et al., 2018. There are 28 directions in the parameter space of parton distribution function fit, each point in the variables labelled X1-X56 indicate moving +- 1 standard devation from the ‘best’ (maximum likelihood estimate) fit of the function. Each observation has all predictions of the corresponding measurement from an experiment. (see table 3 in that paper for more explicit details).</p>
+<p>Data were obtained from CT14HERA2 parton distribution function fits as used in <span class="citation">Cook, Laa, and Valencia (2018)</span>. There are 28 directions in the parameter space of parton distribution function fit, each point in the variables labelled X1-X56 indicate moving +- 1 standard deviation from the ‘best’ (maximum likelihood estimate) fit of the function. Each observation has all predictions of the corresponding measurement from an experiment. (see table 3 in that paper for more explicit details).</p>
 <p>The remaining columns are:</p>
 <ul>
 <li>InFit: A flag indicating whether an observation entered the fit of CT14HERA2 parton distribution function</li>
 <li>Type: First number of ID</li>
-<li>ID: contains the identifier of experiment, 1XX/2XX/5XX correpsonds to Deep Inelastic Scattering (DIS) / Vector Boson Production (VBP) / Strong Interaction (JET). Every ID points to an experimental paper.<br>
+<li>ID: contains the identifier of experiment, 1XX/2XX/5XX corresponds to Deep Inelastic Scattering (DIS) / Vector Boson Production (VBP) / Strong Interaction (JET). Every ID points to an experimental paper.<br>
 </li>
 <li>pt: the per experiment observational id</li>
 <li>x,mu: the kinematics of a parton. x is the parton momentum fraction, and mu is the factorisation scale.</li>
@@ -169,6 +169,15 @@
   cols <span class="op">=</span> <span class="va">PC1</span><span class="op">:</span><span class="va">PC6</span>,
   color <span class="op">=</span> <span class="va">Type</span>
 <span class="op">)</span></code></pre></div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1 class="hasAnchor">
+<a href="#references" class="anchor" aria-hidden="true"></a>References</h1>
+<div id="refs" class="references">
+<div id="ref-Cook2018-jm">
+<p>Cook, Dianne, Ursula Laa, and German Valencia. 2018. “Dynamical projections for the visualization of PDFSense data.” <em>European Physical Journal C: Particles and Fields</em> 78 (9): 742. <a href="https://doi.org/10.1140/epjc/s10052-018-6205-2" class="external-link">https://doi.org/10.1140/epjc/s10052-018-6205-2</a>.</p>
+</div>
+</div>
 </div>
   </div>
 

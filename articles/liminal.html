@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>liminal • liminal</title>
+<title>Explore embeddings with liminal! • liminal</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/journal/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="liminal">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Explore embeddings with liminal!">
 <meta property="og:description" content="liminal">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -71,7 +71,8 @@
       </header><script src="liminal_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>liminal</h1>
+      <h1 data-toc-skip>Explore embeddings with liminal!</h1>
+                        <h4 data-toc-skip class="author">Stuart Lee</h4>
             
       
       
@@ -81,7 +82,7 @@
 
     
     
-<p>Let’s take a look at a high-dimensional tree structured data set:</p>
+<p>Let’s take a look at a high-dimensional tree structured data set, which is adapted from the default example in the phateR package <span class="citation">(Moon et al. 2019)</span>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">liminal</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">fake_trees</span><span class="op">)</span>
@@ -92,7 +93,7 @@
 <span class="co"># var explained</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum</a></span><span class="op">(</span><span class="va">pcs</span><span class="op">$</span><span class="va">sdev</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">pcs</span><span class="op">$</span><span class="va">sdev</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; [1] 0.05569726 0.09768259 0.13586130 0.17200716 0.20405094 0.23398570</span></code></pre></div>
-<p>And visualise the results as scatter plot by augmenting the orginal data</p>
+<p>And visualise the results as scatter plot by augmenting the original data</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fake_trees</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_cols</a></span><span class="op">(</span><span class="va">fake_trees</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">pcs</span><span class="op">$</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>
 <span class="fu">ggplot</span><span class="op">(</span><span class="va">fake_trees</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">PC1</span>, y <span class="op">=</span> <span class="va">PC2</span>, color <span class="op">=</span> <span class="va">branches</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
@@ -105,7 +106,7 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># this loads a shiny app</span>
 <span class="fu"><a href="../reference/limn_tour.html">limn_tour</a></span><span class="op">(</span><span class="va">fake_trees</span>, <span class="va">PC1</span><span class="op">:</span><span class="va">PC15</span>, color <span class="op">=</span> <span class="va">branches</span><span class="op">)</span></code></pre></div>
-<p>The interace consists of the tour view which is a dynamic scatterplot and an axis view which corresponds to magnitude and direction of the generated basis vectors.</p>
+<p>The interface consists of the tour view which is a dynamic scatterplot and an axis view which corresponds to magnitude and direction of the generated basis vectors.</p>
 <p>Brushing on the tour view is activated with the shift key plus a mouse drag. It will highlight points that fall inside the brush and pause the current view.</p>
 <p>There are several additional interactions available on this view: * There is a play button, that when pressed will start the tour. * There is also a text view of the half range which is the maximum squared Euclidean distance between points in the tour view. The half range is a scale factor for projections and can be thought of as a way of zooming in and out on points. It can be dynamically modified by scrolling (via a mouse-wheel). To reset double click the tour view. * The legend can be toggled to highlight groups of points with shift+mouse-click. Multiple groups can be selected in this way. To reset double click the legend title.</p>
 <p>From tour view, we can see that the blue branch is hidden and forms the backbone of the tree.</p>
@@ -127,7 +128,12 @@
                <span class="va">fake_trees</span>,
                cols <span class="op">=</span> <span class="va">PC1</span><span class="op">:</span><span class="va">PC10</span>,
                color <span class="op">=</span> <span class="va">branches</span><span class="op">)</span></code></pre></div>
-<p>This function requires two tables that will be linked together in seperate views. The tour interface is the same as above, except now brushing on the tour view will highlight points on the right hand side scatter plot. The right side scatterplot view is an interactive scatterplot. Brushing on the right view is activated via click and drag movements. It will highlight points in the tour view but the type of highlighting depends on the brush mode selected, the default is simple linked brushing. There are two other brushing modes that can be modified via radio buttons. Both neighbors and distance based brushing operate on the k-NN graph obtained from the control panel.</p>
+<p>This function requires two tables that will be linked together in separate views. The tour interface is the same as above, except now brushing on the tour view will highlight points on the right hand side scatter plot. The right side scatterplot view is an interactive scatterplot. Brushing on the right view is activated via click and drag movements. It will highlight points in the tour view but the type of highlighting depends on the brush mode selected, the default is simple linked brushing.</p>
+<div id="refs" class="references">
+<div id="ref-Moon2019-ne">
+<p>Moon, Kevin R, David van Dijk, Zheng Wang, Scott Gigante, Daniel B Burkhardt, William S Chen, Kristina Yim, et al. 2019. “Visualizing Structure and Transitions in High-Dimensional Biological Data.” <em>Nature Biotechnology</em> 37 (12): 1482–92. <a href="https://doi.org/10.1038/s41587-019-0336-3" class="external-link">https://doi.org/10.1038/s41587-019-0336-3</a>.</p>
+</div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
