@@ -137,8 +137,7 @@
   color <span class='op'>=</span> <span class='cn'>NULL</span>,
   tour_path <span class='op'>=</span> <span class='fu'>tourr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/tourr/man/grand_tour.html'>grand_tour</a></span><span class='op'>(</span><span class='op'>)</span>,
   rescale <span class='op'>=</span> <span class='va'>clamp</span>,
-  morph <span class='op'>=</span> <span class='st'>"center"</span>,
-  reference <span class='op'>=</span> <span class='cn'>NULL</span>
+  morph <span class='op'>=</span> <span class='st'>"center"</span>
 <span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -177,13 +176,6 @@ To not perform any scaling use <code><a href='https://rdrr.io/r/base/identity.ht
 that rescales each projection along the tour path. The default
 is to center the projections and divide by half range. See <code><a href='morphs.html'>morph_center()</a></code>
 for details for each of these functions.</p></td>
-    </tr>
-    <tr>
-      <th>reference</th>
-      <td><p>an optional data set to compute a nearest neighbors from.
-By default the <code>reference</code> is set to <code>NULL</code> in which case neighbors will be
-computed from <code>tour_data</code>. Otherwise <code>data.frame</code>, <code>matrix</code> or <code>dist</code>
-objects can be used.</p></td>
     </tr>
     </table>
 
