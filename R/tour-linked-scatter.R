@@ -14,11 +14,6 @@
 #' is to center the projections and divide by half range. See [morph_center()]
 #' for details for each of these functions.
 #'
-#' @param reference an optional data set to compute a nearest neighbors from.
-#' By default the `reference` is set to `NULL` in which case neighbors will be
-#' computed from `tour_data`. Otherwise `data.frame`, `matrix` or `dist`
-#' objects can be used.
-#'
 #' @details
 #'  1. The tour view on the left is a dynamic and interactive scatterplot. Brushing on the tour view
 #'  is activated with the shift key plus a mouse drag. By default it will
@@ -72,8 +67,7 @@ limn_tour_link <- function(embed_data,
                            color = NULL,
                            tour_path = tourr::grand_tour(),
                            rescale = clamp,
-                           morph = "center",
-                           reference = NULL) {
+                           morph = "center") {
   if (!identical(nrow(tour_data), nrow(embed_data))) {
     stop("tour_data and embed_data should have same number of rows")
   }
@@ -104,27 +98,15 @@ limn_tour_link <- function(embed_data,
   # set up transformation function
   morph_projection <- generate_morph(morph, p_eff = ncol(tour_matrix))
 
-
-  if (is.null(reference)) {
-    reference <- reference_data_knn(dplyr::select(tour_data, !!cols))
-  } else {
-    if (!identical(nrow(reference), nrow(tour_matrix))) {
-      stop("tour_data and reference should have same number of rows")
-    }
-    reference <- reference_data_knn(reference)
-  }
-
   # generate app
   ui <- gadget_linked_ui()
-
 
   server <- limn_tour_linked_server(
     tour_matrix,
     tour_path,
     color_data,
     morph_projection,
-    embed_data,
-    reference
+    embed_data
   )
 
   app <- shinyApp(ui, server)
@@ -133,7 +115,7 @@ limn_tour_link <- function(embed_data,
 
 
 limn_tour_linked_server <- function(tour_data, tour_path, color_data, morph,
-                                    embed_data, reference) {
+                                    embed_data) {
   path <- tourr::new_tour(tour_data, tour_path)
 
   half_range <- compute_half_range(tour_data)
@@ -187,24 +169,6 @@ limn_tour_linked_server <- function(tour_data, tour_path, color_data, morph,
         half_range = rct_half_range()
       )
       tbl_projection(tour_frame, proj)
-    })
-
-    rct_neighbors <- reactive({
-      if (is.null(input$k)) {
-        return()
-      }
-      if (is.na(input$k)) {
-        return()
-      }
-
-      if (input$k == 1) {
-        selections$idx <- idx
-      }
-      else {
-        selections$idx <- find_knn(reference, num_neighbors = input$k)$idx
-      }
-
-      selections$do_tour <- FALSE
     })
 
     vw_shiny_set_data("tourView", "path", rct_proj())

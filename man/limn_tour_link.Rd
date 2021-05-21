@@ -11,8 +11,7 @@ limn_tour_link(
   color = NULL,
   tour_path = tourr::grand_tour(),
   rescale = clamp,
-  morph = "center",
-  reference = NULL
+  morph = "center"
 )
 }
 \arguments{
@@ -35,11 +34,6 @@ To not perform any scaling use \code{\link[=identity]{identity()}}.}
 that rescales each projection along the tour path. The default
 is to center the projections and divide by half range. See \code{\link[=morph_center]{morph_center()}}
 for details for each of these functions.}
-
-\item{reference}{an optional data set to compute a nearest neighbors from.
-By default the \code{reference} is set to \code{NULL} in which case neighbors will be
-computed from \code{tour_data}. Otherwise \code{data.frame}, \code{matrix} or \code{dist}
-objects can be used.}
 }
 \value{
 After pressing the Done button on the interface, a list of artefacts
