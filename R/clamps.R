@@ -57,5 +57,5 @@ clamp_standardize <- function(.data, sd = 1) {
   centers <- colMeans(.data)
   scales <- matrixStats::colSds(.data) / sd
   vals <- sweep(.data, 2, centers)
-  vals <- sweep(vals, 2, scales, FUN = "/")
+  sweep(vals, 2, scales, FUN = "/")
 }
