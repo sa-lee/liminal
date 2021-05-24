@@ -219,7 +219,6 @@ limn_tour_linked_server <- function(tour_data, tour_path, color_data, morph,
         p("mouse wheel or scroll on right hand side: pan and zoom on the tour animation"),
         easyClose = TRUE
       ))
-
     })
 
     # When the Done button is clicked, return a value

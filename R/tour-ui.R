@@ -68,4 +68,3 @@ gadget_tour_ui <- function(linked = FALSE, axis = TRUE) {
     gadget_tour_controls()
   )
 }
-
