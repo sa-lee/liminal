@@ -50,19 +50,14 @@ Link a 2-d embedding with a tour
 }
 \details{
 All controls for the app can be obtained by clicking on the help button,
-in the bottom panel. More details are described beloww
-\enumerate{
+in the bottom panel. More details are described below:
+\itemize{
 \item The tour view on the left is a dynamic and interactive scatterplot. Brushing on the tour view
 is activated with the shift key plus a mouse drag. By default it will
 highlight corresponding points in the xy view and pause the animation.
 \item The xy view on the right is an interactive scatterplot. Brushing on the xy view
 will highlight points in the tour view and is activated via a mouse drag,
 the type of highlighting depends on the brush mode selected.
-\item the axis view which shows the direction and magnitude of the
-basis vectors being generated.
-There are several other user controls available:
-}
-\itemize{
 \item There is a play button, that when pressed will start the tour.
 \item The half range which is the maximum squared
 Euclidean distance between points in the tour view. The half range

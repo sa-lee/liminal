@@ -16,16 +16,14 @@
 #'
 #' @details
 #' All controls for the app can be obtained by clicking on the help button,
-#' in the bottom panel. More details are described beloww
-#'  1. The tour view on the left is a dynamic and interactive scatterplot. Brushing on the tour view
+#' in the bottom panel. More details are described below:
+#'
+#'  * The tour view on the left is a dynamic and interactive scatterplot. Brushing on the tour view
 #'  is activated with the shift key plus a mouse drag. By default it will
 #'  highlight corresponding points in the xy view and pause the animation.
-#'  2. The xy view on the right is an interactive scatterplot. Brushing on the xy view
+#'  * The xy view on the right is an interactive scatterplot. Brushing on the xy view
 #'  will highlight points in the tour view and is activated via a mouse drag,
 #'  the type of highlighting depends on the brush mode selected.
-#'  3. the axis view which shows the direction and magnitude of the
-#'  basis vectors being generated.
-#' There are several other user controls available:
 #'  * There is a play button, that when pressed will start the tour.
 #'  * The half range which is the maximum squared
 #'    Euclidean distance between points in the tour view. The half range
@@ -35,6 +33,7 @@
 #'  * The legend can be toggled to highlight groups of points with
 #'    shift+mouse-click. Multiple groups can be selected in this way. To
 #'    reset double click the legend title.
+#'
 #' @return After pressing the Done button on the interface, a list of artefacts
 #' is returned to the R session.
 #'
