@@ -24,7 +24,7 @@ For more details on the features and usage of liminal, see the vignettes:
 \code{browseVignettes(package = "liminal")}
 }
 \author{
-\strong{Maintainer}: Stuart Lee \email{stuart.a.lee@monash.edu}
+\strong{Maintainer}: Stuart Lee \email{stuart.a.lee@monash.edu} (\href{https://orcid.org/0000-0003-1179-8436}{ORCID}) [copyright holder]
 
 }
 \keyword{internal}

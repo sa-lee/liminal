@@ -8,7 +8,7 @@
 An object of class \code{data.frame} with 2808 rows and 62 columns.
 }
 \source{
-\url{http://www.physics.smu.edu/botingw/PDFsense_web_histlogy}
+\url{http://www.physics.smu.edu/botingw/PDFsense_web_histlogy/}
 }
 \usage{
 pdfsense
@@ -44,11 +44,11 @@ mu is the factorisation scale.
 Wang, B.-T., Hobbs, T. J., Doyle, S., Gao, J., Hou, T.-J., Nadolsky, P. M.,
 & Olness, F. I. (2018). PDFSense: Mapping the sensitivity of
 hadronic experiments to nucleon structure.
-Retrieved from \url{http://arxiv.org/abs/1808.07470}
+Retrieved from \url{https://arxiv.org/abs/1808.07470}
 
 Cook, D., Laa, U., & Valencia, G. (2018).
 Dynamical projections for the visualization of PDFSense data.
 The European Physical Journal C, 78(9), 742.
-\url{https://doi.org/10.1140/epjc/s10052-018-6205-2}
+\doi{10.1140/epjc/s10052-018-6205-2}
 }
 \keyword{datasets}

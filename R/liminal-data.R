@@ -28,15 +28,15 @@
 #' Wang, B.-T., Hobbs, T. J., Doyle, S., Gao, J., Hou, T.-J., Nadolsky, P. M.,
 #' & Olness, F. I. (2018). PDFSense: Mapping the sensitivity of
 #' hadronic experiments to nucleon structure.
-#' Retrieved from [http://arxiv.org/abs/1808.07470](http://arxiv.org/abs/1808.07470)
+#' Retrieved from [https://arxiv.org/abs/1808.07470](https://arxiv.org/abs/1808.07470)
 #'
 #' Cook, D., Laa, U., & Valencia, G. (2018).
 #' Dynamical projections for the visualization of PDFSense data.
 #' The European Physical Journal C, 78(9), 742.
-#' [https://doi.org/10.1140/epjc/s10052-018-6205-2](https://doi.org/10.1140/epjc/s10052-018-6205-2)
+#' \doi{10.1140/epjc/s10052-018-6205-2}
 #'
 #'
-#' @source [http://www.physics.smu.edu/botingw/PDFsense_web_histlogy](http://www.physics.smu.edu/botingw/PDFsense_web_histlogy)
+#' @source [http://www.physics.smu.edu/botingw/PDFsense_web_histlogy/](http://www.physics.smu.edu/botingw/PDFsense_web_histlogy/)
 "pdfsense"
 
 #' A high-dimensional tree data structure with 10 branching points.
