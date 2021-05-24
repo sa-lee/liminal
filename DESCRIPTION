@@ -1,11 +1,11 @@
 Package: liminal
 Type: Package
 Title: Multivariate Data Visualization With Tours and Embeddings
-Version: 0.0.8.9999
+Version: 0.0.9.9999
 Authors@R: person(given = "Stuart", 
                   family = "Lee",
                   role = c("aut", "cre"),
-                  email = "stuart.lee1@monash.edu")
+                  email = "stuart.a.lee@monash.edu")
 Description: Compose interactive visualisations designed for exploratory 
         high-dimensional data analysis. With liminal you can combine tours with 
         (non-linear) dimension reduction algorithms to provide a more holistic 
@@ -29,7 +29,6 @@ Suggests:
     Rtsne,
     knitr,
     rmarkdown,
-    uwot,
     covr,
     ggplot2,
     testthat
