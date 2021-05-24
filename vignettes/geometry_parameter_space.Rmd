@@ -1,5 +1,5 @@
 ---
-title: "pdfsense: or understanding high dimensional parameter space"
+title: "Using liminal to understand high dimensional parameter space"
 bibliography: pdfsense.bib
 ---
 
