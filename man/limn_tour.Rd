@@ -80,7 +80,6 @@ limn_tour(fake_trees, dim1:dim10)
 # perform the same action but now coloring points
 limn_tour(fake_trees, dim1:dim10, color = branches)
 }
-
 }
 \seealso{
 \code{\link[=compute_half_range]{compute_half_range()}}, \code{\link[=morph_center]{morph_center()}}, \code{\link[=limn_tour_link]{limn_tour_link()}}

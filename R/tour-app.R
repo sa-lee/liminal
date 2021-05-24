@@ -55,8 +55,7 @@
 #' limn_tour(fake_trees, dim1:dim10)
 #' # perform the same action but now coloring points
 #' limn_tour(fake_trees, dim1:dim10, color = branches)
-#' }
-#'
+#'}
 #' @export
 limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour(), rescale = clamp, morph = "center") {
   cols <- rlang::enquo(cols)

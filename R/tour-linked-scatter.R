@@ -44,26 +44,25 @@
 #' # tour the first ten columns of the fake tree data and link to the
 #' # another layout based on t-SNE
 #' # loads the default interface
-#' tsne <- Rtsne::Rtsne(dplyr::select(fake_trees, dplyr::starts_with("dim")))
-#' tsne_df <- data.frame(tsneX = tsne$Y[, 1], tsneY = tsne$Y[, 2])
-#' limn_tour_link(
-#'   tsne_df,
-#'   dplyr::select(fake_trees, dim1:dim10, branches),
-#'   color = branches,
-#' )
-#' # assigning to an object will return a list of artefacts after clicking
-#' # done on the tourr
-#' res <- limn_tour_link(
-#'   tsne_df,
-#'   dplyr::select(fake_trees, dim1:dim10, branches),
-#'   color = branches,
-#' )
+#' if (requireNamespace("Rtsne", quietly = TRUE)) {
+#'   set.seed(2020)
+#'   tsne <- Rtsne::Rtsne(dplyr::select(fake_trees, dplyr::starts_with("dim")))
+#'   tsne_df <- data.frame(tsneX = tsne$Y[, 1], tsneY = tsne$Y[, 2])
+#'   limn_tour_link(
+#'     tsne_df,
+#'     fake_trees,
+#'     cols = dim1:dim10,
+#'     color = branches
+#'   )
+#'   # assigning to an object will return a list of artefacts after clicking
+#'   # done in the upper right hand corner
+#'   res <- limn_tour_link(tsne_df, fake_trees, cols = dim1:dim10, color = branches)
 #' }
-#'
+#' }
 #' @export
 limn_tour_link <- function(embed_data,
                            tour_data,
-                           cols,
+                           cols = NULL,
                            color = NULL,
                            tour_path = tourr::grand_tour(),
                            rescale = clamp,
@@ -86,11 +85,17 @@ limn_tour_link <- function(embed_data,
     color_data <- try(dplyr::select(tour_data, !!color), silent = TRUE)
     # column not found...
     if (inherits(color_data, "try-error")) {
-      # try embed data, if not there through an error
+      # try embed data, if not there throw an error
       color_data <- dplyr::select(embed_data, !!color)
     }
   } else {
     color_data <- NULL
+  }
+
+  if (rlang::quo_is_null(cols)) {
+    message("Touring all columns provided in `tour_data`")
+    # remove color column if present
+    cols <- rlang::syms(setdiff(names(tour_data), names(color_data)))
   }
 
   # generate tour data
