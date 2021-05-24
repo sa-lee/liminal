@@ -13,3 +13,4 @@ Makefile
 ^data-raw$
 ^codecov\.yml$
 ^vignettes/articles$
+^cran-comments\.md$
