@@ -35,7 +35,7 @@ by the median absolute deviation.
 }
 }
 \examples{
-mv <- matrix(rnorm(300), ncol = 3)
+mv <- matrix(rnorm(30), ncol = 3)
 
 clamp(mv)
 
