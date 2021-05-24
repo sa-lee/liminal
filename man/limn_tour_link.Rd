@@ -75,23 +75,23 @@ reset double click the legend title.
 }
 }
 \examples{
-\dontrun{
-# tour the first ten columns of the fake tree data and link to the
-# another layout based on t-SNE
-# loads the default interface
-if (requireNamespace("Rtsne", quietly = TRUE)) {
-  set.seed(2020)
-  tsne <- Rtsne::Rtsne(dplyr::select(fake_trees, dplyr::starts_with("dim")))
-  tsne_df <- data.frame(tsneX = tsne$Y[, 1], tsneY = tsne$Y[, 2])
-  limn_tour_link(
-    tsne_df,
-    fake_trees,
-    cols = dim1:dim10,
-    color = branches
-  )
-  # assigning to an object will return a list of artefacts after clicking
-  # done in the upper right hand corner
-  res <- limn_tour_link(tsne_df, fake_trees, cols = dim1:dim10, color = branches)
-}
+if (interactive()) {
+  # tour the first ten columns of the fake tree data and link to the
+  # another layout based on t-SNE
+  # loads the default interface
+  if (requireNamespace("Rtsne", quietly = TRUE)) {
+    set.seed(2020)
+    tsne <- Rtsne::Rtsne(dplyr::select(fake_trees, dplyr::starts_with("dim")))
+    tsne_df <- data.frame(tsneX = tsne$Y[, 1], tsneY = tsne$Y[, 2])
+    limn_tour_link(
+      tsne_df,
+      fake_trees,
+      cols = dim1:dim10,
+      color = branches
+    )
+    # assigning to an object will return a list of artefacts after clicking
+    # done in the upper right hand corner
+    res <- limn_tour_link(tsne_df, fake_trees, cols = dim1:dim10, color = branches)
+  }
 }
 }

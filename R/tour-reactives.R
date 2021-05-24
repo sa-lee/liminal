@@ -1,6 +1,7 @@
-# Reactives for a given tour path
+# Reactives for manipulationg a given tour path
 
 #' @importFrom shiny reactive invalidateLater
+#' @noRd
 rct_half_range <- function(rct_zoom, half_range) {
   shiny::reactive({
     res <- rct_zoom()

@@ -1,6 +1,11 @@
 # --- Alternative implementations of tourr package internals ---
 #' Compute Frobenius norm of matrix-like objects x and y
 #' @param x,y 'matrix' like objects that have `tcrossprod` methods
+#'
+#' @examples
+#' x <- matrix(rnorm(300), ncol = 3)
+#' y <- matrix(rnorm(300), ncol = 3)
+#' compute_proj_dist(x,y)
 #' @export
 compute_proj_dist <- function(x, y) {
   sqrt(sum((tcrossprod(x) - tcrossprod(y))^2))

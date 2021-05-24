@@ -16,7 +16,7 @@ RStudio Viewer pane or from a web-browser using \code{shiny}.
 \details{
 There are two main functions for generating tour interfaces:
 \itemize{
-\item The basic tour scatter via \code{\link[=limn_tour]{limn_tour()}}
+\item The basic tour animation via \code{\link[=limn_tour]{limn_tour()}}
 \item Linking tours to another view \code{\link[=limn_tour_link]{limn_tour_link()}}
 }
 

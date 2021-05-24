@@ -50,12 +50,12 @@
 #'
 #' @seealso [compute_half_range()], [morph_center()], [limn_tour_link()]
 #' @examples
-#' \dontrun{
-#' # tour the first ten columns of the fake tree data
-#' # loads the default interface
-#' limn_tour(fake_trees, dim1:dim10)
-#' # perform the same action but now coloring points
-#' limn_tour(fake_trees, dim1:dim10, color = branches)
+#' if (interactive()) {
+#'   # tour the first ten columns of the fake tree data
+#'   # loads the default interface
+#'   limn_tour(fake_trees, dim1:dim10)
+#'   # perform the same action but now coloring points
+#'   limn_tour(fake_trees, dim1:dim10, color = branches)
 #' }
 #' @export
 limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour(), rescale = clamp, morph = "center") {

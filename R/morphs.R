@@ -5,6 +5,13 @@
 #' @param p_eff  Effective dimensionality of reference data set.
 #'
 #' @export
+#' @examples
+#' proj <- matrix(rnorm(20), ncol = 2)
+#' half_range <- compute_half_range(proj)
+#' morph_center(proj, half_range)
+#' morph_identity(proj, half_range)
+#' morph_radial(proj, half_range, p_eff = 2)
+#'
 #' @rdname morphs
 morph_center <- function(proj, half_range) {
   scale(proj, scale = FALSE) / half_range

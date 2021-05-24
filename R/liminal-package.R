@@ -8,7 +8,7 @@
 #' RStudio Viewer pane or from a web-browser using `shiny`.
 #'
 #' There are two main functions for generating tour interfaces:
-#'   * The basic tour scatter via [limn_tour()]
+#'   * The basic tour animation via [limn_tour()]
 #'   * Linking tours to another view [limn_tour_link()]
 #'
 #' For more details on the features and usage of liminal, see the vignettes:

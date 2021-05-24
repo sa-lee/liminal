@@ -74,12 +74,12 @@ If the tour animation a brush event will pause it.
 }
 }
 \examples{
-\dontrun{
-# tour the first ten columns of the fake tree data
-# loads the default interface
-limn_tour(fake_trees, dim1:dim10)
-# perform the same action but now coloring points
-limn_tour(fake_trees, dim1:dim10, color = branches)
+if (interactive()) {
+  # tour the first ten columns of the fake tree data
+  # loads the default interface
+  limn_tour(fake_trees, dim1:dim10)
+  # perform the same action but now coloring points
+  limn_tour(fake_trees, dim1:dim10, color = branches)
 }
 }
 \seealso{
