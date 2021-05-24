@@ -23,6 +23,15 @@ There are two main functions for generating tour interfaces:
 For more details on the features and usage of liminal, see the vignettes:
 \code{browseVignettes(package = "liminal")}
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/sa-lee/liminal}
+  \item \url{https://sa-lee.github.io/liminal}
+  \item Report bugs at \url{https://github.com/sa-lee/liminal/issues/}
+}
+
+}
 \author{
 \strong{Maintainer}: Stuart Lee \email{stuart.a.lee@monash.edu} (\href{https://orcid.org/0000-0003-1179-8436}{ORCID}) [copyright holder]
 

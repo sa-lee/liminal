@@ -14,6 +14,8 @@ Description: Compose interactive visualisations designed for exploratory
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+URL: https://github.com/sa-lee/liminal, https://sa-lee.github.io/liminal
+BugReports: https://github.com/sa-lee/liminal/issues/
 Depends: R (>= 3.6.0)
 Imports: 
     tourr (>= 0.6.0),
