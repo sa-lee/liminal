@@ -2,6 +2,7 @@
 title: "Explore embeddings with liminal!"
 author: "Stuart Lee"
 output: rmarkdown::html_vignette
+link-citations: yes
 bibliography: liminal.bib
 vignette: >
   %\VignetteIndexEntry{liminal}
