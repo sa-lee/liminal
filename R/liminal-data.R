@@ -55,14 +55,26 @@
 
 #' liminal color palettes
 #'
-#' @details Vectors of colors based of the schemes available in Vega-Lite.
-#' Their main purpose is so you can use these palettes in `ggplot2` graphics.
+#' @details Vectors of colors based on the schemes available in Vega-Lite.
+#' Their main purpose is so you can use these palettes in `ggplot2` graphics,
+#' so that graphs align with the [limn_tour()] functions.
 #'
-#' @return A character vector of hex color codes
+#' @return A character vector of hex color codes of length 10 or 20.
 #'
 #' @seealso https://vega.github.io/vega/docs/schemes/
 #'
 #' @rdname palettes
+#' @examples
+#' if (requireNamespace("ggplot2", quietly = TRUE)) {
+#'   library(ggplot2)
+#'   ggplot(fake_trees, aes(x = dim1, y = dim2, color = branches)) +
+#'     geom_point() +
+#'     scale_color_manual(values = limn_pal_tableau10())
+#'
+#'   ggplot(fake_trees, aes(x = dim1, y = dim2, color = branches)) +
+#'     geom_point() +
+#'     scale_color_manual(values = limn_pal_tableau20())
+#' }
 #' @export
 limn_pal_tableau10 <- function() {
   c(
