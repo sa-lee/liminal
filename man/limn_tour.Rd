@@ -41,7 +41,8 @@ the tour and and highlighting subsets of interest, you can click the
 'Done' button. This will return a named list with two elements:
 \itemize{
 \item \code{selected_basis}: a matrix consisting of the final projection selected
-\item \code{selected_brush}: a matrix consisting of the bounding box of brush
+\item \code{tour_brush_box}: a list consisting of the bounding box of brush
+\item \code{tour_half_range}: the current value of half range parameter
 }
 }
 \description{

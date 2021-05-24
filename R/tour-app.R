@@ -21,7 +21,8 @@
 #' 'Done' button. This will return a named list with two elements:
 #'
 #'  * `selected_basis`: a matrix consisting of the final projection selected
-#'  * `selected_brush`: a matrix consisting of the bounding box of brush
+#'  * `tour_brush_box`: a list consisting of the bounding box of brush
+#'  * `tour_half_range`: the current value of half range parameter
 #'
 #' @details
 #' The tour interface consists of two views:
@@ -68,7 +69,7 @@ limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour()
   morph_projection <- generate_morph(morph, p_eff = ncol(tour_data))
   # generate app
   server <- limn_tour_server(tour_data, tour_path, color_data, morph_projection)
-  ui <- gadget_tour_ui()
+  ui <- gadget_tour_ui(linked = FALSE, axis = TRUE)
   app <- shinyApp(ui, server)
   runGadget(app)
 }
@@ -158,22 +159,33 @@ limn_tour_server <- function(tour_data, tour_path, color_tbl, morph) {
       selections$force_restart <- TRUE
     })
 
+    observeEvent(input$help, {
+      showModal(modalDialog(
+        title = "Guide to liminal controls",
+        h5("Brushing"),
+        p("shift + mouse drag: creates rectangular brush and pauses the tour animation."),
+        h5("Highlighting"),
+        p("double click on group in legend: highlights points in group"),
+        p("shift + double click on group in legend: highlights points in another group"),
+        p("double click outside of legend: resets selections"),
+        h5("Zooming"),
+        p("mouse wheel or scroll: pan and zoom on the tour animation"),
+        easyClose = TRUE
+      ))
+    })
+
     # When the Done button is clicked, return a value
     observeEvent(input$done, {
       tour_artefacts <- list(
         selected_basis = selections$proj,
-        tour_brush_box = rct_active_brush()
+        tour_brush_box = rct_active_brush(),
+        tour_half_range = rct_half_range()
       )
       stopApp(tour_artefacts)
     })
 
-
     observe({
       rct_tour()
-    })
-
-    output$half_range <- shiny::renderText({
-      paste("Tour with half-range:", round(rct_half_range(), 3))
     })
   }
 }

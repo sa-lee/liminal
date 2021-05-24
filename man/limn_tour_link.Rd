@@ -38,11 +38,19 @@ for details for each of these functions.}
 \value{
 After pressing the Done button on the interface, a list of artefacts
 is returned to the R session.
+\itemize{
+\item \code{selected_basis}: A matrix of the current projection
+\item \code{tour_brush_box}: A list containing the bounding box of the  tour brush
+\item \code{embed_brush_box}: A list containing the bounding box of the embed brush
+\item \code{tour_half_range}: The current value of the half range
+}
 }
 \description{
 Link a 2-d embedding with a tour
 }
 \details{
+All controls for the app can be obtained by clicking on the help button,
+in the bottom panel. More details are described beloww
 \enumerate{
 \item The tour view on the left is a dynamic and interactive scatterplot. Brushing on the tour view
 is activated with the shift key plus a mouse drag. By default it will
@@ -56,7 +64,7 @@ There are several other user controls available:
 }
 \itemize{
 \item There is a play button, that when pressed will start the tour.
-\item There is also a text view of the half range which is the maximum squared
+\item The half range which is the maximum squared
 Euclidean distance between points in the tour view. The half range
 is a scale factor for projections and can be thought of as a way
 of zooming in and out on points. It can be dynamically modified by scrolling
@@ -64,9 +72,6 @@ of zooming in and out on points. It can be dynamically modified by scrolling
 \item The legend can be toggled to highlight groups of points with
 shift+mouse-click. Multiple groups can be selected in this way. To
 reset double click the legend title.
-\item There are different brushing modes that can be modified via
-radio buttons. Both neighbors and distance based brushing operate
-on the k-NN graph obtained from the control panel.
 }
 }
 \examples{

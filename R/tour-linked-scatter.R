@@ -15,6 +15,8 @@
 #' for details for each of these functions.
 #'
 #' @details
+#' All controls for the app can be obtained by clicking on the help button,
+#' in the bottom panel. More details are described beloww
 #'  1. The tour view on the left is a dynamic and interactive scatterplot. Brushing on the tour view
 #'  is activated with the shift key plus a mouse drag. By default it will
 #'  highlight corresponding points in the xy view and pause the animation.
@@ -25,7 +27,7 @@
 #'  basis vectors being generated.
 #' There are several other user controls available:
 #'  * There is a play button, that when pressed will start the tour.
-#'  * There is also a text view of the half range which is the maximum squared
+#'  * The half range which is the maximum squared
 #'    Euclidean distance between points in the tour view. The half range
 #'    is a scale factor for projections and can be thought of as a way
 #'    of zooming in and out on points. It can be dynamically modified by scrolling
@@ -33,11 +35,13 @@
 #'  * The legend can be toggled to highlight groups of points with
 #'    shift+mouse-click. Multiple groups can be selected in this way. To
 #'    reset double click the legend title.
-#'  * There are different brushing modes that can be modified via
-#'    radio buttons. Both neighbors and distance based brushing operate
-#'    on the k-NN graph obtained from the control panel.
 #' @return After pressing the Done button on the interface, a list of artefacts
 #' is returned to the R session.
+#'
+#' * `selected_basis`: A matrix of the current projection
+#' * `tour_brush_box`: A list containing the bounding box of the  tour brush
+#' * `embed_brush_box`: A list containing the bounding box of the embed brush
+#' * `tour_half_range`: The current value of the half range
 #'
 #' @examples
 #' \dontrun{
@@ -104,7 +108,7 @@ limn_tour_link <- function(embed_data,
   morph_projection <- generate_morph(morph, p_eff = ncol(tour_matrix))
 
   # generate app
-  ui <- gadget_linked_ui()
+  ui <- gadget_tour_ui(linked = TRUE, axis = FALSE)
 
   server <- limn_tour_linked_server(
     tour_matrix,
@@ -200,22 +204,37 @@ limn_tour_linked_server <- function(tour_data, tour_path, color_data, morph,
       selections$force_restart <- TRUE
     })
 
+    observeEvent(input$help, {
+      selections$do_tour <- FALSE
+      showModal(modalDialog(
+        title = "Guide to liminal controls",
+        h5("Brushing"),
+        p("mouse drag on left hand side: creates rectangular brush on emedding view"),
+        p("shift + mouse drag on right hand side: creates rectangular brush and pauses the tour animation."),
+        h5("Highlighting"),
+        p("double click on group in legend: highlights points in group"),
+        p("shift + double click on group in legend: highlights points in another group"),
+        p("double click outside of legend: resets selections"),
+        h5("Zooming"),
+        p("mouse wheel or scroll on right hand side: pan and zoom on the tour animation"),
+        easyClose = TRUE
+      ))
+
+    })
+
     # When the Done button is clicked, return a value
     observeEvent(input$done, {
       tour_artefacts <- list(
         selected_basis = selections$proj,
         tour_brush_box = rct_active_brush(),
-        embed_brush_box = rct_embed_brush()
+        embed_brush_box = rct_embed_brush(),
+        tour_half_range = rct_half_range()
       )
       stopApp(tour_artefacts)
     })
 
     observe({
       rct_tour()
-    })
-
-    output$half_range <- renderText({
-      paste("Tour with half-range:", round(rct_half_range(), 3))
     })
   }
 }
