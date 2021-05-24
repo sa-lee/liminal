@@ -3,3 +3,23 @@ template:
     bootswatch: journal
 
 destination: docs
+
+authors:
+  Stuart Lee:
+    href: https://stuartlee.org
+
+reference:
+- title: "Tour high-dimensional space"
+  desc: "Identify global and local structures"
+  - starts_with("limn_tour")
+- title: "Datasets"
+  - fake_trees
+  - pdfsense
+- title: "Modifying and manipulating projections and data matrices"
+  - starts_with("clamp")
+  - starts_with("morph")
+  - starts_with("compute")
+- title: "Colors"
+  - starts_with("limn_pal")
+
+
