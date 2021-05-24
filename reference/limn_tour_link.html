@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">liminal</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.8.9999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9.9999</span>
       </span>
     </div>
 
@@ -133,7 +133,7 @@
     <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>limn_tour_link</span><span class='op'>(</span>
   <span class='va'>embed_data</span>,
   <span class='va'>tour_data</span>,
-  <span class='va'>cols</span>,
+  cols <span class='op'>=</span> <span class='cn'>NULL</span>,
   color <span class='op'>=</span> <span class='cn'>NULL</span>,
   tour_path <span class='op'>=</span> <span class='fu'>tourr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/tourr/man/grand_tour.html'>grand_tour</a></span><span class='op'>(</span><span class='op'>)</span>,
   rescale <span class='op'>=</span> <span class='va'>clamp</span>,
@@ -218,22 +218,21 @@ on the k-NN graph obtained from the control panel.</p></li>
 <span class='r-in'><span class='co'># tour the first ten columns of the fake tree data and link to the</span></span>
 <span class='r-in'><span class='co'># another layout based on t-SNE</span></span>
 <span class='r-in'><span class='co'># loads the default interface</span></span>
-<span class='r-in'><span class='va'>tsne</span> <span class='op'>&lt;-</span> <span class='fu'>Rtsne</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/Rtsne/man/Rtsne.html'>Rtsne</a></span><span class='op'>(</span><span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>fake_trees</span>, <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://tidyselect.r-lib.org/reference/starts_with.html'>starts_with</a></span><span class='op'>(</span><span class='st'>"dim"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span>
-<span class='r-in'><span class='va'>tsne_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>tsneX <span class='op'>=</span> <span class='va'>tsne</span><span class='op'>$</span><span class='va'>Y</span><span class='op'>[</span>, <span class='fl'>1</span><span class='op'>]</span>, tsneY <span class='op'>=</span> <span class='va'>tsne</span><span class='op'>$</span><span class='va'>Y</span><span class='op'>[</span>, <span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span></span>
-<span class='r-in'><span class='fu'>limn_tour_link</span><span class='op'>(</span></span>
-<span class='r-in'>  <span class='va'>tsne_df</span>,</span>
-<span class='r-in'>  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>fake_trees</span>, <span class='va'>dim1</span><span class='op'>:</span><span class='va'>dim10</span>, <span class='va'>branches</span><span class='op'>)</span>,</span>
-<span class='r-in'>  color <span class='op'>=</span> <span class='va'>branches</span>,</span>
-<span class='r-in'><span class='op'>)</span></span>
-<span class='r-in'><span class='co'># assigning to an object will return a list of artefacts after clicking</span></span>
-<span class='r-in'><span class='co'># done on the tourr</span></span>
-<span class='r-in'><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>limn_tour_link</span><span class='op'>(</span></span>
-<span class='r-in'>  <span class='va'>tsne_df</span>,</span>
-<span class='r-in'>  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>fake_trees</span>, <span class='va'>dim1</span><span class='op'>:</span><span class='va'>dim10</span>, <span class='va'>branches</span><span class='op'>)</span>,</span>
-<span class='r-in'>  color <span class='op'>=</span> <span class='va'>branches</span>,</span>
-<span class='r-in'><span class='op'>)</span></span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/ns-load.html'>requireNamespace</a></span><span class='op'>(</span><span class='st'>"Rtsne"</span>, quietly <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2020</span><span class='op'>)</span></span>
+<span class='r-in'>  <span class='va'>tsne</span> <span class='op'>&lt;-</span> <span class='fu'>Rtsne</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/Rtsne/man/Rtsne.html'>Rtsne</a></span><span class='op'>(</span><span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>fake_trees</span>, <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://tidyselect.r-lib.org/reference/starts_with.html'>starts_with</a></span><span class='op'>(</span><span class='st'>"dim"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'>  <span class='va'>tsne_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>tsneX <span class='op'>=</span> <span class='va'>tsne</span><span class='op'>$</span><span class='va'>Y</span><span class='op'>[</span>, <span class='fl'>1</span><span class='op'>]</span>, tsneY <span class='op'>=</span> <span class='va'>tsne</span><span class='op'>$</span><span class='va'>Y</span><span class='op'>[</span>, <span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span></span>
+<span class='r-in'>  <span class='fu'>limn_tour_link</span><span class='op'>(</span></span>
+<span class='r-in'>    <span class='va'>tsne_df</span>,</span>
+<span class='r-in'>    <span class='va'>fake_trees</span>,</span>
+<span class='r-in'>    cols <span class='op'>=</span> <span class='va'>dim1</span><span class='op'>:</span><span class='va'>dim10</span>,</span>
+<span class='r-in'>    color <span class='op'>=</span> <span class='va'>branches</span></span>
+<span class='r-in'>  <span class='op'>)</span></span>
+<span class='r-in'>  <span class='co'># assigning to an object will return a list of artefacts after clicking</span></span>
+<span class='r-in'>  <span class='co'># done in the upper right hand corner</span></span>
+<span class='r-in'>  <span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>limn_tour_link</span><span class='op'>(</span><span class='va'>tsne_df</span>, <span class='va'>fake_trees</span>, cols <span class='op'>=</span> <span class='va'>dim1</span><span class='op'>:</span><span class='va'>dim10</span>, color <span class='op'>=</span> <span class='va'>branches</span><span class='op'>)</span></span>
 <span class='r-in'><span class='op'>}</span></span>
-<span class='r-in'></span>
+<span class='r-in'><span class='op'>}</span></span>
 </code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
