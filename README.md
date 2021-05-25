@@ -32,8 +32,8 @@ different parameterisations warps the underlying high-dimensional space.
 See the [liminal
 vignette](https://sa-lee.github.io/liminal/articles/liminal.html) for
 details of package usage and our [arXiv
-preprint](https://arxiv.org/abs/2012.06077/) for a complete discussion
-on how to apply **liminal** to real data analysis workflows like
+preprint](https://arxiv.org/abs/2012.06077) for a complete discussion on
+how to apply **liminal** to real data analysis workflows like
 clustering.
 
 ## Quick Start
