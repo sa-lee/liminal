@@ -17,15 +17,17 @@ of a dataset. These are designed for data analysts first, so they render
 either inside the RStudio Viewer pane or from a web-browser using
 **shiny**.
 
-There are two main functions for generating tour interfaces: \* The
-basic tour animation via \[limn\_tour()\] \* Linking tours to another
-view \[limn\_tour\_link()\]
+There are two main functions for generating tour interfaces:
+
+-   The basic tour animation via `limn_tour()`
+-   Linking tours to another view `limn_tour_link()`
 
 The goal of **liminal** is to provide complementary visualisations for
 use with understanding embedding algorithms such as tSNE. It has been
 [shown](https://distill.pub/2016/misread-tsne/) that in order to produce
 an ‘effective’ embedding one may have to play with hyperparamters and
-various settings for these algorithms.
+various settings for these algorithms. **liminal** allows you to see how
+different parameterisations warps the underlying high-dimensional space.
 
 See the [liminal
 vignette](https://sa-lee.github.io/liminal/articles/liminal.html) for
