@@ -33,7 +33,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Stuart Lee \email{stuart.a.lee@monash.edu} (\href{https://orcid.org/0000-0003-1179-8436}{ORCID}) [copyright holder]
+\strong{Maintainer}: Stuart Lee \email{stuart.andrew.lee@gmail.com} (\href{https://orcid.org/0000-0003-1179-8436}{ORCID}) [copyright holder]
 
 }
 \keyword{internal}

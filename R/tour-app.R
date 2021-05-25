@@ -1,9 +1,9 @@
 #' Tour a high dimensional dataset
 #'
-#' @param .data a data.frame to tour
+#' @param tour_data a data.frame to tour
 #' @param cols Columns to tour. This can use a tidyselect specification
 #' such as [tidyselect::starts_with()].
-#' @param color A variable name in `.data`, mapping to the color aesthetic, if
+#' @param color A variable mapping to the color aesthetic, if
 #' NULL points will be colored black.
 #' @param tour_path the tour path to take, the default is [tourr::grand_tour()]
 #' but also works with [tourr::guided_tour()].
@@ -14,6 +14,10 @@
 #' that rescales each projection along the tour path. The default
 #' is to center the projections and divide by half range. See [morph_center()]
 #' for details.
+#' @param gadget_mode Run the app as a [shiny::runGadget()] which will load
+#' the app in the RStudio Viewer pane or a browser (default = TRUE). If FALSE
+#' will return a regular shiny app object that could be used to deploy the app
+#' elsewhere.
 #'
 #' @return The tour interface loads a shiny app either in the Viewer pane
 #' if you are using Rstudio or in a browser window. After iterating through
@@ -58,19 +62,20 @@
 #'   limn_tour(fake_trees, dim1:dim10, color = branches)
 #' }
 #' @export
-limn_tour <- function(.data, cols, color = NULL, tour_path = tourr::grand_tour(), rescale = clamp, morph = "center") {
+limn_tour <- function(tour_data, cols, color = NULL, tour_path = tourr::grand_tour(), rescale = clamp, morph = "center", gadget_mode = TRUE) {
   cols <- rlang::enquo(cols)
   color <- rlang::enquo(color)
   # setup colors
-  color_data <- dplyr::select(.data, !!color)
+  color_data <- dplyr::select(tour_data, !!color)
   # set up tour matrix
-  tour_data <- generate_tour_matrix(.data, cols, rescale = rescale)
+  tour_data <- generate_tour_matrix(tour_data, cols, rescale = rescale)
   # set up transformation function
   morph_projection <- generate_morph(morph, p_eff = ncol(tour_data))
   # generate app
   server <- limn_tour_server(tour_data, tour_path, color_data, morph_projection)
   ui <- gadget_tour_ui(linked = FALSE, axis = TRUE)
   app <- shinyApp(ui, server)
+  if (!gadget_mode) return(app)
   runGadget(app)
 }
 

@@ -11,29 +11,37 @@ limn_tour_link(
   color = NULL,
   tour_path = tourr::grand_tour(),
   rescale = clamp,
-  morph = "center"
+  morph = "center",
+  gadget_mode = TRUE
 )
 }
 \arguments{
 \item{embed_data}{A \code{data.frame} representing embedding coordinates}
 
-\item{tour_data}{A \code{data.frame} that is linked to \code{embed_data} to tour}
+\item{tour_data}{a data.frame to tour}
 
-\item{cols}{Columns in \code{tour_data} to tour. This can use a \code{tidyselect} specification
+\item{cols}{Columns to tour. This can use a tidyselect specification
 such as \code{\link[tidyselect:starts_with]{tidyselect::starts_with()}}.}
 
-\item{color}{An optional bare column name in either \code{embed_data} or \code{tour_data} for color
-mapping the points in the views. If NULL points will be colored black.}
+\item{color}{A variable mapping to the color aesthetic, if
+NULL points will be colored black.}
 
-\item{tour_path}{the tour path to take, the default is \code{\link[tourr:grand_tour]{tourr::grand_tour()}}.}
+\item{tour_path}{the tour path to take, the default is \code{\link[tourr:grand_tour]{tourr::grand_tour()}}
+but also works with \code{\link[tourr:guided_tour]{tourr::guided_tour()}}.}
 
-\item{rescale}{A function that rescales tour columns. Default is \code{\link[=clamp]{clamp()}}
-To not perform any scaling use \code{\link[=identity]{identity()}}.}
+\item{rescale}{A function that rescales \code{cols}, the default is to
+\code{\link[=clamp]{clamp()}} the data to lie in the hyperdimensional unit cube. To not perform
+any scaling use \code{\link[=identity]{identity()}}.}
 
 \item{morph}{One of \code{c("center", "centre", "identity", "radial")}
 that rescales each projection along the tour path. The default
 is to center the projections and divide by half range. See \code{\link[=morph_center]{morph_center()}}
-for details for each of these functions.}
+for details.}
+
+\item{gadget_mode}{Run the app as a \code{\link[shiny:runGadget]{shiny::runGadget()}} which will load
+the app in the RStudio Viewer pane or a browser (default = TRUE). If FALSE
+will return a regular shiny app object that could be used to deploy the app
+elsewhere.}
 }
 \value{
 After pressing the Done button on the interface, a list of artefacts

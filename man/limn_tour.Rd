@@ -5,21 +5,22 @@
 \title{Tour a high dimensional dataset}
 \usage{
 limn_tour(
-  .data,
+  tour_data,
   cols,
   color = NULL,
   tour_path = tourr::grand_tour(),
   rescale = clamp,
-  morph = "center"
+  morph = "center",
+  gadget_mode = TRUE
 )
 }
 \arguments{
-\item{.data}{a data.frame to tour}
+\item{tour_data}{a data.frame to tour}
 
 \item{cols}{Columns to tour. This can use a tidyselect specification
 such as \code{\link[tidyselect:starts_with]{tidyselect::starts_with()}}.}
 
-\item{color}{A variable name in \code{.data}, mapping to the color aesthetic, if
+\item{color}{A variable mapping to the color aesthetic, if
 NULL points will be colored black.}
 
 \item{tour_path}{the tour path to take, the default is \code{\link[tourr:grand_tour]{tourr::grand_tour()}}
@@ -33,6 +34,11 @@ any scaling use \code{\link[=identity]{identity()}}.}
 that rescales each projection along the tour path. The default
 is to center the projections and divide by half range. See \code{\link[=morph_center]{morph_center()}}
 for details.}
+
+\item{gadget_mode}{Run the app as a \code{\link[shiny:runGadget]{shiny::runGadget()}} which will load
+the app in the RStudio Viewer pane or a browser (default = TRUE). If FALSE
+will return a regular shiny app object that could be used to deploy the app
+elsewhere.}
 }
 \value{
 The tour interface loads a shiny app either in the Viewer pane

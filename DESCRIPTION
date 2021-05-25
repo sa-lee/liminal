@@ -5,7 +5,7 @@ Version: 0.0.9.9999
 Authors@R: person(given = "Stuart", 
                   family = "Lee",
                   role = c("aut", "cre", "cph"),
-                  email = "stuart.a.lee@monash.edu",
+                  email = "stuart.andrew.lee@gmail.com",
                   comment = c(ORCID = "0000-0003-1179-8436"))
 Description: Compose interactive visualisations designed for exploratory 
         high-dimensional data analysis. With liminal you can combine tours with 

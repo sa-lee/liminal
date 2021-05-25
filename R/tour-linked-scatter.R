@@ -1,18 +1,7 @@
 #' Link a 2-d embedding with a tour
 #'
 #' @param embed_data A `data.frame` representing embedding coordinates
-#' @param tour_data A `data.frame` that is linked to `embed_data` to tour
-#' @param cols Columns in `tour_data` to tour. This can use a `tidyselect` specification
-#' such as [tidyselect::starts_with()].
-#' @param color An optional bare column name in either `embed_data` or `tour_data` for color
-#' mapping the points in the views. If NULL points will be colored black.
-#' @param tour_path the tour path to take, the default is [tourr::grand_tour()].
-#' @param rescale A function that rescales tour columns. Default is [clamp()]
-#' To not perform any scaling use [identity()].
-#' @param morph One of `c("center", "centre", "identity", "radial")`
-#' that rescales each projection along the tour path. The default
-#' is to center the projections and divide by half range. See [morph_center()]
-#' for details for each of these functions.
+#' @inheritParams limn_tour
 #'
 #' @details
 #' All controls for the app can be obtained by clicking on the help button,
@@ -69,7 +58,8 @@ limn_tour_link <- function(embed_data,
                            color = NULL,
                            tour_path = tourr::grand_tour(),
                            rescale = clamp,
-                           morph = "center") {
+                           morph = "center",
+                           gadget_mode = TRUE) {
   if (!identical(nrow(tour_data), nrow(embed_data))) {
     stop("tour_data and embed_data should have same number of rows")
   }
@@ -118,6 +108,8 @@ limn_tour_link <- function(embed_data,
   )
 
   app <- shinyApp(ui, server)
+  if (!gadget_mode) return(app)
+
   runGadget(app)
 }
 
