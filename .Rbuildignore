@@ -14,3 +14,4 @@ Makefile
 ^codecov\.yml$
 ^vignettes/articles$
 ^cran-comments\.md$
+^CRAN-RELEASE$
