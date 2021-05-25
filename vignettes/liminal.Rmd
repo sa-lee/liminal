@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 
 library(ggplot2)
 theme_set(theme_bw())
+library(liminal)
 ```
 
 The **liminal** R package is designed to help you understand and interrogate
@@ -52,6 +53,7 @@ First, let's generate principal components:
 
 ```{r pc-view}
 library(liminal)
+data("fake_trees")
 pcs  <- prcomp(fake_trees[, -ncol(fake_trees)])
 # var explained
 head(cumsum(pcs$sdev / sum(pcs$sdev)))

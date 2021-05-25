@@ -2,7 +2,7 @@
 title: "Using liminal to understand high dimensional parameter space"
 output: rmarkdown::html_vignette
 link-citations: yes
-bibliography: pdfsense.bib
+bibliography: liminal.bib
 vignette: >
   %\VignetteIndexEntry{geometry_parameter_space}
   %\VignetteEngine{knitr::rmarkdown}
