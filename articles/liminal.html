@@ -148,7 +148,7 @@
 <span class="op">)</span></code></pre></div>
 <p>This function requires two tables that will be linked together in separate views. The tour interface is the same as above, except now brushing on the tour view will highlight points on the right hand side scatter plot. The right hand side scatterplot view is an interactive scatterplot.<br>
 Brushing on the right view is activated via click and drag movements.</p>
-<p><img src="figures/limn_tour_basic.png" style="display: block; margin: auto;"></p>
+<p><img src="figures/limn_tour_linked.png" style="display: block; margin: auto;"></p>
 <p>We can see from brushing on the right, where t-SNE has broken up the global structure in the data and distorted the distance between points. For either interface, you can assign the results to an R object, that will return a list consisting of the selected basis (target) and the brushing bounding boxes.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/limn_tour_link.html">limn_tour_link</a></span><span class="op">(</span>embed_data <span class="op">=</span> <span class="va">tsne_df</span>,
