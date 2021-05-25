@@ -86,8 +86,14 @@
 <!-- badges: start -->
 
 <p><strong>liminal</strong> is an R package for constructing interactive visualisations designed for exploratory high-dimensional data analysis. It’s main purpose is to combine tours with (non-linear) dimension reduction algorithms to provide a more holistic view of the geometry and topology of a dataset. These are designed for data analysts first, so they render either inside the RStudio Viewer pane or from a web-browser using <strong>shiny</strong>.</p>
-<p>There are two main functions for generating tour interfaces: * The basic tour animation via [limn_tour()] * Linking tours to another view [limn_tour_link()]</p>
-<p>The goal of <strong>liminal</strong> is to provide complementary visualisations for use with understanding embedding algorithms such as tSNE. It has been <a href="https://distill.pub/2016/misread-tsne/" class="external-link">shown</a> that in order to produce an ‘effective’ embedding one may have to play with hyperparamters and various settings for these algorithms.</p>
+<p>There are two main functions for generating tour interfaces:</p>
+<ul>
+<li>The basic tour animation via <code><a href="reference/limn_tour.html">limn_tour()</a></code>
+</li>
+<li>Linking tours to another view <code><a href="reference/limn_tour_link.html">limn_tour_link()</a></code>
+</li>
+</ul>
+<p>The goal of <strong>liminal</strong> is to provide complementary visualisations for use with understanding embedding algorithms such as tSNE. It has been <a href="https://distill.pub/2016/misread-tsne/" class="external-link">shown</a> that in order to produce an ‘effective’ embedding one may have to play with hyperparamters and various settings for these algorithms. <strong>liminal</strong> allows you to see how different parameterisations warps the underlying high-dimensional space.</p>
 <p>See the <a href="https://sa-lee.github.io/liminal/articles/liminal.html" class="external-link">liminal vignette</a> for details of package usage.</p>
 <div id="quick-start" class="section level2">
 <h2 class="hasAnchor">
