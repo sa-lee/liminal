@@ -111,9 +111,6 @@ There are several additional interactions available on this view:
     shift+mouse-click. Multiple groups can be selected in this way. To
     reset double click the legend title.
 
-You can play with the app to exploring this  data [here]() if you would
-like to try it out without installing the package first. Please note that
-the liminal applications are optimised for view in the RStudio Viewer pane.
 
 
 
@@ -170,7 +167,6 @@ res <- limn_tour_link(embed_data = tsne_df,
 )
 ```
 
-You can play with the app to exploring this embedding and data [here]().
 
 # References {-}
 
