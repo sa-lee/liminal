@@ -9,12 +9,12 @@ Authors@R: person(given = "Stuart",
                   comment = c(ORCID = "0000-0003-1179-8436"))
 Description: Compose interactive visualisations designed for exploratory 
         high-dimensional data analysis. With liminal you can create linked
-        interactive grpahics to diagnose the quality of a dimension reduction
+        interactive graphics to diagnose the quality of a dimension reduction
         technique and explore the global structure of dataset.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/sa-lee/liminal, https://sa-lee.github.io/liminal
+URL: https://github.com/sa-lee/liminal/, https://sa-lee.github.io/liminal/
 BugReports: https://github.com/sa-lee/liminal/issues/
 Depends: R (>= 3.6.0)
 Imports: 
