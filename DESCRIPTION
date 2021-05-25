@@ -1,7 +1,7 @@
 Package: liminal
 Type: Package
 Title: Multivariate Data Visualization With Tours and Embeddings
-Version: 0.0.9.9999
+Version: 0.0.10.9999
 Authors@R: person(given = "Stuart", 
                   family = "Lee",
                   role = c("aut", "cre", "cph"),
