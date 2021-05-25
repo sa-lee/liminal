@@ -150,7 +150,7 @@ The right hand side scatterplot view is an interactive scatterplot.
 Brushing on the right view is activated via click and drag movements. 
 
 ```{r limn-interface, echo = FALSE, fig.align='center'}
-knitr::include_graphics("figures/limn_tour_basic.png")
+knitr::include_graphics("figures/limn_tour_linked.png")
 ```
 
 We can see from brushing on the right, where t-SNE has broken up the global
