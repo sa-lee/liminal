@@ -98,7 +98,7 @@
 <p>The <strong>liminal</strong> package comes with a built in <code>data.frame</code> which is a high-dimensional tree structured dataset called <code>fake_trees</code>. It consists of 3000 observations over 100 numeric variables. The tree can really be embedded in 2 dimensions and has 10 branches.</p>
 <p>First, let’s generate principal components:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sa-lee/liminal" class="external-link">liminal</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sa-lee/liminal/" class="external-link">liminal</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"fake_trees"</span><span class="op">)</span>
 <span class="va">pcs</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="va">fake_trees</span><span class="op">[</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">fake_trees</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>
 <span class="co"># var explained</span>
