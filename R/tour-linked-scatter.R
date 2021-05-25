@@ -108,7 +108,9 @@ limn_tour_link <- function(embed_data,
   )
 
   app <- shinyApp(ui, server)
-  if (!gadget_mode) return(app)
+  if (!gadget_mode) {
+    return(app)
+  }
 
   runGadget(app)
 }

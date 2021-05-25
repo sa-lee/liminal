@@ -5,7 +5,7 @@
 #' @examples
 #' x <- matrix(rnorm(300), ncol = 3)
 #' y <- matrix(rnorm(300), ncol = 3)
-#' compute_proj_dist(x,y)
+#' compute_proj_dist(x, y)
 #' @export
 compute_proj_dist <- function(x, y) {
   sqrt(sum((tcrossprod(x) - tcrossprod(y))^2))

@@ -75,7 +75,9 @@ limn_tour <- function(tour_data, cols, color = NULL, tour_path = tourr::grand_to
   server <- limn_tour_server(tour_data, tour_path, color_data, morph_projection)
   ui <- gadget_tour_ui(linked = FALSE, axis = TRUE)
   app <- shinyApp(ui, server)
-  if (!gadget_mode) return(app)
+  if (!gadget_mode) {
+    return(app)
+  }
   runGadget(app)
 }
 

@@ -11,7 +11,6 @@
 #' morph_center(proj, half_range)
 #' morph_identity(proj, half_range)
 #' morph_radial(proj, half_range, p_eff = 2)
-#'
 #' @rdname morphs
 morph_center <- function(proj, half_range) {
   scale(proj, scale = FALSE) / half_range
