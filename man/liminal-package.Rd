@@ -6,20 +6,6 @@
 \alias{liminal-package}
 \title{liminal: interactive high-dimensional data visualisation}
 \description{
-liminal is an R package for constructing interactive visualisations designed
-for exploratory high-dimensional data analysis. It's main purpose is to
-combine tours with (non-linear) dimension reduction algorithms to provide a
-more holistic view of the geometry and topology of a dataset. These
-are designed for data analysts first, so they render either inside the
-RStudio Viewer pane or from a web-browser using \code{shiny}.
-}
-\details{
-There are two main functions for generating tour interfaces:
-\itemize{
-\item The basic tour animation via \code{\link[=limn_tour]{limn_tour()}}
-\item Linking tours to another view \code{\link[=limn_tour_link]{limn_tour_link()}}
-}
-
 For more details on the features and usage of liminal, see the vignettes:
 \code{browseVignettes(package = "liminal")}
 }

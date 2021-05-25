@@ -28,5 +28,4 @@ half_range <- compute_half_range(proj)
 morph_center(proj, half_range)
 morph_identity(proj, half_range)
 morph_radial(proj, half_range, p_eff = 2)
-
 }
