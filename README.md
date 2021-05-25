@@ -9,6 +9,18 @@
 status](https://github.com/sa-lee/liminal/workflows/R-CMD-check/badge.svg)](https://github.com/sa-lee/liminal/actions)
 <!-- badges: end -->
 
+**liminal** is an R package for constructing interactive visualisations
+designed for exploratory high-dimensional data analysis. It’s main
+purpose is to combine tours with (non-linear) dimension reduction
+algorithms to provide a more holistic view of the geometry and topology
+of a dataset. These are designed for data analysts first, so they render
+either inside the RStudio Viewer pane or from a web-browser using
+**shiny**.
+
+There are two main functions for generating tour interfaces: \* The
+basic tour animation via \[limn\_tour()\] \* Linking tours to another
+view \[limn\_tour\_link()\]
+
 The goal of **liminal** is to provide complementary visualisations for
 use with understanding embedding algorithms such as tSNE. It has been
 [shown](https://distill.pub/2016/misread-tsne/) that in order to produce
@@ -28,22 +40,12 @@ The development version of **liminal** can be installed as follows:
 remotes::install_github("sa-lee/liminal")
 ```
 
-## About
+You can generate a tour view that will load in the Rstudio Viewer pane:
 
-**liminal** aims to assist with the use of embedding algorithms by
-combining them with interactive and dynamic graphics (via the
-**vegawidget** and **shiny** packages) and with a technique from
-multivariate statistics called the tour (via the **tourr** package).
-Briefly, a tour is a sequence of interpolated projections of
-multivariate data onto lower dimensional space. The sequence is
-displayed as a dynamic visualisation, and enables us to see the shadows
-the high dimensional data makes in a lower dimensional view. By
-combining the tour with embedding algorithms, we can see the following:
+``` r
+library(liminal)
+limn_tour(fake_trees, dim1:dim10)
+```
 
-1.  whether distances in the embedding view are meaningful
-2.  the local and global structure of the data
-3.  identify ‘interesting’ shapes or points in the data
-
-The **liminal** package easily incorporates into a exploratory data
-analysis workflow, and tracks user events such as brushes for downstream
-analysis.
+The interface provides instructions on how to use it, click on the help
+button to get started!
