@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">liminal</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9.9999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.10.9999</span>
       </span>
     </div>
 
@@ -136,19 +136,20 @@
     </div>
 
     <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>limn_tour</span><span class='op'>(</span>
-  <span class='va'>.data</span>,
+  <span class='va'>tour_data</span>,
   <span class='va'>cols</span>,
   color <span class='op'>=</span> <span class='cn'>NULL</span>,
   tour_path <span class='op'>=</span> <span class='fu'>tourr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/tourr/man/grand_tour.html'>grand_tour</a></span><span class='op'>(</span><span class='op'>)</span>,
   rescale <span class='op'>=</span> <span class='va'>clamp</span>,
-  morph <span class='op'>=</span> <span class='st'>"center"</span>
+  morph <span class='op'>=</span> <span class='st'>"center"</span>,
+  gadget_mode <span class='op'>=</span> <span class='cn'>TRUE</span>
 <span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.data</th>
+      <th>tour_data</th>
       <td><p>a data.frame to tour</p></td>
     </tr>
     <tr>
@@ -158,7 +159,7 @@ such as <code><a href='https://tidyselect.r-lib.org/reference/starts_with.html'>
     </tr>
     <tr>
       <th>color</th>
-      <td><p>A variable name in <code>.data</code>, mapping to the color aesthetic, if
+      <td><p>A variable mapping to the color aesthetic, if
 NULL points will be colored black.</p></td>
     </tr>
     <tr>
@@ -178,6 +179,13 @@ any scaling use <code><a href='https://rdrr.io/r/base/identity.html'>identity()<
 that rescales each projection along the tour path. The default
 is to center the projections and divide by half range. See <code><a href='morphs.html'>morph_center()</a></code>
 for details.</p></td>
+    </tr>
+    <tr>
+      <th>gadget_mode</th>
+      <td><p>Run the app as a <code><a href='https://rdrr.io/pkg/shiny/man/runGadget.html'>shiny::runGadget()</a></code> which will load
+the app in the RStudio Viewer pane or a browser (default = TRUE). If FALSE
+will return a regular shiny app object that could be used to deploy the app
+elsewhere.</p></td>
     </tr>
     </table>
 

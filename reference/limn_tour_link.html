@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">liminal</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9.9999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.10.9999</span>
       </span>
     </div>
 
@@ -142,7 +142,8 @@
   color <span class='op'>=</span> <span class='cn'>NULL</span>,
   tour_path <span class='op'>=</span> <span class='fu'>tourr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/tourr/man/grand_tour.html'>grand_tour</a></span><span class='op'>(</span><span class='op'>)</span>,
   rescale <span class='op'>=</span> <span class='va'>clamp</span>,
-  morph <span class='op'>=</span> <span class='st'>"center"</span>
+  morph <span class='op'>=</span> <span class='st'>"center"</span>,
+  gadget_mode <span class='op'>=</span> <span class='cn'>TRUE</span>
 <span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -154,33 +155,42 @@
     </tr>
     <tr>
       <th>tour_data</th>
-      <td><p>A <code>data.frame</code> that is linked to <code>embed_data</code> to tour</p></td>
+      <td><p>a data.frame to tour</p></td>
     </tr>
     <tr>
       <th>cols</th>
-      <td><p>Columns in <code>tour_data</code> to tour. This can use a <code>tidyselect</code> specification
+      <td><p>Columns to tour. This can use a tidyselect specification
 such as <code><a href='https://tidyselect.r-lib.org/reference/starts_with.html'>tidyselect::starts_with()</a></code>.</p></td>
     </tr>
     <tr>
       <th>color</th>
-      <td><p>An optional bare column name in either <code>embed_data</code> or <code>tour_data</code> for color
-mapping the points in the views. If NULL points will be colored black.</p></td>
+      <td><p>A variable mapping to the color aesthetic, if
+NULL points will be colored black.</p></td>
     </tr>
     <tr>
       <th>tour_path</th>
-      <td><p>the tour path to take, the default is <code><a href='https://rdrr.io/pkg/tourr/man/grand_tour.html'>tourr::grand_tour()</a></code>.</p></td>
+      <td><p>the tour path to take, the default is <code><a href='https://rdrr.io/pkg/tourr/man/grand_tour.html'>tourr::grand_tour()</a></code>
+but also works with <code><a href='https://rdrr.io/pkg/tourr/man/guided_tour.html'>tourr::guided_tour()</a></code>.</p></td>
     </tr>
     <tr>
       <th>rescale</th>
-      <td><p>A function that rescales tour columns. Default is <code><a href='clamps.html'>clamp()</a></code>
-To not perform any scaling use <code><a href='https://rdrr.io/r/base/identity.html'>identity()</a></code>.</p></td>
+      <td><p>A function that rescales <code>cols</code>, the default is to
+<code><a href='clamps.html'>clamp()</a></code> the data to lie in the hyperdimensional unit cube. To not perform
+any scaling use <code><a href='https://rdrr.io/r/base/identity.html'>identity()</a></code>.</p></td>
     </tr>
     <tr>
       <th>morph</th>
       <td><p>One of <code>c("center", "centre", "identity", "radial")</code>
 that rescales each projection along the tour path. The default
 is to center the projections and divide by half range. See <code><a href='morphs.html'>morph_center()</a></code>
-for details for each of these functions.</p></td>
+for details.</p></td>
+    </tr>
+    <tr>
+      <th>gadget_mode</th>
+      <td><p>Run the app as a <code><a href='https://rdrr.io/pkg/shiny/man/runGadget.html'>shiny::runGadget()</a></code> which will load
+the app in the RStudio Viewer pane or a browser (default = TRUE). If FALSE
+will return a regular shiny app object that could be used to deploy the app
+elsewhere.</p></td>
     </tr>
     </table>
 
