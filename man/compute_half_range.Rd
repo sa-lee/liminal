@@ -12,6 +12,9 @@ compute_half_range(.data, center = TRUE)
 \item{center}{Subtract \code{colMeans(.data)} from each column in \code{.data}?
 Default is TRUE.}
 }
+\value{
+A numeric vector of length 1.
+}
 \description{
 Compute range of axes for a tour
 }

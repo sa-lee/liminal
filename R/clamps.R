@@ -12,6 +12,10 @@
 #' * `clamp_standardize()` rescales all columns to have zero mean and unit variance.
 #'
 #' @importFrom matrixStats colRanges colMedians colMads colSds
+#'
+#' @return A matrix with the same dimension as `.data` where each column has
+#' been rescaled.
+#'
 #' @export
 #'
 #' @examples

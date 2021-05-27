@@ -2,6 +2,8 @@
 #' Compute Frobenius norm of matrix-like objects x and y
 #' @param x,y 'matrix' like objects that have `tcrossprod` methods
 #'
+#' @return A numeric vector of length 1 that is the Frobenius norm
+#'
 #' @examples
 #' x <- matrix(rnorm(300), ncol = 3)
 #' y <- matrix(rnorm(300), ncol = 3)
@@ -20,6 +22,8 @@ compute_proj_dist <- function(x, y) {
 #' @details This function computes the maximum squared
 #' Euclidean distance of rows in a matrix like object. Mostly used
 #' internally for setting up xy-axis ranges for a tour animation.
+#'
+#' @return A numeric vector of length 1.
 #'
 #' @examples
 #' mv <- matrix(rnorm(300), ncol = 3)

@@ -9,6 +9,9 @@ compute_proj_dist(x, y)
 \arguments{
 \item{x, y}{'matrix' like objects that have \code{tcrossprod} methods}
 }
+\value{
+A numeric vector of length 1 that is the Frobenius norm
+}
 \description{
 Compute Frobenius norm of matrix-like objects x and y
 }

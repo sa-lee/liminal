@@ -13,14 +13,26 @@ morph_identity(proj, half_range)
 morph_radial(proj, half_range, p_eff)
 }
 \arguments{
-\item{proj}{a projection}
+\item{proj}{a projection matrix}
 
 \item{half_range}{scale factor for projection}
 
-\item{p_eff}{Effective dimensionality of reference data set.}
+\item{p_eff}{Effective dimensionality of reference data set, see \code{\link[tourr:display_sage]{tourr::display_sage()}} for details.}
+}
+\value{
+A matrix with dimensions the same as \code{proj}.
 }
 \description{
 Morphing Projections
+}
+\details{
+These functions are designed to alter the resulting
+projection after basis generation with the \link{tourr} and will change how
+the projections are animated with \code{\link[=limn_tour]{limn_tour()}} and \code{\link[=limn_tour_link]{limn_tour_link()}}.
+For \code{\link[=morph_center]{morph_center()}} the projection is centered and then scaled by
+the half range, while \code{\link[=morph_identity]{morph_identity()}} only scales by half range.
+\code{\link[=morph_radial]{morph_radial()}} is an implemenation of the burning sage algorithm
+available in \code{\link[tourr:display_sage]{tourr::display_sage()}}.
 }
 \examples{
 proj <- matrix(rnorm(20), ncol = 2)

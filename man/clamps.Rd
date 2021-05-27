@@ -20,6 +20,10 @@ clamp_standardize(.data, sd = 1)
 
 \item{sd}{the value of each columns standard deviation (default is 1)}
 }
+\value{
+A matrix with the same dimension as \code{.data} where each column has
+been rescaled.
+}
 \description{
 Rescale all columns of a matrix
 }

@@ -1,8 +1,18 @@
 #' Morphing Projections
 #'
-#' @param proj a projection
+#' @param proj a projection matrix
 #' @param half_range scale factor for projection
-#' @param p_eff  Effective dimensionality of reference data set.
+#' @param p_eff  Effective dimensionality of reference data set, see [tourr::display_sage()] for details.
+#'
+#' @details These functions are designed to alter the resulting
+#' projection after basis generation with the [tourr] and will change how
+#' the projections are animated with [limn_tour()] and [limn_tour_link()].
+#' For [morph_center()] the projection is centered and then scaled by
+#' the half range, while [morph_identity()] only scales by half range.
+#' [`morph_radial()`] is an implemenation of the burning sage algorithm
+#' available in [tourr::display_sage()].
+#'
+#' @return A matrix with dimensions the same as `proj`.
 #'
 #' @export
 #' @examples
