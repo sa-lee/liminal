@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">liminal</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -146,7 +146,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>proj</th>
-      <td><p>a projection</p></td>
+      <td><p>a projection matrix</p></td>
     </tr>
     <tr>
       <th>half_range</th>
@@ -154,10 +154,22 @@
     </tr>
     <tr>
       <th>p_eff</th>
-      <td><p>Effective dimensionality of reference data set.</p></td>
+      <td><p>Effective dimensionality of reference data set, see <code><a href='https://rdrr.io/pkg/tourr/man/display_sage.html'>tourr::display_sage()</a></code> for details.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A matrix with dimensions the same as <code>proj</code>.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>These functions are designed to alter the resulting
+projection after basis generation with the tourr and will change how
+the projections are animated with <code><a href='limn_tour.html'>limn_tour()</a></code> and <code><a href='limn_tour_link.html'>limn_tour_link()</a></code>.
+For <code>morph_center()</code> the projection is centered and then scaled by
+the half range, while <code>morph_identity()</code> only scales by half range.
+<code>morph_radial()</code> is an implemenation of the burning sage algorithm
+available in <code><a href='https://rdrr.io/pkg/tourr/man/display_sage.html'>tourr::display_sage()</a></code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='va'>proj</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>20</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span>
