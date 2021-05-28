@@ -7,6 +7,8 @@
 
 [![R build
 status](https://github.com/sa-lee/liminal/workflows/R-CMD-check/badge.svg)](https://github.com/sa-lee/liminal/actions)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/liminal)](https://CRAN.R-project.org/package=liminal)
 <!-- badges: end -->
 
 **liminal** is an R package for constructing interactive visualisations
@@ -37,6 +39,12 @@ how to apply **liminal** to real data analysis workflows like
 clustering.
 
 ## Quick Start
+
+The release version of **liminal** is available on CRAN:
+
+``` r
+install.packages("liminal")
+```
 
 The development version of **liminal** can be installed as follows:
 
